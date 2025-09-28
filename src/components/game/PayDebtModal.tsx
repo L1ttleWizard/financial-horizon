@@ -47,7 +47,7 @@ export function PayDebtModal({ currentDebt, currentBalance, onClose, onConfirm }
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         placeholder={`Максимум: $${maxPayable}`}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border text-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button 
                         onClick={() => setAmount(String(maxPayable))}

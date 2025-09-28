@@ -5,9 +5,12 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 export function NetWorthChart({ data }: { data: NetWorthHistoryPoint[] }) {
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 h-full">
+    // 1. Делаем этот контейнер flex-колонкой, чтобы управлять высотой дочерних элементов
+    <div className="bg-white rounded-xl shadow-md p-4 h-full flex flex-col">
       <h2 className="text-2xl font-bold text-gray-700 mb-4">Динамика капитала</h2>
-      <div className="w-full h-64">
+      
+      
+      <div className="w-full flex-grow">
         <ResponsiveContainer>
           <AreaChart data={data}>
             <defs>
