@@ -3,14 +3,14 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/store';
-import { startNextTurn, resetGame, payDebt } from '@/store/slices/gameSlice';
 import { achievementsData } from '@/data/achievementsData';
 import { DashboardCard } from '@/components/ui/DashboardCard';
 import { PaydayProgressBar } from '@/components/ui/PaydayProgressBar';
 import { EventModal } from '@/components/game/EventModal';
 import { ResultModal } from '@/components/game/ResultModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { startNextTurn, resetGame, payDebt } from '@/store/slices/gameSlice';
 import { AchievementToast } from '@/components/notifications/AchievementToast';
 import { AchievementsWidget } from '@/components/game/AchievementsWidget';
 import { MoneyTreeWidget } from '@/components/game/MoneyTreeWidget';
