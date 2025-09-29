@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { achievementsData } from "@/data/achievementsData";
 import { DashboardCard } from "@/components/ui/DashboardCard";
 import { PaydayProgressBar } from "@/components/ui/PaydayProgressBar";
@@ -25,6 +25,11 @@ export default function HomePage() {
   const gameState = useAppSelector((state) => state.game);
   const dispatch = useDispatch();
   const [isPayDebtModalOpen, setIsPayDebtModalOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // --- ЛОГИКА ДЛЯ КАРТОЧКИ ДОЛГА ---
   const monthlyInterestRate = 0.1;
@@ -45,20 +50,27 @@ export default function HomePage() {
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
             Финансовый Горизонт
           </h1>
-          <p className="text-gray-600 mt-1">Неделя: {gameState.turn + 1}</p>
+          <p className="text-gray-600 mt-1">
+            Неделя: {isClient ? gameState.turn + 1 : 1}
+          </p>
         </header>
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-6 p-4 rounded-xl">
-          <button
-            onClick={() => dispatch(startNextTurn())}
-            disabled={
-              gameState.isEventModalOpen ||
-              gameState.isResultModalOpen ||
-              gameState.gameOverState?.isGameOver
-            }
-            className="w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-700 transition"
-          >
-            {gameState.turn === 0 ? "Начать игру" : `Следующая неделя`}
-          </button>
+        <div
+          className="flex flex-wrap items-center justify-center gap-4 mb-6 p-4 rounded-xl"
+          id="conrols-panel"
+        >
+          <div id="start-turn-button">
+            <button
+              onClick={() => dispatch(startNextTurn())}
+              disabled={
+                gameState.isEventModalOpen ||
+                gameState.isResultModalOpen ||
+                gameState.gameOverState?.isGameOver
+              }
+              className="w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-700 transition"
+            >
+              {gameState.turn === 0 ? "Начать игру" : `Следующая неделя`}
+            </button>
+          </div>
           <button
             onClick={() => dispatch(resetGame())}
             className="w-full sm:w-auto bg-gray-700 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-800 transition"
@@ -72,6 +84,7 @@ export default function HomePage() {
             Все достижения
           </Link>
           <Link
+            id="glossary-button"
             href="/glossary"
             className="w-full sm:w-auto text-center bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition"
           >
@@ -86,32 +99,40 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-6">
-          <DashboardCard
-            title="Баланс"
-            value={`$${gameState.balance}`}
-            icon="💰"
-          />
-          <DashboardCard
-            title="Настроение"
-            value={`${gameState.mood} / 100`}
-            icon="❤️"
-          />
-          <DashboardCard
-            title="Сбережения"
-            value={`$${gameState.savings}`}
-            icon="📈"
-            subValue={`Активных вкладов: ${gameState.activeDeposits.length}`}
-            linkTo="/savings"
-          />
-          <DashboardCard
-            title="Долг"
-            value={`$${gameState.debt}`}
-            icon="💳"
-            subValue={`Проценты в этом месяце: +$${accruedInterest}`}
-            actionLabel="Погасить"
-            onAction={() => setIsPayDebtModalOpen(true)}
-            actionDisabled={gameState.debt === 0}
-          />
+          <div id="balance-card">
+            <DashboardCard
+              title="Баланс"
+              value={`$${gameState.balance}`}
+              icon="💰"
+            />
+          </div>
+          <div id="mood-card">
+            <DashboardCard
+              title="Настроение"
+              value={`${gameState.mood} / 100`}
+              icon="❤️"
+            />
+          </div>
+          <div id="savings-card">
+            <DashboardCard
+              title="Сбережения"
+              value={`$${gameState.savings}`}
+              icon="📈"
+              subValue={`Активных вкладов: ${gameState.activeDeposits.length}`}
+              linkTo="/savings"
+            />
+          </div>
+          <div id="debt-card">
+            <DashboardCard
+              title="Долг"
+              value={`$${gameState.debt}`}
+              icon="💳"
+              subValue={`Проценты в этом месяце: +$${accruedInterest}`}
+              actionLabel="Погасить"
+              onAction={() => setIsPayDebtModalOpen(true)}
+              actionDisabled={gameState.debt === 0}
+            />
+          </div>
         </div>
 
         <div className="mb-6">
@@ -121,9 +142,17 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <NetWorthChart data={gameState.netWorthHistory} />
           {/* Новая колонка с двумя виджетами */}
-          <div className="flex flex-col gap-6">
-            <ObligatorySpendsWidget currentTurn={gameState.turn} />
-            <RecentLogsWidget log={gameState.log} />
+          <div className="flex flex-col gap-6" id="obligatory-spends-widget">
+            <div id="obligatory-spends-widget">
+              <ObligatorySpendsWidget 
+              currentTurn={gameState.turn} 
+              weeklySpends={gameState.weeklySpends}
+              monthlyBills={gameState.monthlyBills}
+            />
+            </div>
+            <div id="recent-logs-widget">
+              <RecentLogsWidget log={gameState.log} />
+            </div>
           </div>
         </div>
 
@@ -148,11 +177,15 @@ export default function HomePage() {
       <AchievementToast />
 
       {gameState.isEventModalOpen && gameState.currentEvent && (
-        <EventModal event={gameState.currentEvent} />
+        <div id="event-modal">
+          <EventModal event={gameState.currentEvent} />
+        </div>
       )}
 
       {gameState.isResultModalOpen && gameState.lastChoiceResult && (
-        <ResultModal result={gameState.lastChoiceResult} />
+        <div id="result-modal">
+          <ResultModal result={gameState.lastChoiceResult} />
+        </div>
       )}
 
       {isPayDebtModalOpen && (

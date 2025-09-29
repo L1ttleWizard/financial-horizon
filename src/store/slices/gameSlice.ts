@@ -13,7 +13,14 @@ export const MONTHLY_BILLS = 600;
 const MONTHLY_SALARY = 1600;
 const DEBT_INTEREST_RATE = 0.2;
 const MOOD_BOOST_ON_PAYDAY = 5;
-const MOOD_PENALTY_FOR_DEBT = -30;
+const MOOD_PENALTY_FOR_DEBT = -10;
+
+// --- СИСТЕМНЫЕ ПЕРЕМЕННЫЕ (МОГУТ ИЗМЕНЯТЬСЯ) ---
+export const getSystemVariables = () => ({
+  monthlyBills: 600,
+  weeklySpends: 100,
+  monthlySalary: 1600,
+});
 
 // --- УСЛОВИЯ ПРОИГРЫША ---
 const DEBT_SPIRAL_THRESHOLD = MONTHLY_SALARY / 2;
@@ -41,6 +48,16 @@ export interface ActiveDeposit {
   startTurn: number;
   endTurn: number;
 }
+
+export interface PropertyInvestment {
+  id: string;
+  name: string;
+  type: 'apartment' | 'commercial' | 'crypto' | 'stocks';
+  amount: number;
+  monthlyIncome: number;
+  purchaseTurn: number;
+  description: string;
+}
 interface GameOverState {
   isGameOver: true;
   reason: GameOverReason;
@@ -61,6 +78,7 @@ interface GameState {
   treeStage: number;
   turn: number;
   activeDeposits: ActiveDeposit[];
+  propertyInvestments: PropertyInvestment[];
   availableOffers: BankOffer[];
   moodAtZeroTurns: number;
   gameOverState: { isGameOver: false } | GameOverState;
@@ -78,6 +96,10 @@ interface GameState {
   newlyUnlockedAchievement: Achievement | null;
   isGlossaryForced: boolean;
   forcedGlossaryTerm: Term | null;
+  // Системные переменные
+  monthlyBills: number;
+  weeklySpends: number;
+  monthlySalary: number;
 }
 
 // --- НАЧАЛЬНОЕ СОСТОЯНИЕ ---
@@ -89,6 +111,7 @@ const initialState: GameState = {
   treeStage: 1,
   turn: 0,
   activeDeposits: [],
+  propertyInvestments: [],
   availableOffers: [...bankOffersPool]
     .sort(() => 0.5 - Math.random())
     .slice(0, 3),
@@ -104,6 +127,10 @@ const initialState: GameState = {
   newlyUnlockedAchievement: null,
   isGlossaryForced: false,
   forcedGlossaryTerm: null,
+  // Системные переменные
+  monthlyBills: 600,
+  weeklySpends: 100,
+  monthlySalary: 1600,
 };
 
 // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
@@ -123,10 +150,17 @@ const addLogEntry = (
   });
 };
 const updateNetWorthAndTree = (state: GameState) => {
-  state.savings = state.activeDeposits.reduce(
+  // Считаем сбережения как сумму банковских вкладов + инвестиций в недвижимость
+  const bankSavings = (state.activeDeposits || []).reduce(
     (sum, dep) => sum + dep.amount,
     0
   );
+  const propertyValue = (state.propertyInvestments || []).reduce(
+    (sum, prop) => sum + prop.amount,
+    0
+  );
+  state.savings = bankSavings + propertyValue;
+  
   const netWorth = state.balance + state.savings - state.debt;
   state.netWorthHistory.push({ week: state.turn, netWorth });
   const newStage = getTreeStageForNetWorth(netWorth);
@@ -216,8 +250,8 @@ const gameSlice = createSlice({
         updateNetWorthAndTree(state);
       }
 
-      state.balance -= WEEKLY_SPENDS;
-      addLogEntry(state, "expense", "Еда и транспорт", -WEEKLY_SPENDS);
+      state.balance -= state.weeklySpends;
+      addLogEntry(state, "expense", "Еда и транспорт", -state.weeklySpends);
 
       const shuffled = [...gameEventsPool].sort(() => 0.5 - Math.random());
       state.currentEvent = shuffled[0];
@@ -253,11 +287,19 @@ const gameSlice = createSlice({
         );
       }
 
-      if (state.balance >= MONTHLY_BILLS) {
-        state.balance -= MONTHLY_BILLS;
-        addLogEntry(state, "expense", "Аренда и коммуналка", -MONTHLY_BILLS);
+      // Сначала начисляем проценты по существующему долгу (если есть)
+      if (state.debt > 0) {
+        const interest = Math.ceil(state.debt * DEBT_INTEREST_RATE);
+        state.debt += interest;
+        addLogEntry(state, "debt", "Проценты по долгу", interest);
+      }
+
+      // Затем обрабатываем оплату счетов
+      if (state.balance >= state.monthlyBills) {
+        state.balance -= state.monthlyBills;
+        addLogEntry(state, "expense", "Аренда и коммуналка", -state.monthlyBills);
       } else {
-        const shortfall = MONTHLY_BILLS - state.balance;
+        const shortfall = state.monthlyBills - state.balance;
         if (state.balance > 0) {
           addLogEntry(
             state,
@@ -282,15 +324,29 @@ const gameSlice = createSlice({
           MOOD_PENALTY_FOR_DEBT
         );
       }
-      state.balance += MONTHLY_SALARY;
-      addLogEntry(state, "income", "Месячная зарплата", MONTHLY_SALARY);
+      state.balance += state.monthlySalary;
+      addLogEntry(state, "income", "Месячная зарплата", state.monthlySalary);
       state.mood += MOOD_BOOST_ON_PAYDAY;
       addLogEntry(state, "mood", "Бонус к настроению", MOOD_BOOST_ON_PAYDAY);
-      if (state.debt > 0) {
-        const interest = Math.ceil(state.debt * DEBT_INTEREST_RATE);
-        state.debt += interest;
-        addLogEntry(state, "debt", "Проценты по долгу", interest);
+      
+      // FIRST_STEPS - завершить первый игровой месяц (4 недели)
+      if (state.turn === PAYDAY_CYCLE && !state.unlockedAchievements.includes("FIRST_STEPS")) {
+        state.unlockedAchievements.push("FIRST_STEPS");
+        state.newlyUnlockedAchievement = getAchievementById("FIRST_STEPS") || null;
       }
+      
+      // Повышение зарплаты после обучения (через 8 недель после обучения)
+      if (state.turn === PAYDAY_CYCLE * 2) {
+        // Проверяем, было ли обучение в логе
+        const hasEducation = state.log.some(entry => 
+          entry.description.includes("Инвестиция в образование")
+        );
+        if (hasEducation) {
+          state.monthlySalary = Math.round(state.monthlySalary * 1.15); // +15% к зарплате
+          addLogEntry(state, "income", "Повышение зарплаты после обучения", 0);
+        }
+      }
+      
       updateNetWorthAndTree(state);
       checkGameOverConditions(state);
     },
@@ -311,13 +367,82 @@ const gameSlice = createSlice({
         addLogEntry(state, "mood", choice.text, effects.mood);
       }
       if (effects.savings) {
-        state.savings += effects.savings;
-        addLogEntry(state, "savings", choice.text, effects.savings);
+        if (!state.propertyInvestments) {
+          state.propertyInvestments = [];
+        }
+        
+        // Если это инвестиция в недвижимость из события
+        if (choice.text.includes("квартиру") || choice.text.includes("недвижимость")) {
+          const propertyInvestment: PropertyInvestment = {
+            id: `${Date.now()}-${Math.random()}`,
+            name: "Квартира для сдачи в аренду",
+            type: "apartment",
+            amount: Math.abs(effects.savings),
+            monthlyIncome: Math.abs(effects.savings) * 0.01, // 1% в месяц
+            purchaseTurn: state.turn,
+            description: "Инвестиционная недвижимость, приносящая пассивный доход"
+          };
+          state.propertyInvestments.push(propertyInvestment);
+          addLogEntry(state, "savings", choice.text, effects.savings);
+        } 
+        // Если это криптовалютная инвестиция
+        else if (choice.text.includes("криптовалют") || choice.text.includes("крипту")) {
+          const cryptoInvestment: PropertyInvestment = {
+            id: `${Date.now()}-${Math.random()}`,
+            name: "Криптовалютная инвестиция",
+            type: "crypto",
+            amount: Math.abs(effects.savings),
+            monthlyIncome: 0, // Криптовалюта не приносит регулярный доход
+            purchaseTurn: state.turn,
+            description: "Высокорисковая инвестиция в криптовалюту"
+          };
+          state.propertyInvestments.push(cryptoInvestment);
+          addLogEntry(state, "savings", choice.text, effects.savings);
+        }
+        // Если это инвестиция в акции
+        else if (choice.text.includes("акци") || choice.text.includes("фондовый рынок")) {
+          const stockInvestment: PropertyInvestment = {
+            id: `${Date.now()}-${Math.random()}`,
+            name: "Инвестиция в акции",
+            type: "stocks",
+            amount: Math.abs(effects.savings),
+            monthlyIncome: Math.abs(effects.savings) * 0.005, // 0.5% в месяц
+            purchaseTurn: state.turn,
+            description: "Инвестиция в фондовый рынок"
+          };
+          state.propertyInvestments.push(stockInvestment);
+          addLogEntry(state, "savings", choice.text, effects.savings);
+        }
+        else {
+          // Обычные сбережения (банковские вклады)
+          state.savings += effects.savings;
+          addLogEntry(state, "savings", choice.text, effects.savings);
+        }
       }
       if (effects.debt) {
         state.debt += effects.debt;
         addLogEntry(state, "debt", choice.text, effects.debt);
       }
+      
+      // Обработка изменений системных переменных
+      if (choice.text.includes("Согласиться на повышение")) {
+        // Повышение арендной платы на 20%
+        state.monthlyBills = Math.round(state.monthlyBills * 1.2);
+        addLogEntry(state, "expense", "Повышение арендной платы", 0);
+      } else if (choice.text.includes("Попытаться договориться")) {
+        // Повышение арендной платы на 10% (компромисс)
+        state.monthlyBills = Math.round(state.monthlyBills * 1.1);
+        addLogEntry(state, "expense", "Компромиссное повышение аренды", 0);
+      } else if (choice.text.includes("Согласиться на обучение")) {
+        // Повышение зарплаты после обучения (через 8 недель)
+        // Пока просто логируем, реальное повышение будет в confirmGlossaryRead
+        addLogEntry(state, "income", "Инвестиция в образование", 0);
+      } else if (choice.text.includes("Согласиться на сверхурочные")) {
+        // Временное повышение еженедельных расходов из-за усталости
+        state.weeklySpends = Math.round(state.weeklySpends * 1.1);
+        addLogEntry(state, "expense", "Увеличение расходов из-за усталости", 0);
+      }
+      
       if (state.mood > 100) state.mood = 100;
       if (state.mood < 0) state.mood = 0;
       state.lastChoiceResult = {
@@ -334,21 +459,32 @@ const gameSlice = createSlice({
           state.newlyUnlockedAchievement = getAchievementById(id) || null;
         }
       };
+      
+      // FIRST_SAVINGS - открыть первый накопительный счет
       if ((effects.savings || 0) > 0 && state.savings > 0) {
         checkAndUnlock("FIRST_SAVINGS");
       }
-      if ((effects.debt || 0) > 0 && state.debt > 0) {
+      
+      // CREDIT_BAPTISM - взять первый кредит (только через выборы, не экстренный)
+      if ((effects.debt || 0) > 0 && state.debt > 0 && choice.text !== "Экстренный кредит на оплату счетов") {
         checkAndUnlock("CREDIT_BAPTISM");
       }
+      
+      // MONEY_BOX - накопить более 1000$ на балансе и сбережениях
       if (state.balance + state.savings > 1000) {
         checkAndUnlock("MONEY_BOX");
       }
+      
+      // FINANCIAL_WISDOM - отказаться от дорогой покупки
       if (choice.text === "Вежливо отказаться") {
         checkAndUnlock("FINANCIAL_WISDOM");
       }
+      
+      // ANTIFRAGILITY - справиться с непредвиденными расходами без долгов
       if (
-        choice.text === "Починить старый в мастерской" ||
-        choice.text === "Купить новый, но недорогой"
+        (choice.text === "Починить старый в мастерской" ||
+         choice.text === "Купить новый, но недорогой") &&
+        state.debt === 0
       ) {
         checkAndUnlock("ANTIFRAGILITY");
       }
@@ -405,12 +541,35 @@ const gameSlice = createSlice({
     clearNewAchievement(state) {
       state.newlyUnlockedAchievement = null;
     },
+    addPropertyInvestment(state, action: PayloadAction<PropertyInvestment>) {
+      if (!state.propertyInvestments) {
+        state.propertyInvestments = [];
+      }
+      state.propertyInvestments.push(action.payload);
+      updateNetWorthAndTree(state);
+    },
+    updateSystemVariables(state, action: PayloadAction<{
+      monthlyBills?: number;
+      weeklySpends?: number;
+      monthlySalary?: number;
+    }>) {
+      if (action.payload.monthlyBills !== undefined) {
+        state.monthlyBills = action.payload.monthlyBills;
+      }
+      if (action.payload.weeklySpends !== undefined) {
+        state.weeklySpends = action.payload.weeklySpends;
+      }
+      if (action.payload.monthlySalary !== undefined) {
+        state.monthlySalary = action.payload.monthlySalary;
+      }
+    },
     resetGame: (state) => {
       Object.assign(state, initialState);
       state.availableOffers = [...bankOffersPool]
         .sort(() => 0.5 - Math.random())
         .slice(0, 3);
       state.netWorthHistory = [{ week: 0, netWorth: initialState.balance }];
+      state.propertyInvestments = [];
     },
   },
 });
@@ -423,6 +582,8 @@ export const {
   openDeposit,
   closeResultModal,
   clearNewAchievement,
+  addPropertyInvestment,
+  updateSystemVariables,
   resetGame,
 } = gameSlice.actions;
 export default gameSlice.reducer;

@@ -33,7 +33,7 @@ export function EventModal({ event }: ModalProps) {
         <div>
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{event.title}</h2>
           <p className="text-gray-600 mb-6">{event.description}</p>
-          <div className="flex flex-col space-y-3">
+          <div id="event-choices" className="flex flex-col space-y-3">
             {event.choices.map((choice, index) => (
               <button
                 key={index}

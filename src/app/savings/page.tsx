@@ -9,12 +9,13 @@ import { BankOffer } from "@/data/bankOffers";
 import { ActiveDepositCard } from "@/components/game/ActiveDepositCard";
 import { BankOfferCard } from "@/components/game/BankOfferCard";
 import { OpenDepositModal } from "@/components/game/OpenDepositModal";
+import { PropertyInvestmentCard } from "@/components/game/PropertyInvestmentCard";
 
 export default function SavingsPage() {
   const dispatch = useAppDispatch();
 
   // 2. Используем useAppSelector для получения всего нужного из state
-  const { activeDeposits, availableOffers, turn, balance, debt } =
+  const { activeDeposits, propertyInvestments, availableOffers, turn, balance, debt, savings } =
     useAppSelector((state) => state.game);
 
   const [selectedOffer, setSelectedOffer] = useState<BankOffer | null>(null);
@@ -29,7 +30,7 @@ export default function SavingsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4 sm:p-8">
+    <main className="min-h-screen bg-gray-50 p-4 sm:p-8 text-gray-600">
       <div className="max-w-7xl mx-auto">
         <header className="mb-8 text-center">
           <h1 className="text-3xl sm:text-5xl font-bold text-gray-800">
@@ -40,25 +41,39 @@ export default function SavingsPage() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 max-w-2xl mx-auto">
-          <div className="bg-white shadow rounded-xl p-6 text-center">
-            <p className="text-gray-500 uppercase text-sm">Текущий баланс</p>
-            <p className="text-4xl font-bold text-green-600">${balance}</p>
-          </div>
-          <div className="bg-white shadow rounded-xl p-6 text-center">
-            <p className="text-gray-500 uppercase text-sm">Текущий долг</p>
-            <p className="text-4xl font-bold text-red-600">${debt}</p>
+        {/* Общая информация о сбережениях */}
+        <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 text-white mb-8">
+          <h2 className="text-2xl font-bold mb-4">Ваши сбережения</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <p className="text-blue-100">Общая сумма</p>
+              <p className="text-3xl font-bold">${savings.toLocaleString()}</p>
+            </div>
+            <div>
+              <p className="text-blue-100">Банковские вклады</p>
+              <p className="text-xl font-semibold">
+                ${(activeDeposits || []).reduce((sum, dep) => sum + dep.amount, 0).toLocaleString()}
+              </p>
+            </div>
+            <div>
+              <p className="text-blue-100">Инвестиции</p>
+              <p className="text-xl font-semibold">
+                ${(propertyInvestments || []).reduce((sum, inv) => sum + inv.amount, 0).toLocaleString()}
+              </p>
+            </div>
+            <div>
+              <p className="text-blue-100">Текущий баланс</p>
+              <p className="text-xl font-semibold">${balance.toLocaleString()}</p>
+            </div>
           </div>
         </div>
 
-        {/* Секция активных вкладов */}
+        {/* Секция банковских вкладов */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-4">Активные вклады</h2>
-          {/* 3. Надежная проверка на длину массива */}
-          {activeDeposits && activeDeposits.length > 0 ? (
+          <h2 className="text-3xl font-bold mb-4">🏦 Банковские вклады</h2>
+          {(activeDeposits || []).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* 4. Проходим по массиву и рендерим карточки */}
-              {activeDeposits.map((deposit) => (
+              {(activeDeposits || []).map((deposit) => (
                 <ActiveDepositCard
                   key={deposit.id}
                   deposit={deposit}
@@ -69,6 +84,26 @@ export default function SavingsPage() {
           ) : (
             <div className="text-center py-10 bg-white rounded-xl shadow">
               <p className="text-gray-500">У вас пока нет активных вкладов.</p>
+            </div>
+          )}
+        </section>
+
+        {/* Секция инвестиций в недвижимость */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-4">🏠 Инвестиции в недвижимость</h2>
+          {(propertyInvestments || []).length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {(propertyInvestments || []).map((investment) => (
+                <PropertyInvestmentCard
+                  key={investment.id}
+                  investment={investment}
+                  currentTurn={turn}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-10 bg-white rounded-xl shadow">
+              <p className="text-gray-500">У вас пока нет инвестиций в недвижимость. Инвестируйте в событиях игры!</p>
             </div>
           )}
         </section>

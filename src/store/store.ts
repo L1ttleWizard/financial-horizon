@@ -2,11 +2,13 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import gameReducer from './slices/gameSlice';
 import { loadState } from './localStorage';
+import onboardingReducer from './slices/onboardingSlice'; 
 import { storageMiddleware } from './storageMiddleware';
 
 // 1. Создаем корневой редьюсер. Это позволяет нам вывести тип RootState до создания store.
 const rootReducer = combineReducers({
   game: gameReducer,
+  onboarding: onboardingReducer,
 });
 
 // 2. Теперь RootState определяется явно и без циклических зависимостей.

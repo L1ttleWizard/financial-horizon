@@ -1,11 +1,13 @@
 'use client';
-import { PAYDAY_CYCLE, WEEKLY_SPENDS, MONTHLY_BILLS } from '@/store/slices/gameSlice';
+import { PAYDAY_CYCLE } from '@/store/slices/gameSlice';
 
 interface WidgetProps {
   currentTurn: number;
+  weeklySpends: number;
+  monthlyBills: number;
 }
 
-export function ObligatorySpendsWidget({ currentTurn }: WidgetProps) {
+export function ObligatorySpendsWidget({ currentTurn, weeklySpends, monthlyBills }: WidgetProps) {
   const turnsLeftForBills = PAYDAY_CYCLE - (currentTurn % PAYDAY_CYCLE);
 
   const getWeekText = (weeks: number) => {
@@ -24,11 +26,11 @@ export function ObligatorySpendsWidget({ currentTurn }: WidgetProps) {
       <div className="space-y-3">
         <div className="flex justify-between items-center text-sm">
           <span className="text-gray-600">Еда и транспорт:</span>
-          <span className="font-semibold text-red-600">-${WEEKLY_SPENDS} / неделя</span>
+          <span className="font-semibold text-red-600">-${weeklySpends} / неделя</span>
         </div>
         <div className="flex justify-between items-center text-sm">
           <span className="text-gray-600">Аренда и счета:</span>
-          <span className="font-semibold text-red-600">-${MONTHLY_BILLS} ({billPaymentText})</span>
+          <span className="font-semibold text-red-600">-${monthlyBills} ({billPaymentText})</span>
         </div>
       </div>
     </div>
