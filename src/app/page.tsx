@@ -47,7 +47,7 @@ export default function HomePage() {
           </h1>
           <p className="text-gray-600 mt-1">Неделя: {gameState.turn + 1}</p>
         </header>
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-6 p-4 bg-white rounded-xl shadow">
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-6 p-4 rounded-xl">
           <button
             onClick={() => dispatch(startNextTurn())}
             disabled={

@@ -2,6 +2,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+// 1. Убедитесь, что используются правильные типизированные хуки
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { openDeposit } from "@/store/slices/gameSlice";
 import { BankOffer } from "@/data/bankOffers";
@@ -11,8 +12,11 @@ import { OpenDepositModal } from "@/components/game/OpenDepositModal";
 
 export default function SavingsPage() {
   const dispatch = useAppDispatch();
+
+  // 2. Используем useAppSelector для получения всего нужного из state
   const { activeDeposits, availableOffers, turn, balance, debt } =
     useAppSelector((state) => state.game);
+
   const [selectedOffer, setSelectedOffer] = useState<BankOffer | null>(null);
 
   const handleConfirmDeposit = (payload: {
@@ -25,16 +29,17 @@ export default function SavingsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8 text-gray-600">
+    <main className="min-h-screen bg-gray-50 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         <header className="mb-8 text-center">
-          <h1 className="text-5xl font-bold">Сбережения</h1>
+          <h1 className="text-3xl sm:text-5xl font-bold text-gray-800">
+            Сбережения
+          </h1>
           <p className="text-gray-600 mt-2">
             Управляйте вашими вкладами и приумножайте капитал.
           </p>
         </header>
 
-        {/* НОВЫЙ БЛОК С КЛЮЧЕВЫМИ ПОКАЗАТЕЛЯМИ */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 max-w-2xl mx-auto">
           <div className="bg-white shadow rounded-xl p-6 text-center">
             <p className="text-gray-500 uppercase text-sm">Текущий баланс</p>
@@ -46,15 +51,17 @@ export default function SavingsPage() {
           </div>
         </div>
 
-        {/* Активные вклады */}
+        {/* Секция активных вкладов */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-4">Активные вклады</h2>
-          {activeDeposits.length > 0 ? (
+          {/* 3. Надежная проверка на длину массива */}
+          {activeDeposits && activeDeposits.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {activeDeposits.map((dep) => (
+              {/* 4. Проходим по массиву и рендерим карточки */}
+              {activeDeposits.map((deposit) => (
                 <ActiveDepositCard
-                  key={dep.id}
-                  deposit={dep}
+                  key={deposit.id}
+                  deposit={deposit}
                   currentTurn={turn}
                 />
               ))}
@@ -66,10 +73,10 @@ export default function SavingsPage() {
           )}
         </section>
 
-        {/* Доступные предложения */}
+        {/* Секция доступных предложений */}
         <section>
           <h2 className="text-3xl font-bold mb-4">Доступные предложения</h2>
-          {availableOffers.length > 0 ? (
+          {availableOffers && availableOffers.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {availableOffers.map((offer) => (
                 <BankOfferCard
@@ -98,11 +105,12 @@ export default function SavingsPage() {
         </div>
       </div>
 
+      {/* Модальное окно */}
       {selectedOffer && (
         <OpenDepositModal
           offer={selectedOffer}
           balance={balance}
-          debt={debt} // <-- ПЕРЕДАЕМ ДОЛГ
+          debt={debt}
           onClose={() => setSelectedOffer(null)}
           onConfirm={handleConfirmDeposit}
         />
