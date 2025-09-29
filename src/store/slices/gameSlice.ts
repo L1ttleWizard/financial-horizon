@@ -89,7 +89,6 @@ const initialState: GameState = {
   treeStage: 1,
   turn: 0,
   activeDeposits: [],
-
   availableOffers: [...bankOffersPool]
     .sort(() => 0.5 - Math.random())
     .slice(0, 3),
@@ -117,7 +116,7 @@ const addLogEntry = (
   if (amount === 0) return;
   state.log.push({
     id: `${Date.now()}-${Math.random()}`,
-    week: state.turn + 1,
+    week: state.turn,
     type,
     description,
     amount,
@@ -129,7 +128,7 @@ const updateNetWorthAndTree = (state: GameState) => {
     0
   );
   const netWorth = state.balance + state.savings - state.debt;
-  state.netWorthHistory.push({ week: state.turn + 1, netWorth });
+  state.netWorthHistory.push({ week: state.turn, netWorth });
   const newStage = getTreeStageForNetWorth(netWorth);
   state.treeStage = newStage.stage;
 };
@@ -178,20 +177,59 @@ const gameSlice = createSlice({
   initialState,
   reducers: {
     startNextTurn(state) {
-      if (state.gameOverState.isGameOver) return;
+      if (
+        state.gameOverState.isGameOver ||
+        state.isEventModalOpen ||
+        state.isResultModalOpen
+      )
+        return;
       state.turn += 1;
+
       if (state.turn > 0 && state.turn % PAYDAY_CYCLE === 0) {
         const randomIndex = Math.floor(Math.random() * glossaryData.length);
         state.forcedGlossaryTerm = glossaryData[randomIndex];
         state.isGlossaryForced = true;
         return;
       }
+
+      const completedDeposits = state.activeDeposits.filter(
+        (dep) => state.turn >= dep.endTurn
+      );
+      if (completedDeposits.length > 0) {
+        completedDeposits.forEach((dep) => {
+          const weeksInYear = 52;
+          const interest = Math.ceil(
+            dep.amount * dep.annualRate * (dep.term / weeksInYear)
+          );
+          const totalReturn = dep.amount + interest;
+          state.balance += totalReturn;
+          addLogEntry(
+            state,
+            "income",
+            `Завершение вклада в ${dep.bankName}`,
+            totalReturn
+          );
+        });
+        state.activeDeposits = state.activeDeposits.filter(
+          (dep) => state.turn < dep.endTurn
+        );
+        updateNetWorthAndTree(state);
+      }
+
+      state.balance -= WEEKLY_SPENDS;
+      addLogEntry(state, "expense", "Еда и транспорт", -WEEKLY_SPENDS);
+
+      const shuffled = [...gameEventsPool].sort(() => 0.5 - Math.random());
+      state.currentEvent = shuffled[0];
+      state.isEventModalOpen = true;
     },
     confirmGlossaryRead(state) {
       state.isGlossaryForced = false;
       state.forcedGlossaryTerm = null;
+
       const shuffled = [...bankOffersPool].sort(() => 0.5 - Math.random());
       state.availableOffers = shuffled.slice(0, 3);
+
       const completedDeposits = state.activeDeposits.filter(
         (dep) => state.turn >= dep.endTurn
       );
@@ -214,6 +252,7 @@ const gameSlice = createSlice({
           (dep) => state.turn < dep.endTurn
         );
       }
+
       if (state.balance >= MONTHLY_BILLS) {
         state.balance -= MONTHLY_BILLS;
         addLogEntry(state, "expense", "Аренда и коммуналка", -MONTHLY_BILLS);
@@ -328,19 +367,15 @@ const gameSlice = createSlice({
       addLogEntry(state, "expense", "Погашение долга", -amountToPay);
       updateNetWorthAndTree(state);
     },
-
     openDeposit(
       state,
       action: PayloadAction<{ offer: BankOffer; amount: number; term: number }>
     ) {
       const { offer, amount, term } = action.payload;
-
       if (amount <= 0 || state.balance < amount) {
         return;
       }
-
       state.balance -= amount;
-
       const newDeposit: ActiveDeposit = {
         id: `${Date.now()}-${Math.random()}`,
         bankId: offer.id,
@@ -352,12 +387,9 @@ const gameSlice = createSlice({
         endTurn: state.turn + term,
       };
       state.activeDeposits.push(newDeposit);
-
-      //  Удаляем использованное предложение из списка доступных
       state.availableOffers = state.availableOffers.filter(
         (availableOffer) => availableOffer.id !== offer.id
       );
-
       addLogEntry(
         state,
         "savings",
@@ -378,7 +410,6 @@ const gameSlice = createSlice({
       state.availableOffers = [...bankOffersPool]
         .sort(() => 0.5 - Math.random())
         .slice(0, 3);
-      console.log([...bankOffersPool]);
       state.netWorthHistory = [{ week: 0, netWorth: initialState.balance }];
     },
   },
