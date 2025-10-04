@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Function to handle session logout (delete cookie)
-export async function DELETE(request: NextRequest) {
+export async function DELETE() {
   try {
     const options = {
       name: 'firebase-session',

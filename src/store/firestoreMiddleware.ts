@@ -20,7 +20,14 @@ export const firestoreMiddleware: Middleware = store => next => action => {
 
   // We only want to save the state if a user is logged in
   // and the action is related to the game slice
-  if (user && action.type.startsWith('game/')) {
+  if (
+    user &&
+    typeof action === 'object' &&
+    action !== null &&
+    'type' in action &&
+    typeof (action as { type: string }).type === 'string' &&
+    (action as { type: string }).type.startsWith('game/')
+  ) {
     debounce(() => {
       const userDocRef = doc(db, 'users', user.uid);
       // We update only the gameState field, leaving other fields (like email, createdAt) untouched

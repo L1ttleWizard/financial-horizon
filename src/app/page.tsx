@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { achievementsData } from "@/data/achievementsData";
 import { DashboardCard } from "@/components/ui/DashboardCard";
 import { PaydayProgressBar } from "@/components/ui/PaydayProgressBar";
@@ -25,11 +25,6 @@ export default function HomePage() {
   const gameState = useAppSelector((state) => state.game);
   const dispatch = useDispatch();
   const [isPayDebtModalOpen, setIsPayDebtModalOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   // --- ЛОГИКА ДЛЯ КАРТОЧКИ ДОЛГА ---
   const monthlyInterestRate = 0.1;
