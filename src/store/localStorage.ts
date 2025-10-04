@@ -1,8 +1,15 @@
 // src/store/localStorage.ts
 import { RootState } from './store';
+import { auth } from '@/lib/firebase-client';
 
 // Функция для загрузки состояния из Local Storage
 export const loadState = (): RootState | undefined => {
+  // If a user is logged in, do not load from localStorage.
+  // The state will be loaded from Firestore by GameStateSync.
+  if (auth.currentUser) {
+    return undefined;
+  }
+
   // Проверяем, что мы находимся в браузере, а не на сервере
   if (typeof window === 'undefined') {
     return undefined;

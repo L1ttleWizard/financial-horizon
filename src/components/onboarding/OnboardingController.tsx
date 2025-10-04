@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { useAuth } from "@/contexts/AuthContext";
 import { onboardingSteps } from "@/data/onboardingData";
 import {
   setOnboardingCompleted,
@@ -14,6 +15,7 @@ import { SpotlightOverlay } from "./SpotlightOverlay";
 import { TutorialTooltip } from "./TutorialTooltip";
 
 export function OnboardingController() {
+  const { user } = useAuth();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const pathname = usePathname();
@@ -118,6 +120,11 @@ export function OnboardingController() {
     isGameModalActive,
     step,
   ]);
+
+  // If the user is logged in, disable the onboarding controller entirely.
+  if (user) {
+    return null;
+  }
 
   // Основное правило: если онбординг неактивен или нет текущего шага, ничего не рендерим
   if (!isClient || !isActive || !step) {

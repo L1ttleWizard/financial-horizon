@@ -46,14 +46,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-gray-50 p-4 sm:p-6 flex flex-col items-center">
       <div className="w-full max-w-7xl">
-        <header className="mb-6 text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
-            Финансовый Горизонт
-          </h1>
-          <p className="text-gray-600 mt-1">
-            Неделя: {isClient ? gameState.turn + 1 : 1}
-          </p>
-        </header>
+
         <div
           className="flex flex-wrap items-center justify-center gap-4 mb-6 p-4 rounded-xl"
           id="conrols-panel"

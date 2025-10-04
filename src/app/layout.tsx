@@ -1,9 +1,8 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import StoreProvider from "../store/StoreProvider";
+import { Providers } from "./providers";
 import "./globals.css";
-import { OnboardingController } from "@/components/onboarding/OnboardingController";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +19,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={inter.className}>
-        <StoreProvider>
-          {children}
-          <OnboardingController />
-        </StoreProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
