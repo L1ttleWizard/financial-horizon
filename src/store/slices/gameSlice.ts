@@ -571,6 +571,9 @@ const gameSlice = createSlice({
       state.netWorthHistory = [{ week: 0, netWorth: initialState.balance }];
       state.propertyInvestments = [];
     },
+    setGameState(state, action: PayloadAction<GameState>) {
+      return action.payload;
+    },
   },
 });
 
@@ -585,5 +588,6 @@ export const {
   addPropertyInvestment,
   updateSystemVariables,
   resetGame,
+  setGameState,
 } = gameSlice.actions;
 export default gameSlice.reducer;

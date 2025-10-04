@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { achievementsData } from "@/data/achievementsData";
 import { DashboardCard } from "@/components/ui/DashboardCard";
 import { PaydayProgressBar } from "@/components/ui/PaydayProgressBar";
@@ -25,11 +25,6 @@ export default function HomePage() {
   const gameState = useAppSelector((state) => state.game);
   const dispatch = useDispatch();
   const [isPayDebtModalOpen, setIsPayDebtModalOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   // --- ЛОГИКА ДЛЯ КАРТОЧКИ ДОЛГА ---
   const monthlyInterestRate = 0.1;
@@ -46,14 +41,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-gray-50 p-4 sm:p-6 flex flex-col items-center">
       <div className="w-full max-w-7xl">
-        <header className="mb-6 text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
-            Финансовый Горизонт
-          </h1>
-          <p className="text-gray-600 mt-1">
-            Неделя: {isClient ? gameState.turn + 1 : 1}
-          </p>
-        </header>
+
         <div
           className="flex flex-wrap items-center justify-center gap-4 mb-6 p-4 rounded-xl"
           id="conrols-panel"

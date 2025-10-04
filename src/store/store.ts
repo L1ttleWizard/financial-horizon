@@ -4,6 +4,7 @@ import gameReducer from './slices/gameSlice';
 import { loadState } from './localStorage';
 import onboardingReducer from './slices/onboardingSlice'; 
 import { storageMiddleware } from './storageMiddleware';
+import { firestoreMiddleware } from './firestoreMiddleware'; // Import the new middleware
 
 // 1. Создаем корневой редьюсер. Это позволяет нам вывести тип RootState до создания store.
 const rootReducer = combineReducers({
@@ -22,7 +23,8 @@ export const makeStore = () => {
   return configureStore({
     reducer: rootReducer, // Используем наш корневой редьюсер
     preloadedState,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(storageMiddleware),
+    middleware: (getDefaultMiddleware) => 
+      getDefaultMiddleware().concat(storageMiddleware, firestoreMiddleware), // Add it to the chain
   });
 };
 
