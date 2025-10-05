@@ -8,23 +8,23 @@ import { glossaryData, Term } from "@/data/glossaryData";
 
 // --- ИГРОВЫЕ КОНСТАНТЫ ---
 export const PAYDAY_CYCLE = 4;
-export const WEEKLY_SPENDS = 100;
-export const MONTHLY_BILLS = 600;
-const MONTHLY_SALARY = 1600;
+export const WEEKLY_SPENDS = 8200;
+export const MONTHLY_BILLS = 49200;
+const MONTHLY_SALARY = 131200;
 const DEBT_INTEREST_RATE = 0.2;
 const MOOD_BOOST_ON_PAYDAY = 5;
 const MOOD_PENALTY_FOR_DEBT = -10;
 
 // --- СИСТЕМНЫЕ ПЕРЕМЕННЫЕ (МОГУТ ИЗМЕНЯТЬСЯ) ---
 export const getSystemVariables = () => ({
-  monthlyBills: 600,
-  weeklySpends: 100,
-  monthlySalary: 1600,
+  monthlyBills: 49200,
+  weeklySpends: 8200,
+  monthlySalary: 131200,
 });
 
 // --- УСЛОВИЯ ПРОИГРЫША ---
 const DEBT_SPIRAL_THRESHOLD = MONTHLY_SALARY / 2;
-const BANKRUPTCY_NET_WORTH_THRESHOLD = -1000;
+const BANKRUPTCY_NET_WORTH_THRESHOLD = -82000;
 const BANKRUPTCY_MOOD_THRESHOLD = 10;
 
 // --- ТИПЫ ---
@@ -104,7 +104,7 @@ interface GameState {
 
 // --- НАЧАЛЬНОЕ СОСТОЯНИЕ ---
 const initialState: GameState = {
-  balance: 500,
+  balance: 41000,
   mood: 70,
   savings: 0,
   debt: 0,
@@ -119,7 +119,7 @@ const initialState: GameState = {
   gameOverState: { isGameOver: false },
   currentEvent: null,
   log: [],
-  netWorthHistory: [{ week: 0, netWorth: 500 }],
+  netWorthHistory: [{ week: 0, netWorth: 41000 }],
   lastChoiceResult: null,
   isEventModalOpen: false,
   isResultModalOpen: false,
@@ -127,10 +127,9 @@ const initialState: GameState = {
   newlyUnlockedAchievement: null,
   isGlossaryForced: false,
   forcedGlossaryTerm: null,
-  // Системные переменные
-  monthlyBills: 600,
-  weeklySpends: 100,
-  monthlySalary: 1600,
+  monthlyBills: 49200,
+  weeklySpends: 8200,
+  monthlySalary: 131200,
 };
 
 // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
@@ -470,8 +469,8 @@ const gameSlice = createSlice({
         checkAndUnlock("CREDIT_BAPTISM");
       }
       
-      // MONEY_BOX - накопить более 1000$ на балансе и сбережениях
-      if (state.balance + state.savings > 1000) {
+      // MONEY_BOX - накопить более 82000₽ на балансе и сбережениях
+      if (state.balance + state.savings > 82000) {
         checkAndUnlock("MONEY_BOX");
       }
       

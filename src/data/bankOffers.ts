@@ -47,7 +47,7 @@ export const bankOffersPool: BankOffer[] = [
         description: 'Сбалансированные предложения для уверенного роста.',
         annualRate: 0.07, // 7%
         termOptions: [8, 12],
-        minDeposit: 200,
-        maxDeposit: 3000,
+        minDeposit: 16400,
+        maxDeposit: 246000,
     }
 ];

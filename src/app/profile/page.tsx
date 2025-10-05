@@ -157,7 +157,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <span className="font-medium text-gray-700">Капитал:</span>
-                <span className="font-bold text-lg text-gray-900">${currentNetWorth.toLocaleString()}</span>
+                <span className="font-bold text-lg text-gray-900">₽{currentNetWorth.toLocaleString()}</span>
             </div>
           </div>
           
@@ -166,7 +166,7 @@ export default function ProfilePage() {
             <h2 className="text-xl font-semibold text-gray-700">Управление аккаунтом</h2>
             
             {/* Change Nickname */}
-            <div className="p-4 bg-gray-50 rounded-lg">
+            <div className="p-4 bg-gray-50 rounded-lg text-gray-600">
                 <label htmlFor="nickname-input" className="block font-medium text-gray-600 mb-2">Сменить никнейм</label>
                 <div className="flex items-center gap-4">
                 <input

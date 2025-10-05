@@ -47,23 +47,23 @@ export default function SavingsPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <p className="text-blue-100">Общая сумма</p>
-              <p className="text-3xl font-bold">${savings.toLocaleString()}</p>
+              <p className="text-3xl font-bold">₽{savings.toLocaleString()}</p>
             </div>
             <div>
               <p className="text-blue-100">Банковские вклады</p>
               <p className="text-xl font-semibold">
-                ${(activeDeposits || []).reduce((sum, dep) => sum + dep.amount, 0).toLocaleString()}
+                ₽{(activeDeposits || []).reduce((sum, dep) => sum + dep.amount, 0).toLocaleString()}
               </p>
             </div>
             <div>
               <p className="text-blue-100">Инвестиции</p>
               <p className="text-xl font-semibold">
-                ${(propertyInvestments || []).reduce((sum, inv) => sum + inv.amount, 0).toLocaleString()}
+                ₽{(propertyInvestments || []).reduce((sum, inv) => sum + inv.amount, 0).toLocaleString()}
               </p>
             </div>
             <div>
               <p className="text-blue-100">Текущий баланс</p>
-              <p className="text-xl font-semibold">${balance.toLocaleString()}</p>
+              <p className="text-xl font-semibold">₽{balance.toLocaleString()}</p>
             </div>
           </div>
         </div>
