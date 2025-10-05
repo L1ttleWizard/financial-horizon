@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
   // assetPrefix: isProd ? '/financial-horizon/' : '',
   images:{unoptimized: true},
   basePath: process.env.PAGES_BASE_PATH, 
-  output:'export'
 };
 
 

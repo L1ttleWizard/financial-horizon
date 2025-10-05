@@ -23,7 +23,7 @@ body {
   background: black;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  background-image: url("/background/background.svg");
+  background-image: url("../../public/background/background.svg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -52,22 +52,22 @@ main {
 }
 
 #balance-card {
-  background-image: url("/background/balance-card-background.svg");
+  background-image: url("../../public/background/balance-card-background.svg");
   background-repeat: no-repeat;
   background-size: auto;
 }
 #mood-card {
-  background-image: url("/background/mood-card-background.svg");
+  background-image: url("../../public/background/mood-card-background.svg");
   background-repeat: no-repeat;
   background-size: auto;
 }
 #savings-card {
-  background-image: url("/background/savings-card-background.svg");
+  background-image: url("../../public/background/savings-card-background.svg");
   background-repeat: no-repeat;
   background-size: auto;
 }
 #debt-card {
-  background-image: url("/background/debt-card-background.svg");
+  background-image: url("../../public/background/debt-card-background.svg");
   background-repeat: no-repeat;
   background-size: auto;
 }
