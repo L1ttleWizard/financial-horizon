@@ -2,7 +2,8 @@ import { adminDb } from "@/lib/firebase-admin";
 
 interface UserData {
   uid: string;
-  email: string;
+  email: string; // Keep for fallback
+  nickname: string;
   turn: number;
   netWorth: number;
 }
@@ -26,6 +27,7 @@ async function getLeaderboardData(): Promise<UserData[]> {
       return {
         uid: doc.id,
         email: data.email,
+        nickname: data.nickname || data.email, // Use nickname, fallback to email
         turn: data.gameState.turn || 0,
         netWorth: lastNetWorthPoint ? lastNetWorthPoint.netWorth : 0,
       };
@@ -58,7 +60,7 @@ export default async function LeaderboardPage() {
                   {index + 1}
                 </span>
                 <span className="text-base sm:text-lg font-medium text-gray-700 flex-grow px-4">
-                  {user.email}
+                  {user.nickname}
                 </span>
                 <div className="flex flex-col sm:flex-row sm:gap-6 text-right text-sm sm:text-base text-gray-600 w-48">
                   <span className="font-semibold">Неделя: {user.turn}</span>
