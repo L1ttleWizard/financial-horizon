@@ -35,7 +35,7 @@ export function MoneyTreeWidget({ balance, savings, debt, currentStage }: Widget
       <div className="text-center mt-4">
         <p className="text-sm text-gray-500 uppercase">Чистый капитал</p>
         <p className={`text-3xl font-bold ${netWorth < 0 ? 'text-red-500' : 'text-green-600'}`}>
-          ${netWorth}
+          ₽{netWorth}
         </p>
       </div>
     </div>

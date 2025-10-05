@@ -23,7 +23,7 @@ export function BankOfferCard({
         </div>
         <div className="flex justify-between">
           <span>Мин. вклад:</span>
-          <span className="font-semibold">${offer.minDeposit}</span>
+          <span className="font-semibold">₽{offer.minDeposit}</span>
         </div>
       </div>
 

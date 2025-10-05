@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase-client';
-import { bankOffersPool } from '@/data/bankOffers';
 import { useAppSelector } from '@/store/hooks';
 
 // Helper function to check nickname uniqueness
@@ -29,6 +28,8 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
   const onboardingCompleted = useAppSelector((state) => state.onboarding.hasCompleted);
+
+  const gameState = useAppSelector((state) => state.game);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,38 +62,11 @@ export default function RegisterPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      const initialGameState = {
-        balance: 500,
-        mood: 70,
-        savings: 0,
-        debt: 0,
-        treeStage: 1,
-        turn: 0,
-        activeDeposits: [],
-        propertyInvestments: [],
-        availableOffers: [...bankOffersPool].sort(() => 0.5 - Math.random()).slice(0, 3),
-        moodAtZeroTurns: 0,
-        gameOverState: { isGameOver: false },
-        currentEvent: null,
-        log: [],
-        netWorthHistory: [{ week: 0, netWorth: 500 }],
-        lastChoiceResult: null,
-        isEventModalOpen: false,
-        isResultModalOpen: false,
-        unlockedAchievements: [],
-        newlyUnlockedAchievement: null,
-        isGlossaryForced: false,
-        forcedGlossaryTerm: null,
-        monthlyBills: 600,
-        weeklySpends: 100,
-        monthlySalary: 1600,
-      };
-
       await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
         nickname: nickname, // <-- Add nickname
         createdAt: serverTimestamp(),
-        gameState: initialGameState,
+        gameState: gameState,
       });
 
       router.push('/');

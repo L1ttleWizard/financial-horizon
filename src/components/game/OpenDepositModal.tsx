@@ -37,18 +37,18 @@ export function OpenDepositModal({
           Вклад в &quot;{offer.bankName}&quot;
         </h2>
         <p className="text-sm text-gray-500 mb-4">
-          Мин: ${offer.minDeposit}, Макс: ${offer.maxDeposit}
+          Мин: ₽{offer.minDeposit}, Макс: ₽{offer.maxDeposit}
         </p>
 
         {/* НОВЫЙ БЛОК С ИНФОРМАЦИЕЙ */}
         <div className="bg-gray-50 rounded-lg p-3 mb-4 text-sm">
           <div className="flex justify-between">
             <span>Ваш баланс:</span>
-            <span className="font-bold text-green-600">${balance}</span>
+            <span className="font-bold text-green-600">₽{balance}</span>
           </div>
           <div className="flex justify-between">
             <span>Ваш долг:</span>
-            <span className="font-bold text-red-600">${debt}</span>
+            <span className="font-bold text-red-600">₽{debt}</span>
           </div>
         </div>
 
@@ -59,7 +59,7 @@ export function OpenDepositModal({
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder={`Доступно: $${balance}`}
+            placeholder={`Доступно: ₽${balance}`}
             className="w-full mt-1 p-2 border rounded-lg"
           />
         </div>

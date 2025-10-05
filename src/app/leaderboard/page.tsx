@@ -35,7 +35,7 @@ async function getLeaderboardData(): Promise<UserData[]> {
           turn: data.gameState.turn || 0,
           netWorth: lastNetWorthPoint ? lastNetWorthPoint.netWorth : 0,
         };
-      } catch (error) {
+      } catch {
         // If getUser fails, the user doesn't exist in Auth.
         console.log(`User with UID ${doc.id} not found in Auth, filtering from leaderboard.`);
         return null;
@@ -80,7 +80,7 @@ export default async function LeaderboardPage() {
                 <div className="flex flex-col sm:flex-row sm:gap-6 text-right text-sm sm:text-base text-gray-600 w-48">
                   <span className="font-semibold">Неделя: {user.turn}</span>
                   <span className="font-semibold">
-                    Капитал: ${user.netWorth.toLocaleString()}
+                    Капитал: ₽{user.netWorth.toLocaleString()}
                   </span>
                 </div>
               </li>
