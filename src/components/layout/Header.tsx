@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { auth } from '@/lib/firebase-client';
 import { signOut } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAppSelector } from '@/store/hooks';
 
 export const Header = () => {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const onboardingCompleted = useAppSelector((state) => state.onboarding.hasCompleted);
 
   const handleLogout = async () => {
@@ -18,33 +19,38 @@ export const Header = () => {
   };
 
   return (
-    <header style={headerStyle}>
-      <div style={containerStyle}>
-        <Link href="/" style={logoStyle}>
+    <header className="w-full bg-white shadow-md">
+      <div className="container mx-auto flex justify-between items-center p-4">
+        <Link href="/" className="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors">
           Финансовый Горизонт
         </Link>
-        <nav style={navStyle}>
-          <Link href="/leaderboard" style={linkStyle}>
+        <nav className="flex items-center gap-6">
+          {pathname !== '/' && (
+            <Link href="/" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
+              Главная
+            </Link>
+          )}
+          <Link href="/leaderboard" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
             Таблица лидеров
           </Link>
           {loading ? (
-            <div>Загрузка...</div>
+            <div className="text-lg font-medium text-gray-600">Загрузка...</div>
           ) : user ? (
             <>
-              <Link href="/profile" style={linkStyle}>
+              <Link href="/profile" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
                 Профиль
               </Link>
-              <button onClick={handleLogout} style={buttonStyle}>
+              <button onClick={handleLogout} className="text-lg font-medium text-red-600 hover:text-red-800 transition-colors">
                 Выйти
               </button>
             </>
           ) : (
             <>
-              <Link href="/login" style={linkStyle}>
+              <Link href="/login" className="text-lg font-medium text-blue-600 hover:text-blue-800 transition-colors">
                 Войти
               </Link>
               {onboardingCompleted && (
-                <Link href="/register" style={linkStyle}>
+                <Link href="/register" className="text-lg font-medium text-green-600 hover:text-green-800 transition-colors">
                   Регистрация
                 </Link>
               )}
@@ -54,51 +60,4 @@ export const Header = () => {
       </div>
     </header>
   );
-};
-
-// Basic styles
-const headerStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '1rem 2rem',
-  backgroundColor: '#fff',
-  borderBottom: '1px solid #eaeaea',
-  boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-};
-
-const containerStyle: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  maxWidth: '1200px',
-  margin: '0 auto',
-};
-
-const logoStyle: React.CSSProperties = {
-  fontSize: '1.5rem',
-  fontWeight: 'bold',
-  color: '#333',
-  textDecoration: 'none',
-};
-
-const navStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '1.5rem',
-};
-
-const linkStyle: React.CSSProperties = {
-  fontSize: '1rem',
-  color: '#0070f3',
-  textDecoration: 'none',
-  fontWeight: '500',
-};
-
-const buttonStyle: React.CSSProperties = {
-  fontSize: '1rem',
-  color: '#0070f3',
-  fontWeight: '500',
-  background: 'none',
-  border: 'none',
-  cursor: 'pointer',
-  padding: 0,
 };
