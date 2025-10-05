@@ -98,6 +98,7 @@ export function OnboardingController() {
         return;
       }
       const targetElement = document.querySelector(step.highlightTarget);
+      console.log('targetElement', targetElement);
       if (targetElement) {
         setTargetRect(targetElement.getBoundingClientRect());
       } else {
