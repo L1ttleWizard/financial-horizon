@@ -61,7 +61,7 @@ export default function LoginPage() {
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
             <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-gray-500">
-              <Image src={showPassword ? '/eye-closed.svg' : '/eye-open.svg'} alt="Toggle password visibility" width={20} height={20} />
+              <Image src={showPassword ? '/eye/eye-closed.svg' : '/eye/eye-open.svg'} alt="Toggle password visibility" width={20} height={20} />
             </button>
           </div>
 
