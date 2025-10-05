@@ -39,10 +39,10 @@ export function OnboardingController() {
     if (!isClient) return;
     const completed = localStorage.getItem("onboardingCompleted") === "true";
     dispatch(setOnboardingCompleted(completed));
-    if (!completed) {
+    if (!completed && !isActive) {
       setTimeout(() => dispatch(startOnboarding()), 500);
     }
-  }, [isClient, dispatch]);
+  }, [isClient, dispatch, isActive]);
 
   // --- ГЛАВНОЕ ИЗМЕНЕНИЕ: Определяем, есть ли активная игровая модалка ---
   const isGameModalActive =
