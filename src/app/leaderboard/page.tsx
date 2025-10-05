@@ -42,86 +42,39 @@ export default async function LeaderboardPage() {
   const leaderboard = await getLeaderboardData();
 
   return (
-    <div style={containerStyle}>
-      <div style={cardStyle}>
-        <h1 style={titleStyle}>Таблица лидеров</h1>
+    <main className="min-h-screen bg-gray-50 p-4 sm:p-6 flex justify-center">
+      <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 sm:p-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 sm:mb-8 text-center">
+          Таблица лидеров
+        </h1>
         {leaderboard.length > 0 ? (
-          <ol style={listStyle}>
+          <ol className="space-y-4">
             {leaderboard.map((user, index) => (
-              <li key={user.uid} style={listItemStyle}>
-                <span style={rankStyle}>{index + 1}</span>
-                <span style={emailStyle}>{user.email}</span>
-                <div style={statsStyle}>
-                  <span>Неделя: {user.turn}</span>
-                  <span>Капитал: ${user.netWorth.toLocaleString()}</span>
+              <li
+                key={user.uid}
+                className="flex items-center bg-gray-50 p-4 rounded-lg shadow-sm transition-transform hover:scale-[1.02] hover:shadow-md"
+              >
+                <span className="text-xl sm:text-2xl font-bold text-gray-500 w-12 text-center">
+                  {index + 1}
+                </span>
+                <span className="text-base sm:text-lg font-medium text-gray-700 flex-grow px-4">
+                  {user.email}
+                </span>
+                <div className="flex flex-col sm:flex-row sm:gap-6 text-right text-sm sm:text-base text-gray-600 w-48">
+                  <span className="font-semibold">Неделя: {user.turn}</span>
+                  <span className="font-semibold">
+                    Капитал: ${user.netWorth.toLocaleString()}
+                  </span>
                 </div>
               </li>
             ))}
           </ol>
         ) : (
-          <p>Таблица лидеров пока пуста. Станьте первым!</p>
+          <p className="text-center text-gray-500 mt-8">
+            Таблица лидеров пока пуста. Станьте первым!
+          </p>
         )}
       </div>
-    </div>
+    </main>
   );
 }
-
-// Styles
-const containerStyle: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'center',
-  padding: '2rem',
-  backgroundColor: '#f9fafb',
-};
-
-const cardStyle: React.CSSProperties = {
-  width: '100%',
-  maxWidth: '800px',
-  padding: '2rem',
-  backgroundColor: '#fff',
-  borderRadius: '8px',
-  boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-};
-
-const titleStyle: React.CSSProperties = {
-  fontSize: '2rem',
-  fontWeight: 'bold',
-  marginBottom: '1.5rem',
-  textAlign: 'center',
-  color: '#1f2937',
-};
-
-const listStyle: React.CSSProperties = {
-  listStyle: 'none',
-  padding: 0,
-};
-
-const listItemStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  padding: '1rem 0.5rem',
-  borderBottom: '1px solid #e5e7eb',
-  gap: '1rem',
-};
-
-const rankStyle: React.CSSProperties = {
-  fontSize: '1.25rem',
-  fontWeight: 'bold',
-  color: '#6b7280',
-  width: '40px',
-  textAlign: 'center',
-};
-
-const emailStyle: React.CSSProperties = {
-  fontWeight: '500',
-  color: '#111827',
-  flexGrow: 1,
-};
-
-const statsStyle: React.CSSProperties = {
-  display: 'flex',
-  gap: '1.5rem',
-  color: '#4b5563',
-  minWidth: '200px',
-  justifyContent: 'space-between',
-};
