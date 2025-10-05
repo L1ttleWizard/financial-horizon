@@ -1,42 +1,47 @@
-// src/components/game/AchievementsWidget.tsx
-'use client';
+import { Achievement } from "@/data/achievementsData";
+import { AchievementBadge } from "./AchievementBadge";
+import Link from "next/link";
 
-import type { Achievement } from '@/data/achievementsData';
-import { AchievementBadge } from './AchievementBadge';
-
-interface WidgetProps {
+interface AchievementsWidgetProps {
   unlockedIds: string[];
   allAchievements: Achievement[];
 }
 
-export function AchievementsWidget({ unlockedIds, allAchievements }: WidgetProps) {
-  // Получаем последние 3 разблокированные ачивки и переворачиваем, чтобы новые были первыми
-  const recentUnlocked = allAchievements
+export function AchievementsWidget({ unlockedIds, allAchievements }: AchievementsWidgetProps) {
+  const unlockedCount = unlockedIds.length;
+  const totalCount = allAchievements.length;
+
+  const recentAchievements = allAchievements
     .filter(ach => unlockedIds.includes(ach.id))
-    .slice(-3)
+    .slice(-5)
     .reverse();
 
-  // Если ничего не открыто, показываем первые 3 заблокированные как тизер
-  const lockedTeasers = allAchievements
-    .filter(ach => !unlockedIds.includes(ach.id))
-    .slice(0, 3);
-  
-  const achievementsToShow = recentUnlocked.length > 0 ? recentUnlocked : lockedTeasers;
-  const isShowingUnlocked = recentUnlocked.length > 0;
-
   return (
-    <div className="w-full">
-      <h2 className="text-2xl font-bold text-gray-700 mb-4 text-center sm:text-left">
-        {isShowingUnlocked ? 'Недавние достижения' : 'Ближайшие цели'}
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {achievementsToShow.map(ach => (
-          <AchievementBadge
-            key={ach.id}
-            achievement={ach}
-            isUnlocked={isShowingUnlocked}
-          />
-        ))}
+    <div className="bg-white rounded-xl shadow-lg p-5 flex flex-col h-full">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h3 className="text-xl font-bold text-gray-800">Недавние достижения</h3>
+          <p className="text-sm text-gray-500">{`${unlockedCount} / ${totalCount} разблокировано`}</p>
+        </div>
+        <Link href="/achievements" className="text-sm text-blue-600 hover:underline whitespace-nowrap">
+          Все
+        </Link>
+      </div>
+
+      {/* Content */}
+      <div className="flex-grow overflow-y-auto">
+        {recentAchievements.length > 0 ? (
+          <div className="flex flex-col gap-3">
+            {recentAchievements.map((ach) => (
+              <AchievementBadge key={ach.id} achievement={ach} isUnlocked={true} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-center text-gray-500">Вы еще не открыли ни одного достижения.</p>
+          </div>
+        )}
       </div>
     </div>
   );
