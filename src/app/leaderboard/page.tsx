@@ -1,8 +1,8 @@
-import { adminDb } from "@/lib/firebase-admin";
+import { adminDb, adminAuth } from "@/lib/firebase-admin";
 
 interface UserData {
   uid: string;
-  email: string; // Keep for fallback
+  email: string;
   nickname: string;
   turn: number;
   netWorth: number;
@@ -10,33 +10,48 @@ interface UserData {
 
 async function getLeaderboardData(): Promise<UserData[]> {
   try {
-    // We query the users collection, order by the 'turn' field within gameState in descending order, and limit to 20 results.
     const usersSnapshot = await adminDb
       .collection('users')
       .orderBy('gameState.turn', 'desc')
-      .limit(20)
+      .limit(40) // Fetch more to account for filtering
       .get();
 
     if (usersSnapshot.empty) {
       return [];
     }
 
-    const leaderboardData: UserData[] = usersSnapshot.docs.map(doc => {
-      const data = doc.data();
-      const lastNetWorthPoint = data.gameState.netWorthHistory.slice(-1)[0];
-      return {
-        uid: doc.id,
-        email: data.email,
-        nickname: data.nickname || data.email, // Use nickname, fallback to email
-        turn: data.gameState.turn || 0,
-        netWorth: lastNetWorthPoint ? lastNetWorthPoint.netWorth : 0,
-      };
+    const userPromises = usersSnapshot.docs.map(async (doc) => {
+      try {
+        // Verify user exists in Firebase Auth
+        await adminAuth.getUser(doc.id);
+        
+        const data = doc.data();
+        const lastNetWorthPoint = data.gameState.netWorthHistory.slice(-1)[0];
+        
+        return {
+          uid: doc.id,
+          email: data.email,
+          nickname: data.nickname || data.email,
+          turn: data.gameState.turn || 0,
+          netWorth: lastNetWorthPoint ? lastNetWorthPoint.netWorth : 0,
+        };
+      } catch (error) {
+        // If getUser fails, the user doesn't exist in Auth.
+        console.log(`User with UID ${doc.id} not found in Auth, filtering from leaderboard.`);
+        return null;
+      }
     });
 
-    return leaderboardData;
+    const settledUsers = await Promise.all(userPromises);
+    
+    // Filter out nulls (deleted users) and limit to the top 20 valid users
+    const validUsers = settledUsers.filter((user): user is UserData => user !== null);
+    
+    return validUsers.slice(0, 20);
+
   } catch (error) {
     console.error("Error fetching leaderboard data:", error);
-    return []; // Return empty array on error
+    return [];
   }
 }
 
