@@ -11,7 +11,7 @@ export default function LogPage() {
   const fullLog = [...log].reverse();
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4 sm:p-8 flex justify-center">
+    <main className="min-h-screen p-4 sm:p-8 flex justify-center">
       <div className="w-full max-w-4xl">
         <header className="mb-8 text-center">
           <h1 className="text-3xl sm:text-5xl font-bold text-gray-800">
@@ -29,7 +29,7 @@ export default function LogPage() {
             Вернуться к игре
           </Link>
         </div>
-        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+        <div className="rounded-xl shadow-md p-4 sm:p-6">
           {fullLog.length > 0 ? (
             fullLog.map((entry) => <LogItem key={entry.id} entry={entry} />)
           ) : (

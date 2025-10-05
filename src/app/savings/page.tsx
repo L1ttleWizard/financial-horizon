@@ -30,7 +30,7 @@ export default function SavingsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4 sm:p-8 text-gray-600">
+    <main className="min-h-screen p-4 sm:p-8 text-gray-600">
       <div className="max-w-7xl mx-auto">
         <header className="mb-8 text-center">
           <h1 className="text-3xl sm:text-5xl font-bold text-gray-800">
@@ -82,7 +82,7 @@ export default function SavingsPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-10 bg-white rounded-xl shadow">
+            <div className="text-center py-10 rounded-xl shadow">
               <p className="text-gray-500">У вас пока нет активных вкладов.</p>
             </div>
           )}

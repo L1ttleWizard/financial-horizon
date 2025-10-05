@@ -23,7 +23,7 @@ export function DashboardCard({
 }: CardProps) {
   const content = (
     <div
-      className={`bg-white rounded-xl shadow-md p-4 sm:p-6 flex flex-col justify-between h-full transition-all ${
+      className={` rounded-xl  p-4 sm:p-6 flex flex-col justify-between h-full transition-all ${
         linkTo ? "hover:shadow-lg hover:scale-105" : ""
       }`}
     >

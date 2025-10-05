@@ -40,7 +40,7 @@ export default function HomePage() {
 
   return (
     <>
-      <main className="min-h-screen bg-gray-50 p-4 sm:p-6">
+      <main className="min-h-screen p-4 sm:p-6">
         <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr_380px] gap-6 max-w-[1920px] mx-auto">
           
           {/* --- Left Sidebar (Money Tree) --- */}
@@ -58,38 +58,38 @@ export default function HomePage() {
           {/* --- Main Content --- */}
           <div className="flex flex-col gap-6">
             <div
-              className="flex flex-wrap items-center justify-center gap-4 p-4 rounded-xl bg-white shadow"
+              className="flex flex-wrap items-center justify-center gap-6 p-6 px-10 rounded-xl"
               id="conrols-panel"
             >
               <div id="start-turn-button">
-                <button
+                <button 
                   onClick={() => dispatch(startNextTurn())}
                   disabled={
                     gameState.isEventModalOpen ||
                     gameState.isResultModalOpen ||
                     gameState.gameOverState?.isGameOver
                   }
-                  className="w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-700 transition"
+                  className=" start-turn-button w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-12 rounded-lg shadow-lg hover:bg-blue-700 transition"
                 >
                   {gameState.turn === 0 ? "Начать игру" : `Следующая неделя`}
                 </button>
               </div>
               <button
                 onClick={() => dispatch(resetGame())}
-                className="w-full sm:w-auto bg-gray-700 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-800 transition"
+                className=" new-game-button w-full sm:w-auto bg-gray-700 text-white font-bold py-3 px-12 rounded-lg hover:bg-gray-800 transition"
               >
                 Начать игру заново
               </button>
               <Link
                 href="/achievements"
-                className="w-full sm:w-auto text-center bg-yellow-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-yellow-600 transition"
+                className=" all-achievements-button w-full sm:w-auto text-center bg-yellow-500 text-white font-bold py-3 px-12 rounded-lg hover:bg-yellow-600 transition"
               >
                 Все достижения
               </Link>
               <Link
                 id="glossary-button"
                 href="/glossary"
-                className="w-full sm:w-auto text-center bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition"
+                className=" glossary-button w-full sm:w-auto text-center bg-green-600 text-white font-bold py-3 px-12 rounded-lg hover:bg-green-700 transition"
               >
                 Глоссарий
               </Link>
@@ -125,8 +125,8 @@ export default function HomePage() {
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div id="obligatory-spends-widget"><ObligatorySpendsWidget currentTurn={gameState.turn} weeklySpends={gameState.weeklySpends} monthlyBills={gameState.monthlyBills} /></div>
-                <div id="recent-logs-widget"><RecentLogsWidget log={gameState.log} /></div>
+                <ObligatorySpendsWidget currentTurn={gameState.turn} weeklySpends={gameState.weeklySpends} monthlyBills={gameState.monthlyBills} />
+                <RecentLogsWidget log={gameState.log} />
             </div>
 
             {/* On smaller screens, show Tree and Achievements here */}
