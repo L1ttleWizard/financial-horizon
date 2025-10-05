@@ -26,11 +26,11 @@ export function ObligatorySpendsWidget({ currentTurn, weeklySpends, monthlyBills
       <div className="space-y-3">
         <div className="flex justify-between items-center text-sm">
           <span className="text-gray-600">Еда и транспорт:</span>
-          <span className="font-semibold text-red-600">-${weeklySpends} / неделя</span>
+          <span className="font-semibold text-red-600">-₽{weeklySpends} / неделя</span>
         </div>
         <div className="flex justify-between items-center text-sm">
           <span className="text-gray-600">Аренда и счета:</span>
-          <span className="font-semibold text-red-600">-${monthlyBills} ({billPaymentText})</span>
+          <span className="font-semibold text-red-600">-₽{monthlyBills} ({billPaymentText})</span>
         </div>
       </div>
     </div>

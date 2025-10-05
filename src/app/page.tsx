@@ -96,10 +96,10 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-                <DashboardCard title="Баланс" value={`$${gameState.balance}`} icon="💰" />
+                <DashboardCard title="Баланс" value={`₽${gameState.balance}`} icon="💰" />
                 <DashboardCard title="Настроение" value={`${gameState.mood} / 100`} icon="❤️" />
-                <DashboardCard title="Сбережения" value={`$${gameState.savings}`} icon="📈" subValue={`Активных вкладов: ${gameState.activeDeposits.length}`} linkTo="/savings" />
-                <DashboardCard title="Долг" value={`$${gameState.debt}`} icon="💳" subValue={`Проценты: +$${accruedInterest}`} actionLabel="Погасить" onAction={() => setIsPayDebtModalOpen(true)} actionDisabled={gameState.debt === 0} />
+                <DashboardCard title="Сбережения" value={`₽${gameState.savings}`} icon="📈" subValue={`Активных вкладов: ${gameState.activeDeposits.length}`} linkTo="/savings" />
+                <DashboardCard title="Долг" value={`₽${gameState.debt}`} icon="💳" subValue={`Проценты: +₽${accruedInterest}`} actionLabel="Погасить" onAction={() => setIsPayDebtModalOpen(true)} actionDisabled={gameState.debt === 0} />
             </div>
 
             <div className="mb-6">

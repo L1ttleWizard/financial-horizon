@@ -157,7 +157,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <span className="font-medium text-gray-700">Капитал:</span>
-                <span className="font-bold text-lg text-gray-900">${currentNetWorth.toLocaleString()}</span>
+                <span className="font-bold text-lg text-gray-900">₽{currentNetWorth.toLocaleString()}</span>
             </div>
           </div>
           

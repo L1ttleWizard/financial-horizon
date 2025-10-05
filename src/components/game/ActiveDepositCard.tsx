@@ -17,7 +17,7 @@ export function ActiveDepositCard({
       <h3 className="font-bold text-lg text-gray-800">{deposit.bankName}</h3>
       <div className="flex justify-between items-baseline my-2">
         <span className="text-2xl font-bold text-blue-600">
-          ${deposit.amount}
+          ₽{deposit.amount}
         </span>
         <span className="text-green-600 font-semibold">
           {(deposit.annualRate * 100).toFixed(0)}% годовых
