@@ -17,7 +17,7 @@ export function AchievementsWidget({ unlockedIds, allAchievements }: Achievement
     .reverse();
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-5 flex flex-col h-full">
+    <div className="rounded-xl shadow-lg p-5 flex flex-col h-full bg-white">
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>

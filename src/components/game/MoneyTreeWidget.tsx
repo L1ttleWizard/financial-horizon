@@ -16,7 +16,7 @@ export function MoneyTreeWidget({ balance, savings, debt, currentStage }: Widget
   const tree = treeData.find(t => t.stage === currentStage) || treeData[0];
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center justify-between h-full">
+    <div className="rounded-xl shadow-md p-6 flex flex-col items-center justify-between h-full bg-white">
       <div>
         <h2 className="text-2xl font-bold text-gray-700 text-center">Денежное дерево</h2>
         <p className="text-center text-gray-500 mb-4">Ваш финансовый рост</p>

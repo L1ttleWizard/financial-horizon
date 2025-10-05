@@ -20,7 +20,54 @@
 }
 
 body {
-  background: var(--background);
+  background: black;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  background-image: url("/background.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+main {
+  background: none;
+}
+
+.start-turn-button {
+  background: radial-gradient(50% 191.67% at 50% 50%, #00cc73 0%, #00ff99 100%);
+  border: 2px solid rgba(0, 211, 121, 0.77);
+}
+.new-game-button {
+  background: radial-gradient(50% 275% at 50% 50%, #da4444 0%, #ff6565 100%);
+  border: 2px solid rgba(221, 70, 70, 0.66);
+}
+
+.all-achievements-button {
+  background: radial-gradient(50% 275% at 50% 50%, #003cff 0%, #3593ff 100%);
+  border: 2px solid rgba(57, 106, 255, 0.66);
+}
+
+.glossary-button {
+  background: radial-gradient(50% 191.67% at 50% 50%, #e88f00 0%, #ffd445 100%);
+}
+
+#balance-card {
+  background-image: url("/balance-card-background.svg");
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+#mood-card {
+  background-image: url("/mood-card-background.svg");
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+#savings-card {
+  background-image: url("/savings-card-background.svg");
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+#debt-card {
+  background-image: url("/debt-card-background.svg");
+  background-repeat: no-repeat;
+  background-size: auto;
 }

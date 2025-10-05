@@ -9,7 +9,7 @@ export function BankOfferCard({
   onSelect: () => void;
 }) {
   return (
-    <div className="bg-white rounded-xl shadow p-6 flex flex-col transition-all hover:shadow-lg">
+    <div className="rounded-xl shadow p-6 flex flex-col transition-all hover:shadow-lg">
       <h3 className="text-xl font-bold text-gray-800">{offer.bankName}</h3>
       <p className="text-gray-500 text-sm mb-4 flex-grow">
         {offer.description}

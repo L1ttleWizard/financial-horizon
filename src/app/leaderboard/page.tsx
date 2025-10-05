@@ -11,8 +11,8 @@ interface UserData {
 async function getLeaderboardData(): Promise<UserData[]> {
   try {
     const usersSnapshot = await adminDb
-      .collection('users')
-      .orderBy('gameState.turn', 'desc')
+      .collection("users")
+      .orderBy("gameState.turn", "desc")
       .limit(40) // Fetch more to account for filtering
       .get();
 
@@ -24,10 +24,10 @@ async function getLeaderboardData(): Promise<UserData[]> {
       try {
         // Verify user exists in Firebase Auth
         await adminAuth.getUser(doc.id);
-        
+
         const data = doc.data();
         const lastNetWorthPoint = data.gameState.netWorthHistory.slice(-1)[0];
-        
+
         return {
           uid: doc.id,
           email: data.email,
@@ -37,18 +37,21 @@ async function getLeaderboardData(): Promise<UserData[]> {
         };
       } catch {
         // If getUser fails, the user doesn't exist in Auth.
-        console.log(`User with UID ${doc.id} not found in Auth, filtering from leaderboard.`);
+        console.log(
+          `User with UID ${doc.id} not found in Auth, filtering from leaderboard.`
+        );
         return null;
       }
     });
 
     const settledUsers = await Promise.all(userPromises);
-    
-    // Filter out nulls (deleted users) and limit to the top 20 valid users
-    const validUsers = settledUsers.filter((user): user is UserData => user !== null);
-    
-    return validUsers.slice(0, 20);
 
+    // Filter out nulls (deleted users) and limit to the top 20 valid users
+    const validUsers = settledUsers.filter(
+      (user): user is UserData => user !== null
+    );
+
+    return validUsers.slice(0, 20);
   } catch (error) {
     console.error("Error fetching leaderboard data:", error);
     return [];
@@ -59,8 +62,8 @@ export default async function LeaderboardPage() {
   const leaderboard = await getLeaderboardData();
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4 sm:p-6 flex justify-center">
-      <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 sm:p-8">
+    <main className="min-h-screen p-4 sm:p-6 flex justify-center">
+      <div className="w-full max-w-4xl rounded-xl p-6 sm:p-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 sm:mb-8 text-center">
           Таблица лидеров
         </h1>
