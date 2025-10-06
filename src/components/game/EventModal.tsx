@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 import { makeChoice } from '@/store/slices/gameSlice';
 import type { GameEvent, Choice } from '@/data/gameEvents';
+import { useState, useEffect } from 'react';
 
 interface ModalProps {
   event: GameEvent;
@@ -11,6 +12,28 @@ interface ModalProps {
 
 export function EventModal({ event }: ModalProps) {
   const dispatch = useDispatch();
+  const [imageUrl, setImageUrl] = useState(event.illustration);
+
+  useEffect(() => {
+    const generateImage = async () => {
+      try {
+        const response = await fetch(`/api/generate-image?prompt=${encodeURIComponent(event.description)}`);
+        if (!response.ok) {
+          throw new Error('Failed to generate image');
+        }
+        const data = await response.json();
+        setImageUrl(data.imageUrl);
+      } catch (error) {
+        console.error("Error generating image:", error);
+        // Fallback to static image if generation fails
+        setImageUrl(event.illustration);
+      }
+    };
+
+    if (event.description) {
+      generateImage();
+    }
+  }, [event.description, event.illustration]);
 
   // Теперь мы передаем в makeChoice только сам объект Choice
   const handleChoice = (choice: Choice) => {
@@ -22,7 +45,7 @@ export function EventModal({ event }: ModalProps) {
       <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 animate-fade-in-up">
         <div className="flex flex-col items-center justify-center bg-gray-100 rounded-xl p-4">
           <Image
-            src={event.illustration}
+            src={imageUrl}
             alt={event.title}
             width={300}
             height={300}
