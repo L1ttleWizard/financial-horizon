@@ -12,7 +12,6 @@ const clientConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-console.log("Firebase Client Config:", clientConfig);
 
 // Initialize Firebase for client-side usage
 const clientApp = !getApps().length ? initializeApp(clientConfig) : getApp();

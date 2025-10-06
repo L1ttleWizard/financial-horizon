@@ -30,11 +30,11 @@ export function ObligatorySpendsWidget({
       <h2 className="text-2xl font-bold text-gray-700 mb-4">
         Обязательные расходы
       </h2>
-      <div className="flex items-center justify-between bg-gray-100 p-4 rounded-xl">
-        <div className="space-y-3 justify-center">
+      <div className=" bg-gray-100 p-4 rounded-xl">
+        <div className="space-y-3 justify-between">
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600">Еда и транспорт:</span>
-            <span className="font-semibold text-red-600">
+            <span className="font-semibold text-red-600 ml-auto">
               -₽{weeklySpends} / неделя
             </span>
           </div>
