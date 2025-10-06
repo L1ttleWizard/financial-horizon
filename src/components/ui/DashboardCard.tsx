@@ -9,6 +9,7 @@ interface CardProps {
   onAction?: () => void;
   actionDisabled?: boolean;
   linkTo?: string; // <-- НОВОЕ
+  backgroundImage?: string;
 }
 
 export function DashboardCard({
@@ -20,20 +21,34 @@ export function DashboardCard({
   onAction,
   actionDisabled = false,
   linkTo,
+  backgroundImage,
 }: CardProps) {
+  const cardStyle = backgroundImage
+    ? {
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }
+    : {};
+
   const content = (
     <div
-      className={` rounded-xl  p-4 sm:p-6 flex flex-col justify-between h-full transition-all ${
+      style={cardStyle}
+      className={` rounded-xl   p-4 sm:p-6 flex flex-col justify-end h-full transition-all ${
         linkTo ? "hover:shadow-lg hover:scale-105" : ""
       }`}
     >
-      <div>
-        <div className="text-3xl sm:text-4xl mb-3">{icon}</div>
-        <p className="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wider">
-          {title}
-        </p>
-        <p className="text-xl sm:text-2xl font-bold text-gray-800">{value}</p>
-        {subValue && <p className="text-xs text-gray-500 mt-1">{subValue}</p>}
+      <div className="flex-grow flex justify-between mb-6">
+        <div className="flex flex-col justify-center pb-4 sm:pb-6">
+          <p className="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wider">
+            {title}
+          </p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-800">{value}</p>
+          {subValue && <p className="text-xs text-gray-500 mt-1">{subValue}</p>}
+        </div>
+        <div className="flex items-end">
+          <div className="sm:text-4xl text-6xl">{icon}</div>
+        </div>
       </div>
       {actionLabel && (
         <button

@@ -34,6 +34,7 @@ main {
 }
 
 .start-turn-button {
+  
   background: radial-gradient(50% 191.67% at 50% 50%, #00cc73 0%, #00ff99 100%);
   border: 2px solid rgba(0, 211, 121, 0.77);
 }
@@ -53,21 +54,22 @@ main {
 
 #balance-card {
   background-image: url("../../public/background/balance-card-background.svg");
+  
   background-repeat: no-repeat;
-  background-size: auto;
+  background-size: 100%;
 }
 #mood-card {
   background-image: url("../../public/background/mood-card-background.svg");
   background-repeat: no-repeat;
-  background-size: auto;
+  background-size: 100%;
 }
 #savings-card {
   background-image: url("../../public/background/savings-card-background.svg");
   background-repeat: no-repeat;
-  background-size: auto;
+  background-size: 100%;
 }
 #debt-card {
   background-image: url("../../public/background/debt-card-background.svg");
   background-repeat: no-repeat;
-  background-size: auto;
+  background-size: 100%;
 }
