@@ -131,8 +131,8 @@ export default function ProfilePage() {
 
   return (
     <>
-      <main className="min-h-screen p-4 sm:p-6 flex justify-center">
-        <div className="w-full max-w-2xl rounded-xl shadow-lg p-6 sm:p-8">
+      <main className="min-h-screen p-4 sm:p-6 flex justify-center ">
+        <div className="w-full max-w-2xl rounded-xl shadow-lg p-6 sm:p-8 bg-white">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">Профиль</h1>
 
           {/* --- Main Information --- */}
