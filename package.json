@@ -1,7 +1,7 @@
 {
   "name": "financial-horizon",
   "version": "0.3.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
