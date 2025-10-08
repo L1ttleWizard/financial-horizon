@@ -24,7 +24,7 @@ export function MoneyTreeWidget({ balance, savings, debt, currentStage }: Widget
       
       <div className="relative w-48 h-48 sm:w-64 sm:h-64">
         <Image
-          src={`/tree/stage-${tree.stage+1}.png`}
+          src={`../../../public/tree/stage-${tree.stage+1}.png`}
           alt={`Дерево на стадии ${tree.stage}`}
           fill
           style={{ objectFit: 'contain' }}
