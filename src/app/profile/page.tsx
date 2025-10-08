@@ -89,7 +89,7 @@ export default function ProfilePage() {
     } catch (error) {
       setMessage({ type: 'error', text: 'Ошибка при обновлении никнейма.' });
       console.error("Error updating nickname:", error);
-    } finally {
+    } finally { 
       setIsUpdatingNickname(false);
     }
   };
