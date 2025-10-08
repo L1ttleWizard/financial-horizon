@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-export const PHASE_PRODUCTION_BUILD = 'phase-production-build'
+
 // Check if the build is running on GitHub Actions
 const isGithubActions = process.env.GITHUB_ACTIONS || false;
 
