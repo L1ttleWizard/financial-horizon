@@ -8,9 +8,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  publicRuntimeConfig: {
-    basePath: '/financial-horizon',
-  },
 };
 
 module.exports = nextConfig;

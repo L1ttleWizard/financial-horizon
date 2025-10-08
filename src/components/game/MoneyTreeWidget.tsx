@@ -3,10 +3,8 @@
 
 import Image from 'next/image';
 import { treeData } from '@/data/treeData';
-import getConfig from 'next/config';
 
-const { publicRuntimeConfig } = getConfig();
-const basePath = publicRuntimeConfig.basePath || '';
+const basePath = '/financial-horizon';
 
 interface WidgetProps {
   balance: number;
