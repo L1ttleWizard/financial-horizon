@@ -6,5 +6,4 @@ const nextConfig: NextConfig = {
   assetPrefix: '/financial-horizon/',
 };
 
-
-export default nextConfig;
+module.exports = nextConfig;
