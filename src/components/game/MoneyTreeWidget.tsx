@@ -32,7 +32,7 @@ export function MoneyTreeWidget({
       <div
         className="relative w-48 h-48 sm:w-64 sm:h-64"
         style={{
-          backgroundImage: `background-image: url(../../../../../public/tree/stage-${
+          backgroundImage: `url(../../../../../public/tree/stage-${
             tree.stage + 1
           }.png)`,
         }}
