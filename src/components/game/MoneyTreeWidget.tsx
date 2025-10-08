@@ -1,8 +1,8 @@
 // src/components/game/MoneyTreeWidget.tsx
-"use client";
+'use client';
 
-import Image from "next/image";
-import { treeData } from "@/data/treeData";
+import Image from 'next/image';
+import { treeData } from '@/data/treeData';
 
 interface WidgetProps {
   balance: number;
@@ -11,40 +11,30 @@ interface WidgetProps {
   currentStage: number;
 }
 
-export function MoneyTreeWidget({
-  balance,
-  savings,
-  debt,
-  currentStage,
-}: WidgetProps) {
+export function MoneyTreeWidget({ balance, savings, debt, currentStage }: WidgetProps) {
   const netWorth = balance + savings - debt;
-  const tree = treeData.find((t) => t.stage === currentStage) || treeData[0];
+  const tree = treeData.find(t => t.stage === currentStage) || treeData[0];
 
   return (
     <div className="rounded-xl shadow-md p-6 flex flex-col items-center justify-between h-full bg-white">
       <div>
-        <h2 className="text-2xl font-bold text-gray-700 text-center">
-          Денежное дерево
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-700 text-center">Денежное дерево</h2>
         <p className="text-center text-gray-500 mb-4">Ваш финансовый рост</p>
       </div>
-
-      <div
-        className="relative w-48 h-48 sm:w-64 sm:h-64"
-        style={{
-          backgroundImage: `url(../../../../../public/tree/stage-${
-            tree.stage + 1
-          }.png)`,
-        }}
-      ></div>
-
+      
+      <div className="relative w-48 h-48 sm:w-64 sm:h-64">
+        <Image
+          src={`/tree/stage-${tree.stage+1}.png`}
+          alt={`Дерево на стадии ${tree.stage}`}
+          fill
+          style={{ objectFit: 'contain' }}
+          priority
+        />
+      </div>
+      
       <div className="text-center mt-4">
         <p className="text-sm text-gray-500 uppercase">Чистый капитал</p>
-        <p
-          className={`text-3xl font-bold ${
-            netWorth < 0 ? "text-red-500" : "text-green-600"
-          }`}
-        >
+        <p className={`text-3xl font-bold ${netWorth < 0 ? 'text-red-500' : 'text-green-600'}`}>
           ₽{netWorth}
         </p>
       </div>
