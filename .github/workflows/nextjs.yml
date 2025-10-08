@@ -73,14 +73,15 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Copy backgrounds
-        run: |
-            cp -rf public/ out
-            ls -l out
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: ./out
+      - name: Copy backgrounds
+        run: |
+              cp -rf public/ out
+              ls -l out
       - name: Build with Next.js
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
