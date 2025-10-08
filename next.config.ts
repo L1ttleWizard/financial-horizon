@@ -1,11 +1,9 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: "export",
-  basePath: "/financial-horizon",
-  assetPrefix: "/financial-horizon",
-  images: {
-    unoptimized: true,
-  },
+import type { NextConfig } from "next";
+
+
+const nextConfig: NextConfig = {
+  basePath: '/financial-horizon',
+  assetPrefix: '/financial-horizon/',
 };
 
 module.exports = nextConfig;
