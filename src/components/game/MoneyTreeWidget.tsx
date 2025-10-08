@@ -3,6 +3,10 @@
 
 import Image from 'next/image';
 import { treeData } from '@/data/treeData';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+const basePath = publicRuntimeConfig.basePath || '';
 
 interface WidgetProps {
   balance: number;
@@ -24,7 +28,7 @@ export function MoneyTreeWidget({ balance, savings, debt, currentStage }: Widget
       
       <div className="relative w-48 h-48 sm:w-64 sm:h-64">
         <Image
-          src={`/tree/stage-${tree.stage+1}.png`}
+          src={`${basePath}/tree/stage-${tree.stage+1}.png`}
           alt={`Дерево на стадии ${tree.stage}`}
           fill
           style={{ objectFit: 'contain' }}
