@@ -7,10 +7,10 @@ export interface TreeStage {
 }
 
 export const treeData: TreeStage[] = [
-    { stage: 0, imagePath: '/illustrations/tree-stage-0.svg', minNetWorth: -Infinity },
-    { stage: 1, imagePath: '/illustrations/tree-stage-1.svg', minNetWorth: 0 },
-    { stage: 2, imagePath: '/illustrations/tree-stage-2.svg', minNetWorth: 41000 },
-    { stage: 3, imagePath: '/illustrations/tree-stage-3.svg', minNetWorth: 123000 },
+    { stage: 0, imagePath: 'tree/stage-1.png', minNetWorth: -Infinity },
+    { stage: 1, imagePath: 'tree/stage-2.png', minNetWorth: 0 },
+    { stage: 2, imagePath: 'tree/stage-3.png', minNetWorth: 41000 },
+    { stage: 3, imagePath: 'tree/stage-4.png', minNetWorth: 123000 },
 ];
 
 // Вспомогательная функция, которая определяет стадию дерева по капиталу

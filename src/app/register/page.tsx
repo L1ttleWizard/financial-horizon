@@ -183,11 +183,7 @@ export default function RegisterPage() {
               className="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-gray-500"
             >
               <Image
-                src={
-                  showPassword
-                    ? "../../../public/eye/eye-closed.svg"
-                    : "../../../public/eye-open.svg"
-                }
+                src={showPassword ? "eye/eye-closed.svg" : "eye/eye-open.svg"}
                 alt="Toggle password visibility"
                 width={20}
                 height={20}
@@ -218,8 +214,8 @@ export default function RegisterPage() {
               <Image
                 src={
                   showConfirmPassword
-                    ? "../../../public/eye/eye-closed.svg"
-                    : "../../../public/eye/eye-open.svg"
+                    ? "eye/eye-closed.svg"
+                    : "eye/eye-open.svg"
                 }
                 alt="Toggle password visibility"
                 width={20}

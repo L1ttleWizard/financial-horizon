@@ -74,8 +74,6 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
-
-
       - name: Build with Next.js
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
@@ -87,10 +85,6 @@ jobs:
           FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
-      - name: Copy backgrounds
-        run: |
-          cp -rf public/* ./out
-          ls -l out
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
