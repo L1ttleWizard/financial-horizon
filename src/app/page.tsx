@@ -20,12 +20,30 @@ import { ObligatorySpendsWidget } from "@/components/game/ObligatorySpendsWidget
 import { useAppSelector } from "@/store/hooks";
 import { RecentLogsWidget } from "@/components/game/RecentLogsWidget";
 import { ForcedGlossaryModal } from "@/components/game/ForcedGlossaryModal";
+import { MascotWidget } from "@/components/game/MascotWidget";
+import Image from "next/image";
 
 export default function HomePage() {
   const gameState = useAppSelector((state) => state.game);
   const dispatch = useDispatch();
   const [isPayDebtModalOpen, setIsPayDebtModalOpen] = useState(false);
   const [isChartExpanded, setIsChartExpanded] = useState(false); // State for chart visibility
+
+  const getMoodIcon = (mood: number) => {
+    if (mood <= 0) {
+      return "🤍";
+    }
+    const roundedMood = Math.round(mood / 10) * 10;
+    const iconName = Math.max(10, roundedMood);
+    return (
+      <Image
+        src={`/heart_assets/${iconName}.svg`}
+        alt={`Heart ${iconName}%`}
+        width={48}
+        height={48}
+      />
+    );
+  };
 
   const monthlyInterestRate = 0.1;
   const turnsInMonth = 4;
@@ -42,16 +60,16 @@ export default function HomePage() {
     <>
       <main className="min-h-screen p-4 sm:p-6">
         <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr_380px] gap-6 max-w-[1920px] mx-auto">
-          
           {/* --- Left Sidebar (Money Tree) --- */}
           <aside className="hidden xl:block">
-            <div className="sticky top-6">
+            <div className="sticky top-6 flex flex-col gap-6">
               <MoneyTreeWidget
                 balance={gameState.balance}
                 savings={gameState.savings}
                 debt={gameState.debt}
                 currentStage={gameState.treeStage}
               />
+              <MascotWidget />
             </div>
           </aside>
 
@@ -62,7 +80,7 @@ export default function HomePage() {
               id="conrols-panel"
             >
               <div id="start-turn-button">
-                <button 
+                <button
                   onClick={() => dispatch(startNextTurn())}
                   disabled={
                     gameState.isEventModalOpen ||
@@ -95,11 +113,44 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"> 
-                <div id="balance-card"><DashboardCard title="Баланс" value={`₽${gameState.balance}`} icon="💰" /></div>
-                <div id="mood-card"><DashboardCard title="Настроение" value={`${gameState.mood} / 100`} icon="❤️" /></div>
-                <div id="savings-card"><DashboardCard title="Сбережения" value={`₽${gameState.savings}`} icon="📈" subValue={`Активных вкладов: ${gameState.activeDeposits.length}`} linkTo="/savings" /></div>
-                <div id="debt-card"><DashboardCard title="Долг" value={`₽${gameState.debt}`} icon="💳" subValue={`Проценты: +₽${accruedInterest}`} actionLabel="Погасить" onAction={() => setIsPayDebtModalOpen(true)} actionDisabled={gameState.debt === 0} /></div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+              <div id="balance-card">
+                <DashboardCard
+                  title="Баланс"
+                  value={`₽${gameState.balance}`}
+                  icon="💰"
+                />
+              </div>
+              <div id="mood-card">
+                <DashboardCard
+                  title="Настроение"
+                  value={`${gameState.mood} / 100`}
+                  icon={getMoodIcon(gameState.mood)}
+                />
+              </div>
+              <div
+                id="savings-card"
+                className="hover:hover:scale-105 transition-all"
+              >
+                <DashboardCard
+                  title="Сбережения"
+                  value={`₽${gameState.savings}`}
+                  icon="📈"
+                  subValue={`Активных вкладов: ${gameState.activeDeposits.length}`}
+                  linkTo="/savings"
+                />
+              </div>
+              <div id="debt-card">
+                <DashboardCard
+                  title="Долг"
+                  value={`₽${gameState.debt}`}
+                  icon="💳"
+                  subValue={`Проценты: +₽${accruedInterest}`}
+                  actionLabel="Погасить"
+                  onAction={() => setIsPayDebtModalOpen(true)}
+                  actionDisabled={gameState.debt === 0}
+                />
+              </div>
             </div>
 
             <div className="mb-6">
@@ -108,13 +159,28 @@ export default function HomePage() {
 
             {/* Collapsible Net Worth Chart */}
             <div className="bg-white rounded-xl shadow-lg">
-              <div 
+              <div
                 className="flex justify-between items-center p-5 cursor-pointer"
                 onClick={() => setIsChartExpanded(!isChartExpanded)}
               >
-                <h3 className="text-xl font-bold text-gray-800">Динамика капитала</h3>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-6 h-6 transition-transform ${isChartExpanded ? 'rotate-180' : ''}`}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                <h3 className="text-xl font-bold text-gray-800">
+                  Динамика капитала
+                </h3>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className={`w-6 h-6 transition-transform ${
+                    isChartExpanded ? "rotate-180" : ""
+                  }`}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  />
                 </svg>
               </div>
               {isChartExpanded && (
@@ -123,16 +189,28 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <ObligatorySpendsWidget currentTurn={gameState.turn} weeklySpends={gameState.weeklySpends} monthlyBills={gameState.monthlyBills} />
-                <RecentLogsWidget log={gameState.log} />
+              <ObligatorySpendsWidget
+                currentTurn={gameState.turn}
+                weeklySpends={gameState.weeklySpends}
+                monthlyBills={gameState.monthlyBills}
+              />
+              <RecentLogsWidget log={gameState.log} />
             </div>
 
             {/* On smaller screens, show Tree and Achievements here */}
             <div className="flex flex-col xl:hidden gap-6">
-                <MoneyTreeWidget balance={gameState.balance} savings={gameState.savings} debt={gameState.debt} currentStage={gameState.treeStage} />
-                <AchievementsWidget unlockedIds={gameState.unlockedAchievements} allAchievements={achievementsData} />
+              <MoneyTreeWidget
+                balance={gameState.balance}
+                savings={gameState.savings}
+                debt={gameState.debt}
+                currentStage={gameState.treeStage}
+              />
+              <AchievementsWidget
+                unlockedIds={gameState.unlockedAchievements}
+                allAchievements={achievementsData}
+              />
             </div>
           </div>
 
@@ -150,8 +228,12 @@ export default function HomePage() {
 
       {/* --- Modals --- */}
       <AchievementToast />
-      {gameState.isEventModalOpen && gameState.currentEvent && <EventModal event={gameState.currentEvent} />}
-      {gameState.isResultModalOpen && gameState.lastChoiceResult && <ResultModal result={gameState.lastChoiceResult} />}
+      {gameState.isEventModalOpen && gameState.currentEvent && (
+        <EventModal event={gameState.currentEvent} />
+      )}
+      {gameState.isResultModalOpen && gameState.lastChoiceResult && (
+        <ResultModal result={gameState.lastChoiceResult} />
+      )}
       {isPayDebtModalOpen && (
         <PayDebtModal
           currentDebt={gameState.debt}
@@ -163,8 +245,15 @@ export default function HomePage() {
           }}
         />
       )}
-      {gameState.gameOverState?.isGameOver && <GameOverModal reason={gameState.gameOverState.reason} message={gameState.gameOverState.message} />}
-      {gameState.isGlossaryForced && <ForcedGlossaryModal term={gameState.forcedGlossaryTerm!} />}
+      {gameState.gameOverState?.isGameOver && (
+        <GameOverModal
+          reason={gameState.gameOverState.reason}
+          message={gameState.gameOverState.message}
+        />
+      )}
+      {gameState.isGlossaryForced && (
+        <ForcedGlossaryModal term={gameState.forcedGlossaryTerm!} />
+      )}
     </>
   );
 }
