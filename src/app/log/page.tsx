@@ -29,7 +29,7 @@ export default function LogPage() {
             Вернуться к игре
           </Link>
         </div>
-        <div className="rounded-xl shadow-md p-4 sm:p-6">
+        <div className="rounded-xl shadow-md p-4 sm:p-6 bg-white">
           {fullLog.length > 0 ? (
             fullLog.map((entry) => <LogItem key={entry.id} entry={entry} />)
           ) : (

@@ -8,7 +8,7 @@ import { glossaryData, Term } from "@/data/glossaryData";
 
 // --- ИГРОВЫЕ КОНСТАНТЫ ---
 export const PAYDAY_CYCLE = 4;
-export const WEEKLY_SPENDS = 8200;
+export const WEEKLY_SPENDS = 10000;
 export const MONTHLY_BILLS = 49200;
 const MONTHLY_SALARY = 131200;
 const DEBT_INTEREST_RATE = 0.2;
@@ -18,7 +18,7 @@ const MOOD_PENALTY_FOR_DEBT = -10;
 // --- СИСТЕМНЫЕ ПЕРЕМЕННЫЕ (МОГУТ ИЗМЕНЯТЬСЯ) ---
 export const getSystemVariables = () => ({
   monthlyBills: 49200,
-  weeklySpends: 8200,
+  weeklySpends: 10000,
   monthlySalary: 131200,
 });
 
@@ -128,7 +128,7 @@ const initialState: GameState = {
   isGlossaryForced: false,
   forcedGlossaryTerm: null,
   monthlyBills: 49200,
-  weeklySpends: 8200,
+  weeklySpends: 10000,
   monthlySalary: 131200,
 };
 

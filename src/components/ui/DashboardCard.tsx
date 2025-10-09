@@ -40,18 +40,13 @@ export function DashboardCard({
       }`}
     >
       <div className="flex-grow flex justify-between mb-6">
-        <div className="flex flex-col justify-center pb-4 sm:pb-6">
+        <div className="flex flex-col justify-baseline pb-4 sm:pb-6 pt2">
           <p className="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wider">
             {title}
           </p>
           <p className="text-xl sm:text-2xl font-bold text-gray-800">{value}</p>
           {subValue && <p className="text-xs text-gray-500 mt-1">{subValue}</p>}
-        </div>
-        <div className="flex items-end">
-          <div className="sm:text-4xl text-6xl">{icon}</div>
-        </div>
-      </div>
-      {actionLabel && (
+          {actionLabel && (
         <button
           onClick={onAction}
           disabled={actionDisabled}
@@ -60,6 +55,13 @@ export function DashboardCard({
           {actionLabel}
         </button>
       )}
+        </div>
+        <div className="flex items-end">
+          <div className="sm:text-4xl text-6xl">{icon}</div>
+        </div>
+        
+      </div>
+      
     </div>
   );
 
