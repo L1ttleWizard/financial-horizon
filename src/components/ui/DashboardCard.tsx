@@ -5,7 +5,7 @@ import React from "react";
 interface CardProps {
   title: string;
   value: string;
-  icon: React.ReactNode;
+  icon: string;
   subValue?: string;
   actionLabel?: string;
   onAction?: () => void;
@@ -33,10 +33,13 @@ export function DashboardCard({
       }
     : {};
 
-  const cardClasses = "rounded-xl p-4 sm:p-6 flex flex-col justify-end h-full";
-
   const content = (
-    <>
+    <div
+      style={cardStyle}
+      className={` rounded-xl   p-4 sm:p-6 flex flex-col justify-end h-full transition-all ${
+        linkTo ? "hover:shadow-lg hover:scale-105" : ""
+      }`}
+    >
       <div className="flex-grow flex justify-between mb-6">
         <div className=" mt-6  flex flex-col justify-baseline pb-4 sm:pb-6">
           <p className="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wider">
@@ -58,24 +61,12 @@ export function DashboardCard({
           <div className="sm:text-4xl text-6xl">{icon}</div>
         </div>
       </div>
-    </>
+Z    </>
   );
 
   if (linkTo) {
-    return (
-      <Link
-        href={linkTo}
-        style={cardStyle}
-        className={`${cardClasses} transition-all `}
-      >
-        {content}
-      </Link>
-    );
+    return <Link href={linkTo}>{content}</Link>;
   }
 
-  return (
-    <div style={cardStyle} className={cardClasses}>
-      {content}
-    </div>
-  );
+  return content;
 }

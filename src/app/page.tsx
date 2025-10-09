@@ -20,30 +20,12 @@ import { ObligatorySpendsWidget } from "@/components/game/ObligatorySpendsWidget
 import { useAppSelector } from "@/store/hooks";
 import { RecentLogsWidget } from "@/components/game/RecentLogsWidget";
 import { ForcedGlossaryModal } from "@/components/game/ForcedGlossaryModal";
-import { MascotWidget } from "@/components/game/MascotWidget";
-import Image from "next/image";
 
 export default function HomePage() {
   const gameState = useAppSelector((state) => state.game);
   const dispatch = useDispatch();
   const [isPayDebtModalOpen, setIsPayDebtModalOpen] = useState(false);
   const [isChartExpanded, setIsChartExpanded] = useState(false); // State for chart visibility
-
-  const getMoodIcon = (mood: number) => {
-    if (mood <= 0) {
-      return '🤍';
-    }
-    const roundedMood = Math.round(mood / 10) * 10;
-    const iconName = Math.max(10, roundedMood);
-    return (
-      <Image
-        src={`/heart_assets/${iconName}.svg`}
-        alt={`Heart ${iconName}%`}
-        width={48}
-        height={48}
-      />
-    );
-  };
 
   const monthlyInterestRate = 0.1;
   const turnsInMonth = 4;
@@ -63,14 +45,13 @@ export default function HomePage() {
           
           {/* --- Left Sidebar (Money Tree) --- */}
           <aside className="hidden xl:block">
-            <div className="sticky top-6 flex flex-col gap-6">
+            <div className="sticky top-6">
               <MoneyTreeWidget
                 balance={gameState.balance}
                 savings={gameState.savings}
                 debt={gameState.debt}
                 currentStage={gameState.treeStage}
               />
-              <MascotWidget />
             </div>
           </aside>
 
@@ -116,8 +97,8 @@ export default function HomePage() {
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"> 
                 <div id="balance-card"><DashboardCard title="Баланс" value={`₽${gameState.balance}`} icon="💰" /></div>
-                <div id="mood-card"><DashboardCard title="Настроение" value={`${gameState.mood} / 100`} icon={getMoodIcon(gameState.mood)} /></div>
-                <div id="savings-card" className="hover:hover:scale-105 transition-all"><DashboardCard title="Сбережения" value={`₽${gameState.savings}`} icon="📈" subValue={`Активных вкладов: ${gameState.activeDeposits.length}`} linkTo="/savings" /></div>
+                <div id="mood-card"><DashboardCard title="Настроение" value={`${gameState.mood} / 100`} icon="❤️" /></div>
+                <div id="savings-card"><DashboardCard title="Сбережения" value={`₽${gameState.savings}`} icon="📈" subValue={`Активных вкладов: ${gameState.activeDeposits.length}`} linkTo="/savings" /></div>
                 <div id="debt-card"><DashboardCard title="Долг" value={`₽${gameState.debt}`} icon="💳" subValue={`Проценты: +₽${accruedInterest}`} actionLabel="Погасить" onAction={() => setIsPayDebtModalOpen(true)} actionDisabled={gameState.debt === 0} /></div>
             </div>
 
