@@ -130,8 +130,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="email"
-              className="text-sm font-medium text-gray-700"
-            >
+              className="text-sm font-medium text-gray-700">
               Email
             </label>
             <input
@@ -147,8 +146,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="nickname"
-              className="text-sm font-medium text-gray-700"
-            >
+              className="text-sm font-medium text-gray-700">
               Никнейм
             </label>
             <input
@@ -164,8 +162,7 @@ export default function RegisterPage() {
           <div className="relative">
             <label
               htmlFor="password"
-              className="text-sm font-medium text-gray-700"
-            >
+              className="text-sm font-medium text-gray-700">
               Пароль
             </label>
             <input
@@ -180,8 +177,7 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-gray-500"
-            >
+              className="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-gray-500">
               <Image
                 src={showPassword ? "eye/eye-closed.svg" : "eye/eye-open.svg"}
                 alt="Toggle password visibility"
@@ -193,8 +189,7 @@ export default function RegisterPage() {
           <div className="relative">
             <label
               htmlFor="confirm-password"
-              className="text-sm font-medium text-gray-700"
-            >
+              className="text-sm font-medium text-gray-700">
               Подтвердите пароль
             </label>
             <input
@@ -209,8 +204,7 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-gray-500"
-            >
+              className="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-gray-500">
               <Image
                 src={
                   showConfirmPassword
@@ -224,13 +218,12 @@ export default function RegisterPage() {
             </button>
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600">{error}</p>}  
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-sm disabled:bg-gray-400"
-          >
+            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-sm disabled:bg-gray-400">
             {isLoading ? "Регистрация..." : "Зарегистрироваться"}
           </button>
         </form>
@@ -238,8 +231,7 @@ export default function RegisterPage() {
           Уже есть аккаунт?{" "}
           <Link
             href="/login"
-            className="font-medium text-blue-600 hover:underline"
-          >
+            className="font-medium text-blue-600 hover:underline">
             Войти
           </Link>
         </p>
