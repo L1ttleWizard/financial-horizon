@@ -95,7 +95,7 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"> 
                 <div id="balance-card"><DashboardCard title="Баланс" value={`₽${gameState.balance}`} icon="💰" /></div>
                 <div id="mood-card"><DashboardCard title="Настроение" value={`${gameState.mood} / 100`} icon="❤️" /></div>
                 <div id="savings-card"><DashboardCard title="Сбережения" value={`₽${gameState.savings}`} icon="📈" subValue={`Активных вкладов: ${gameState.activeDeposits.length}`} linkTo="/savings" /></div>
