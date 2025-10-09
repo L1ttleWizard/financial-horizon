@@ -1,9 +1,10 @@
 // src/components/ui/DashboardCard.tsx
 import Link from "next/link";
+import { ReactNode } from "react";
 interface CardProps {
   title: string;
   value: string;
-  icon: string;
+  icon: string | ReactNode;
   subValue?: string;
   actionLabel?: string;
   onAction?: () => void;

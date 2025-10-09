@@ -22,6 +22,7 @@ import { RecentLogsWidget } from "@/components/game/RecentLogsWidget";
 import { ForcedGlossaryModal } from "@/components/game/ForcedGlossaryModal";
 import { MascotWidget } from "@/components/game/MascotWidget";
 import Image from "next/image";
+const basePath = '/financial-horizon';
 
 export default function HomePage() {
   const gameState = useAppSelector((state) => state.game);
@@ -37,7 +38,7 @@ export default function HomePage() {
     const iconName = Math.max(10, roundedMood);
     return (
       <Image
-        src={`heart_assets/${iconName}.svg`}
+        src={`${basePath}/heart_assets/${iconName}.svg`}
         alt={`Heart ${iconName}%`}
         width={48}
         height={48}
