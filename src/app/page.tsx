@@ -37,7 +37,7 @@ export default function HomePage() {
     const iconName = Math.max(10, roundedMood);
     return (
       <Image
-        src={`/heart_assets/${iconName}.svg`}
+        src={`heart_assets/${iconName}.svg`}
         alt={`Heart ${iconName}%`}
         width={48}
         height={48}
