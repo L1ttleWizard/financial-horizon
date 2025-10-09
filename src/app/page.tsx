@@ -22,10 +22,14 @@ import { RecentLogsWidget } from "@/components/game/RecentLogsWidget";
 import { ForcedGlossaryModal } from "@/components/game/ForcedGlossaryModal";
 import { MascotWidget } from "@/components/game/MascotWidget";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
+import { DashboardCardSkeleton } from "@/components/ui/DashboardCardSkeleton";
 const basePath = '/financial-horizon';
 
 export default function HomePage() {
+  const { user, loading: authLoading } = useAuth();
   const gameState = useAppSelector((state) => state.game);
+  const gameStatus = useAppSelector((state) => state.game.status);
   const dispatch = useDispatch();
   const [isPayDebtModalOpen, setIsPayDebtModalOpen] = useState(false);
   const [isChartExpanded, setIsChartExpanded] = useState(false); // State for chart visibility
@@ -53,9 +57,7 @@ export default function HomePage() {
     gameState.debt * monthlyInterestRate * (turnsPassedInMonth / turnsInMonth)
   );
 
-  if (!gameState) {
-    return <div>Загрузка...</div>;
-  }
+  const isLoading = authLoading || (user && gameStatus === 'loading');
 
   return (
     <>
@@ -115,43 +117,54 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-              <div id="balance-card">
-                <DashboardCard
-                  title="Баланс"
-                  value={`₽${gameState.balance}`}
-                  icon="💰"
-                />
-              </div>
-              <div id="mood-card">
-                <DashboardCard
-                  title="Настроение"
-                  value={`${gameState.mood} / 100`}
-                  icon={getMoodIcon(gameState.mood)}
-                />
-              </div>
-              <div
-                id="savings-card"
-                className="hover:hover:scale-105 transition-all"
-              >
-                <DashboardCard
-                  title="Сбережения"
-                  value={`₽${gameState.savings}`}
-                  icon="📈"
-                  subValue={`Активных вкладов: ${gameState.activeDeposits.length}`}
-                  linkTo="/savings"
-                />
-              </div>
-              <div id="debt-card">
-                <DashboardCard
-                  title="Долг"
-                  value={`₽${gameState.debt}`}
-                  icon="💳"
-                  subValue={`Проценты: +₽${accruedInterest}`}
-                  actionLabel="Погасить"
-                  onAction={() => setIsPayDebtModalOpen(true)}
-                  actionDisabled={gameState.debt === 0}
-                />
-              </div>
+              {isLoading ? (
+                <>
+                  <DashboardCardSkeleton />
+                  <DashboardCardSkeleton />
+                  <DashboardCardSkeleton />
+                  <DashboardCardSkeleton />
+                </>
+              ) : (
+                <>
+                  <div id="balance-card">
+                    <DashboardCard
+                      title="Баланс"
+                      value={`₽${gameState.balance}`}
+                      icon="💰"
+                    />
+                  </div>
+                  <div id="mood-card">
+                    <DashboardCard
+                      title="Настроение"
+                      value={`${gameState.mood} / 100`}
+                      icon={getMoodIcon(gameState.mood)}
+                    />
+                  </div>
+                  <div
+                    id="savings-card"
+                    className="hover:hover:scale-105 transition-all"
+                  >
+                    <DashboardCard
+                      title="Сбережения"
+                      value={`₽${gameState.savings}`}
+                      icon="📈"
+                      subValue={`Активных вкладов: ${gameState.activeDeposits.length}`}
+                      linkTo="/savings"
+                    />
+                  </div>
+                  <div id="debt-card">
+                    <DashboardCard
+                      title="Долг"
+                      value={`₽${gameState.debt}`}
+                      icon="💳"
+                      subValue={`Проценты: +₽${accruedInterest}`}
+                      actionLabel="Погасить"
+                      onAction={() => setIsPayDebtModalOpen(true)}
+                      actionDisabled={gameState.debt === 0}
+                    />
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="mb-6">

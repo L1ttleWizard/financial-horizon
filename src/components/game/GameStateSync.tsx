@@ -5,7 +5,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDispatch } from 'react-redux';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase-client';
-import { setGameState, resetGame } from '@/store/slices/gameSlice';
+import {
+  setGameState,
+  resetGame,
+  setGameLoadingStatus,
+} from '@/store/slices/gameSlice';
 
 export const GameStateSync = () => {
   const { user, loading: authLoading } = useAuth();
@@ -21,6 +25,7 @@ export const GameStateSync = () => {
 
       // If user is logged in and we haven't loaded their state yet
       if (user && !hasLoaded) {
+        dispatch(setGameLoadingStatus('loading'));
         setHasLoaded(true); // Mark as loading attempted
         const userDocRef = doc(db, 'users', user.uid);
         try {
@@ -34,10 +39,12 @@ export const GameStateSync = () => {
           } else {
             // This case might happen if the user doc wasn't created on registration
             console.error("User document not found in Firestore!");
+            dispatch(setGameLoadingStatus('failed'));
             // Optionally, dispatch resetGame or handle error
           }
         } catch (error) {
           console.error("Error fetching user game state:", error);
+          dispatch(setGameLoadingStatus('failed'));
         }
       }
       // If user is logged out, reset the game state and loading flag

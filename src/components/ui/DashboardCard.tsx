@@ -36,7 +36,7 @@ export function DashboardCard({
     <div
       style={cardStyle}
       className={` rounded-xl   p-4 sm:p-6 flex flex-col justify-end h-full transition-all ${
-        linkTo ? "hover:shadow-lg hover:scale-105" : ""
+        linkTo ? " hover:scale-105" : ""
       }`}
     >
       <div className="flex-grow flex justify-between mb-6">

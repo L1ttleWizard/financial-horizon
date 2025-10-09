@@ -71,6 +71,7 @@ type ChoiceEffects = Choice["effects"];
 
 // --- СТРУКТУРА СОСТОЯНИЯ ---
 interface GameState {
+  status: "idle" | "loading" | "succeeded" | "failed";
   balance: number;
   mood: number;
   savings: number;
@@ -104,6 +105,7 @@ interface GameState {
 
 // --- НАЧАЛЬНОЕ СОСТОЯНИЕ ---
 const initialState: GameState = {
+  status: "idle",
   balance: 41000,
   mood: 70,
   savings: 0,
@@ -563,7 +565,7 @@ const gameSlice = createSlice({
       }
     },
     resetGame: (state) => {
-      Object.assign(state, initialState);
+      Object.assign(state, initialState, { status: "idle" });
       state.availableOffers = [...bankOffersPool]
         .sort(() => 0.5 - Math.random())
         .slice(0, 3);
@@ -571,7 +573,14 @@ const gameSlice = createSlice({
       state.propertyInvestments = [];
     },
     setGameState(state, action: PayloadAction<GameState>) {
-      return action.payload;
+      const loadedState = action.payload;
+      Object.assign(state, loadedState, { status: "succeeded" });
+    },
+    setGameLoadingStatus(
+      state,
+      action: PayloadAction<"idle" | "loading" | "succeeded" | "failed">
+    ) {
+      state.status = action.payload;
     },
   },
 });
@@ -588,5 +597,6 @@ export const {
   updateSystemVariables,
   resetGame,
   setGameState,
+  setGameLoadingStatus,
 } = gameSlice.actions;
 export default gameSlice.reducer;
