@@ -62,3 +62,4 @@ export async function DELETE() {
     return new NextResponse(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
   }
 }
+  

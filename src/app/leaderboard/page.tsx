@@ -1,8 +1,11 @@
-import { adminDb, adminAuth } from "@/lib/firebase-admin";
+"use client";
+
+import { useState, useEffect } from "react";
+import { collection, getDocs, orderBy, query, limit } from "firebase/firestore";
+import { db } from "@/lib/firebase-client";
 
 interface UserData {
   uid: string;
-  email: string;
   nickname: string;
   turn: number;
   netWorth: number;
@@ -10,56 +13,60 @@ interface UserData {
 
 async function getLeaderboardData(): Promise<UserData[]> {
   try {
-    const usersSnapshot = await adminDb
-      .collection("users")
-      .orderBy("gameState.turn", "desc")
-      .limit(40) // Fetch more to account for filtering
-      .get();
+    const usersRef = collection(db, "users");
+    // Fetch more users than needed to account for potential filtering in the future
+    // or for users with incomplete data.
+    const q = query(
+      usersRef,
+      orderBy("gameState.turn", "desc"),
+      limit(40)
+    );
+
+    const usersSnapshot = await getDocs(q);
 
     if (usersSnapshot.empty) {
       return [];
     }
 
-    const userPromises = usersSnapshot.docs.map(async (doc) => {
-      try {
-        // Verify user exists in Firebase Auth
-        await adminAuth.getUser(doc.id);
+    // Use a Map to filter out duplicate UIDs and ensure data integrity.
+    const uniqueUsers = new Map<string, UserData>();
 
-        const data = doc.data();
+    usersSnapshot.docs.forEach((doc) => {
+      const data = doc.data();
+      const uid = doc.id;
+
+      // Basic validation to ensure essential data exists
+      if (data.gameState && data.gameState.netWorthHistory && !uniqueUsers.has(uid)) {
         const lastNetWorthPoint = data.gameState.netWorthHistory.slice(-1)[0];
 
-        return {
-          uid: doc.id,
-          email: data.email,
-          nickname: data.nickname || data.email,
+        uniqueUsers.set(uid, {
+          uid: uid,
+          nickname: data.nickname || data.email || "Anonymous",
           turn: data.gameState.turn || 0,
           netWorth: lastNetWorthPoint ? lastNetWorthPoint.netWorth : 0,
-        };
-      } catch {
-        // If getUser fails, the user doesn't exist in Auth.
-        console.log(
-          `User with UID ${doc.id} not found in Auth, filtering from leaderboard.`
-        );
-        return null;
+        });
       }
     });
 
-    const settledUsers = await Promise.all(userPromises);
+    // Return the top 20 unique users
+    return Array.from(uniqueUsers.values()).slice(0, 20);
 
-    // Filter out nulls (deleted users) and limit to the top 20 valid users
-    const validUsers = settledUsers.filter(
-      (user): user is UserData => user !== null
-    );
-
-    return validUsers.slice(0, 20);
   } catch (error) {
     console.error("Error fetching leaderboard data:", error);
     return [];
   }
 }
 
-export default async function LeaderboardPage() {
-  const leaderboard = await getLeaderboardData();
+export default function LeaderboardPage() {
+  const [leaderboard, setLeaderboard] = useState<UserData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getLeaderboardData().then((data) => {
+      setLeaderboard(data);
+      setIsLoading(false);
+    });
+  }, []);
 
   return (
     <main className="min-h-screen p-4 sm:p-6 flex justify-center">
@@ -67,7 +74,9 @@ export default async function LeaderboardPage() {
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 sm:mb-8 text-center">
           Таблица лидеров
         </h1>
-        {leaderboard.length > 0 ? (
+        {isLoading ? (
+          <div className="text-center text-gray-500">Загрузка...</div>
+        ) : leaderboard.length > 0 ? (
           <ol className="space-y-4">
             {leaderboard.map((user, index) => (
               <li

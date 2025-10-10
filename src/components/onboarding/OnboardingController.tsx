@@ -20,8 +20,7 @@ export function OnboardingController() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { isActive, currentStep } = useAppSelector((state) => state.onboarding);
-  // "Слушаем" состояние ВСЕХ модальных окон, которые могут конфликтовать
+  const { isActive, currentStep, hasCompleted } = useAppSelector((state) => state.onboarding);
   const {
     isEventModalOpen,
     isResultModalOpen,
@@ -35,27 +34,32 @@ export function OnboardingController() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // This useEffect now correctly handles the onboarding flow for logged-in users.
   useEffect(() => {
-    if (!isClient) return;
+    // Wait for client-side and for user to be authenticated.
+    if (!isClient || !user) return;
+
     const completed = localStorage.getItem("onboardingCompleted") === "true";
-    dispatch(setOnboardingCompleted(completed));
+    if (completed && !hasCompleted) {
+        dispatch(setOnboardingCompleted(true));
+    }
+
+    // If onboarding has not been completed and is not currently active, start it.
     if (!completed && !isActive) {
       setTimeout(() => dispatch(startOnboarding()), 500);
     }
-  }, [isClient, dispatch, isActive]);
+  }, [isClient, user, dispatch, isActive, hasCompleted]);
 
-  // --- ГЛАВНОЕ ИЗМЕНЕНИЕ: Определяем, есть ли активная игровая модалка ---
   const isGameModalActive =
     isEventModalOpen ||
     isResultModalOpen ||
     isGlossaryForced ||
     gameOverState.isGameOver;
 
-  // Определяем текущий шаг онбординга
   const step = onboardingSteps.find((s) => s.step === currentStep);
 
   useEffect(() => {
-    // Если онбординг неактивен ИЛИ есть активная игровая модалка, онбординг должен "спать"
     if (!isActive || !isClient) {
       setTargetRect(null);
       return;
@@ -63,8 +67,6 @@ export function OnboardingController() {
 
     if (!step) return;
 
-    // --- Логика триггеров и навигации ---
-    // СНАЧАЛА обрабатываем триггеры, чтобы не блокировать переход шага при открытии модалок
     const stepTrigger = step.trigger;
     if (stepTrigger) {
       const currentValue = {
@@ -79,7 +81,6 @@ export function OnboardingController() {
       }
     }
 
-    // Если активна игровая модалка, но наша цель НЕ элементы модалки, то скрываем подсказку
     if (
       isGameModalActive &&
       step.highlightTarget !== "#event-modal" &&
@@ -89,16 +90,12 @@ export function OnboardingController() {
       return;
     }
 
-    // Navigation actions are now handled in TutorialTooltip button click
-    // This useEffect only handles target positioning and triggers
-
     const updateTarget = () => {
       if (!step.highlightTarget) {
         setTargetRect(null);
         return;
       }
       const targetElement = document.querySelector(step.highlightTarget);
-      console.log('targetElement', targetElement);
       if (targetElement) {
         setTargetRect(targetElement.getBoundingClientRect());
       } else {
@@ -108,11 +105,10 @@ export function OnboardingController() {
 
     updateTarget();
 
-    // Добавляем isGameModalActive в зависимости, чтобы useEffect перезапускался при открытии/закрытии модалок
   }, [
     isActive,
     currentStep,
-    isEventModalOpen, // Добавлено!
+    isEventModalOpen,
     isResultModalOpen,
     dispatch,
     router,
@@ -122,18 +118,10 @@ export function OnboardingController() {
     step,
   ]);
 
-  // If the user is logged in, disable the onboarding controller entirely.
-  if (user) {
-    return null;
-  }
-
-  // Основное правило: если онбординг неактивен или нет текущего шага, ничего не рендерим
   if (!isClient || !isActive || !step) {
     return null;
   }
 
-  // Уточняющее правило: если активна игровая модалка, 
-  // а шаг онбординга НЕ относится к элементам модалки, тоже ничего не рендерим.
   if (
     isGameModalActive &&
     step.highlightTarget !== "#event-modal" &&

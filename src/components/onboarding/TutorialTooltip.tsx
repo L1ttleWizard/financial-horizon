@@ -3,7 +3,7 @@
 import { useAppDispatch } from "@/store/hooks";
 import { TutorialStep } from "@/data/onboardingData";
 import { CSSProperties } from "react";
-import { nextStep } from "@/store/slices/onboardingSlice";
+import { nextStep, finishOnboarding } from "@/store/slices/onboardingSlice";
 import { useRouter } from "next/navigation";
 
 interface TooltipProps {
@@ -39,7 +39,6 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
         top = targetRect.top - offset;
         left = targetRect.left + targetRect.width / 2;
         transform = "translate(-50%, -100%)";
-        // Если тултип выходит за верхнюю границу, показываем снизу
         if (top - tooltipHeight < 0) {
           top = targetRect.bottom + offset;
           transform = "translate(-50%, 0)";
@@ -49,7 +48,6 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
         top = targetRect.bottom + offset;
         left = targetRect.left + targetRect.width / 2;
         transform = "translate(-50%, 0)";
-        // Если тултип выходит за нижнюю границу, показываем сверху
         if (top + tooltipHeight > viewportHeight) {
           top = targetRect.top - offset;
           transform = "translate(-50%, -100%)";
@@ -59,7 +57,6 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
         top = targetRect.top + targetRect.height / 2;
         left = targetRect.left - offset;
         transform = "translate(-100%, -50%)";
-        // Если тултип выходит за левую границу, показываем справа
         if (left - tooltipWidth < 0) {
           left = targetRect.right + offset;
           transform = "translate(0, -50%)";
@@ -69,7 +66,6 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
         top = targetRect.top + targetRect.height / 2;
         left = targetRect.right + offset;
         transform = "translate(0, -50%)";
-        // Если тултип выходит за правую границу, показываем слева
         if (left + tooltipWidth > viewportWidth) {
           left = targetRect.left - offset;
           transform = "translate(-100%, -50%)";
@@ -81,7 +77,6 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
         transform = "translate(-50%, -50%)";
     }
 
-    // Дополнительная проверка границ
     left = Math.max(16, Math.min(left, viewportWidth - tooltipWidth - 16));
     top = Math.max(16, Math.min(top, viewportHeight - tooltipHeight - 16));
 
@@ -95,7 +90,6 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
   const handleNext = () => {
     const action = step.nextStepAction;
     
-    // Handle navigation actions
     if (action.type === "onboarding/goToSavingsPage") {
       router.push("/savings");
       dispatch(nextStep());
@@ -106,24 +100,36 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
       localStorage.setItem("onboardingCompleted", "true");
       dispatch({ type: "onboarding/finishOnboarding" });
     } else {
-      // Handle other actions (like game/startNextTurn, onboarding/nextStep)
       dispatch({ type: action.type, payload: action.payload });
     }
+  };
+
+  const handleSkip = () => {
+    localStorage.setItem("onboardingCompleted", "true");
+    dispatch(finishOnboarding());
   };
 
   return (
     <div
       style={getPositionStyles()}
-      className="fixed z-[101] bg-white rounded-lg shadow-2xl p-6 w-80 transition-opacity duration-300"
+      className="fixed z-[101] bg-white rounded-lg shadow-2xl p-6 w-80 transition-opacity duration-300 animate-fade-in"
     >
       <h3 className="text-xl font-bold text-gray-800 mb-2">{step.title}</h3>
-      <p className="text-gray-600 mb-4">{step.text}</p>
-      <button
-        onClick={handleNext}
-        className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition"
-      >
-        {step.buttonText}
-      </button>
+      <p className="text-gray-600 mb-4 text-sm">{step.text}</p>
+      <div className="flex flex-col space-y-2">
+        <button
+          onClick={handleNext}
+          className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+        >
+          {step.buttonText}
+        </button>
+        <button
+          onClick={handleSkip}
+          className="w-full bg-transparent text-gray-500 text-sm font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition"
+        >
+          Пропустить обучение
+        </button>
+      </div>
     </div>
   );
 }

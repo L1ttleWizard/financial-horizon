@@ -565,12 +565,36 @@ const gameSlice = createSlice({
       }
     },
     resetGame: (state) => {
-      Object.assign(state, initialState, { status: "idle" });
+      // Reset all properties to their initial values explicitly
+      state.balance = initialState.balance;
+      state.mood = initialState.mood;
+      state.savings = initialState.savings;
+      state.debt = initialState.debt;
+      state.treeStage = initialState.treeStage;
+      state.turn = initialState.turn;
+      state.activeDeposits = [];
+      state.propertyInvestments = [];
       state.availableOffers = [...bankOffersPool]
         .sort(() => 0.5 - Math.random())
         .slice(0, 3);
+      state.moodAtZeroTurns = initialState.moodAtZeroTurns;
+      state.gameOverState = { isGameOver: false };
+      state.currentEvent = null;
+      state.log = [];
       state.netWorthHistory = [{ week: 0, netWorth: initialState.balance }];
-      state.propertyInvestments = [];
+      state.lastChoiceResult = null;
+      state.isEventModalOpen = false;
+      state.isResultModalOpen = false;
+      state.unlockedAchievements = [];
+      state.newlyUnlockedAchievement = null;
+      state.isGlossaryForced = false;
+      state.forcedGlossaryTerm = null;
+      state.monthlyBills = initialState.monthlyBills;
+      state.weeklySpends = initialState.weeklySpends;
+      state.monthlySalary = initialState.monthlySalary;
+
+      // Set the status to 'succeeded' to indicate a ready, playable state
+      state.status = "succeeded";
     },
     setGameState(state, action: PayloadAction<GameState>) {
       const loadedState = action.payload;

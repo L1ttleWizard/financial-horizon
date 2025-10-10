@@ -18,39 +18,39 @@ export const GameStateSync = () => {
 
   useEffect(() => {
     const syncGameState = async () => {
-      // Wait for auth to be resolved
       if (authLoading) {
         return;
       }
 
-      // If user is logged in and we haven't loaded their state yet
       if (user && !hasLoaded) {
         dispatch(setGameLoadingStatus('loading'));
-        setHasLoaded(true); // Mark as loading attempted
+        setHasLoaded(true);
         const userDocRef = doc(db, 'users', user.uid);
         try {
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
             const userData = userDoc.data();
+            // If user has a game state, load it
             if (userData.gameState) {
-              // Dispatch the loaded state to Redux
               dispatch(setGameState(userData.gameState));
+            } else {
+              // If user exists but has no game state (new user), start a new game.
+              // resetGame sets the status to 'succeeded', which will hide the loader.
+              dispatch(resetGame());
             }
           } else {
-            // This case might happen if the user doc wasn't created on registration
-            console.error("User document not found in Firestore!");
-            dispatch(setGameLoadingStatus('failed'));
-            // Optionally, dispatch resetGame or handle error
+            // If the user document doesn't exist at all, also start a new game.
+            console.error("User document not found in Firestore! Starting a new game.");
+            dispatch(resetGame());
           }
         } catch (error) {
           console.error("Error fetching user game state:", error);
-          dispatch(setGameLoadingStatus('failed'));
+          dispatch(setGameLoadingStatus('failed')); // Set to failed on error
         }
       }
-      // If user is logged out, reset the game state and loading flag
       else if (!user) {
         dispatch(resetGame());
-        setHasLoaded(false); // Allow reloading for the next user who logs in
+        setHasLoaded(false);
       }
     };
 
@@ -58,6 +58,5 @@ export const GameStateSync = () => {
 
   }, [user, authLoading, dispatch, hasLoaded]);
 
-  // This component does not render anything
   return null;
 };
