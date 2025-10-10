@@ -19,8 +19,10 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
     const tooltipWidth = 320; // Ширина тултипа (w-80)
     const tooltipHeight = 200; // Примерная высота тултипа
     const offset = 16; // Отступ в 1rem
-    const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
-    const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
+    const viewportWidth =
+      typeof window !== "undefined" ? window.innerWidth : 1024;
+    const viewportHeight =
+      typeof window !== "undefined" ? window.innerHeight : 768;
 
     if (!targetRect) {
       return {
@@ -89,7 +91,7 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
 
   const handleNext = () => {
     const action = step.nextStepAction;
-    
+
     if (action.type === "onboarding/goToSavingsPage") {
       router.push("/savings");
       dispatch(nextStep());
@@ -112,23 +114,22 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
   return (
     <div
       style={getPositionStyles()}
-      className="fixed z-[101] bg-white rounded-lg shadow-2xl p-6 w-80 transition-opacity duration-300 animate-fade-in"
-    >
+      className="fixed z-[101] bg-white rounded-lg shadow-2xl p-6 w-80 transition-opacity duration-300 animate-fade-in">
       <h3 className="text-xl font-bold text-gray-800 mb-2">{step.title}</h3>
       <p className="text-gray-600 mb-4 text-sm">{step.text}</p>
       <div className="flex flex-col space-y-2">
         <button
           onClick={handleNext}
-          className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition"
-        >
+          className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">
           {step.buttonText}
         </button>
-        <button
-          onClick={handleSkip}
-          className="w-full bg-transparent text-gray-500 text-sm font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition"
-        >
-          Пропустить обучение
-        </button>
+        {step.step <= 1 && (
+          <button
+            onClick={handleSkip}
+            className="w-full bg-transparent text-gray-500 text-sm font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition">
+            Пропустить обучение
+          </button>
+        )}
       </div>
     </div>
   );
