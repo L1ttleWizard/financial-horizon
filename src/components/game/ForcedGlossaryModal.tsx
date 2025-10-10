@@ -12,23 +12,23 @@ export function ForcedGlossaryModal({ term }: ModalProps) {
   const dispatch = useDispatch();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-2xl w-full flex flex-col animate-fade-in-up">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 modal-background">
+      <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-2xl w-full flex flex-col animate-fade-in-up text-white bg-gray-900 bg-opacity-50">
         <div className="text-center mb-4">
           <span className="text-5xl">🎓</span>
-          <h2 className="text-3xl font-bold text-gray-800 mt-2">
+          <h2 className="text-3xl font-bold text-white mt-2">
             Время учиться!
           </h2>
-          <p className="text-gray-500">
+          <p className="text-gray-300">
             Прочитайте термин, чтобы продолжить игру.
           </p>
         </div>
 
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg my-6">
-          <h3 className="text-2xl font-bold text-yellow-900 mb-2">
+        <div className="bg-yellow-500 border-l-4 border-yellow-300 p-4 rounded-r-lg my-6">
+          <h3 className="text-2xl font-bold text-white mb-2">
             {term.title}
           </h3>
-          <p className="text-yellow-800 text-base">{term.definition}</p>
+          <p className="text-yellow-100 text-base">{term.definition}</p>
         </div>
 
         <button

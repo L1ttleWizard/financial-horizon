@@ -21,9 +21,10 @@ import { useAppSelector } from "@/store/hooks";
 import { RecentLogsWidget } from "@/components/game/RecentLogsWidget";
 import { ForcedGlossaryModal } from "@/components/game/ForcedGlossaryModal";
 import { MascotWidget } from "@/components/game/MascotWidget";
-import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardCardSkeleton } from "@/components/ui/DashboardCardSkeleton";
+import { getMoodEmoji } from "@/data/moodEmojis";
+import { formatCurrency } from "@/lib/format";
 const basePath = '/financial-horizon';
 
 export default function HomePage() {
@@ -33,22 +34,6 @@ export default function HomePage() {
   const dispatch = useDispatch();
   const [isPayDebtModalOpen, setIsPayDebtModalOpen] = useState(false);
   const [isChartExpanded, setIsChartExpanded] = useState(false); // State for chart visibility
-
-  const getMoodIcon = (mood: number) => {
-    if (mood <= 0) {
-      return "🤍";
-    }
-    const roundedMood = Math.round(mood / 10) * 10;
-    const iconName = Math.max(10, roundedMood);
-    return (
-      <Image
-        src={`${basePath}/heart_assets/${iconName}.svg`}
-        alt={`Heart ${iconName}%`}
-        width={48}
-        height={48}
-      />
-    );
-  };
 
   const monthlyInterestRate = 0.1;
   const turnsInMonth = 4;
@@ -63,23 +48,11 @@ export default function HomePage() {
     <>
       <main className="min-h-screen p-4 sm:p-6">
         <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr_380px] gap-6 max-w-[1920px] mx-auto">
-          {/* --- Left Sidebar (Money Tree) --- */}
+          {/* --- Left Sidebar (Controls) --- */}
           <aside className="hidden xl:block">
             <div className="sticky top-6 flex flex-col gap-6">
-              <MoneyTreeWidget
-                balance={gameState.balance}
-                savings={gameState.savings}
-                debt={gameState.debt}
-                currentStage={gameState.treeStage}
-              />
-              <MascotWidget />
-            </div>
-          </aside>
-
-          {/* --- Main Content --- */}
-          <div className="flex flex-col gap-6">
             <div
-              className="flex flex-wrap items-center justify-center gap-6 p-6 px-10 rounded-xl"
+              className="flex flex-wrap items-stretch justify-center gap-6 p-6 px-10 rounded-xl"
               id="conrols-panel"
             >
               <div id="start-turn-button">
@@ -90,32 +63,38 @@ export default function HomePage() {
                     gameState.isResultModalOpen ||
                     gameState.gameOverState?.isGameOver
                   }
-                  className=" start-turn-button w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-12 rounded-lg shadow-lg hover:bg-blue-700 transition"
+                  className=" start-turn-button w-full sm:w-56 h-full bg-blue-600 text-white font-bold py-3 px-12 rounded-lg shadow-lg hover:bg-blue-700 transition"
                 >
                   {gameState.turn === 0 ? "Начать игру" : `Следующая неделя`}
                 </button>
               </div>
               <button
                 onClick={() => dispatch(resetGame())}
-                className=" new-game-button w-full sm:w-auto bg-gray-700 text-white font-bold py-3 px-12 rounded-lg hover:bg-gray-800 transition"
+                className=" new-game-button w-full sm:w-56 h-full bg-gray-700 text-white font-bold py-3 px-12 rounded-lg hover:bg-gray-800 transition"
               >
                 Начать игру заново
               </button>
               <Link
                 href="/achievements"
-                className=" all-achievements-button w-full sm:w-auto text-center bg-yellow-500 text-white font-bold py-3 px-12 rounded-lg hover:bg-yellow-600 transition"
+                className=" all-achievements-button w-full sm:w-56 h-full text-center bg-yellow-500 text-white font-bold py-3 px-12 rounded-lg hover:bg-yellow-600 transition flex items-center justify-center"
               >
                 Все достижения
               </Link>
               <Link
                 id="glossary-button"
                 href="/glossary"
-                className=" glossary-button w-full sm:w-auto text-center bg-green-600 text-white font-bold py-3 px-12 rounded-lg hover:bg-green-700 transition"
+                className="glossary-button w-full sm:w-56 h-full text-center bg-yellow-500 text-white font-bold py-3 px-12 rounded-lg hover:bg-yellow-600 transition flex flex-col items-center justify-center"
               >
-                Глоссарий
+                <span>Словарь</span>
+                <span>терминов</span>
               </Link>
             </div>
+              <MascotWidget />
+            </div>
+          </aside>
 
+          {/* --- Main Content --- */}
+          <div className="flex flex-col gap-6">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
               {isLoading ? (
                 <>
@@ -126,38 +105,38 @@ export default function HomePage() {
                 </>
               ) : (
                 <>
-                  <div id="balance-card">
+                  <div id="balance-card" className="rounded-xl">
                     <DashboardCard
                       title="Баланс"
-                      value={`₽${gameState.balance}`}
+                      value={`₽${formatCurrency(gameState.balance)}`}
                       icon="💰"
                     />
                   </div>
-                  <div id="mood-card">
+                  <div id="mood-card" className="rounded-xl">
                     <DashboardCard
                       title="Настроение"
                       value={`${gameState.mood} / 100`}
-                      icon={getMoodIcon(gameState.mood)}
+                      icon={getMoodEmoji(gameState.mood)}
                     />
                   </div>
                   <div
                     id="savings-card"
-                    className="hover:hover:scale-105 transition-all"
+                    className="hover:hover:scale-105 transition-all rounded-xl"
                   >
                     <DashboardCard
                       title="Сбережения"
-                      value={`₽${gameState.savings}`}
+                      value={`₽${formatCurrency(gameState.savings)}`}
                       icon="📈"
                       subValue={`Активных вкладов: ${gameState.activeDeposits.length}`}
                       linkTo="/savings"
                     />
                   </div>
-                  <div id="debt-card">
+                  <div id="debt-card" className="rounded-xl">
                     <DashboardCard
                       title="Долг"
-                      value={`₽${gameState.debt}`}
+                      value={`₽${formatCurrency(gameState.debt)}`}
                       icon="💳"
-                      subValue={`Проценты: +₽${accruedInterest}`}
+                      subValue={`Проценты: +₽${formatCurrency(accruedInterest)}`}
                       actionLabel="Погасить"
                       onAction={() => setIsPayDebtModalOpen(true)}
                       actionDisabled={gameState.debt === 0}
@@ -167,7 +146,7 @@ export default function HomePage() {
               )}
             </div>
 
-            <div className="mb-6">
+            <div className="">
               <PaydayProgressBar currentTurn={gameState.turn} />
             </div>
 
@@ -228,12 +207,18 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* --- Right Sidebar (Achievements) --- */}
+          {/* --- Right Sidebar (Achievements & Tree) --- */}
           <aside className="hidden xl:block">
-            <div className="sticky top-6">
+            <div className="sticky top-6 flex flex-col gap-6">
               <AchievementsWidget
                 unlockedIds={gameState.unlockedAchievements}
                 allAchievements={achievementsData}
+              />
+              <MoneyTreeWidget
+                balance={gameState.balance}
+                savings={gameState.savings}
+                debt={gameState.debt}
+                currentStage={gameState.treeStage}
               />
             </div>
           </aside>

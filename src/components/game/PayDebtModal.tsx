@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { formatCurrency } from '@/lib/format';
 
 interface ModalProps {
     currentDebt: number;
@@ -24,34 +25,34 @@ export function PayDebtModal({ currentDebt, currentBalance, onClose, onConfirm }
     }
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full flex flex-col animate-fade-in-up">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Погашение долга</h2>
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 modal-background">
+            <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full flex flex-col animate-fade-in-up text-white bg-gray-900 bg-opacity-50">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Погашение долга</h2>
                 
                 <div className="mb-4">
                     <div className="flex justify-between text-lg">
-                        <span className="text-gray-600">Текущий долг:</span>
-                        <span className="font-bold text-red-600">${currentDebt}</span>
+                        <span className="text-gray-300">Текущий долг:</span>
+                        <span className="font-bold text-red-400">₽{formatCurrency(currentDebt)}</span>
                     </div>
                     <div className="flex justify-between text-lg">
-                        <span className="text-gray-600">Ваш баланс:</span>
-                        <span className="font-bold text-green-600">${currentBalance}</span>
+                        <span className="text-gray-300">Ваш баланс:</span>
+                        <span className="font-bold text-green-400">₽{formatCurrency(currentBalance)}</span>
                     </div>
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-1">Сумма к погашению</label>
+                    <label htmlFor="amount" className="block text-sm font-medium text-gray-300 mb-1">Сумма к погашению</label>
                     <input 
                         type="number"
                         id="amount"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
-                        placeholder={`Максимум: $${maxPayable}`}
-                        className="w-full px-3 py-2 border text-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder={`Максимум: ₽${formatCurrency(maxPayable)}`}
+                        className="w-full px-3 py-2 border text-white bg-gray-700 border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button 
                         onClick={() => setAmount(String(maxPayable))}
-                        className="text-sm text-blue-600 hover:underline mt-1"
+                        className="text-sm text-blue-400 hover:underline mt-1"
                     >
                         Заплатить максимум
                     </button>
@@ -60,7 +61,7 @@ export function PayDebtModal({ currentDebt, currentBalance, onClose, onConfirm }
                 <div className="flex flex-col sm:flex-row gap-3 mt-4">
                     <button 
                         onClick={onClose}
-                        className="w-full bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition"
+                        className="w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-700 transition"
                     >
                         Отмена
                     </button>

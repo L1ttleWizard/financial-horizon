@@ -50,26 +50,38 @@ main {
 
 .glossary-button {
   background: radial-gradient(50% 191.67% at 50% 50%, #e88f00 0%, #ffd445 100%);
+  border:2px solid transparent;
 }
 
 #balance-card {
   background-image: url("../../public/background/balance-card-background.svg");
   
   background-repeat: no-repeat;
-  background-size: 100%;
+  background-size: cover;
+  background-position: bottom right;
 }
 #mood-card {
   background-image: url("../../public/background/mood-card-background.svg");
   background-repeat: no-repeat;
-  background-size: 100%;
+  background-size: cover;
+  background-position: bottom right;
 }
 #savings-card {
   background-image: url("../../public/background/savings-card-background.svg");
   background-repeat: no-repeat;
-  background-size: 100%;
+  background-size: cover;
+  background-position: bottom right;
 }
 #debt-card {
   background-image: url("../../public/background/debt-card-background.svg");
   background-repeat: no-repeat;
-  background-size: 100%;
+  background-size: cover;
+  background-position: bottom right;
+}
+
+.modal-background {
+  background-image: url("../../public/background/background.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }

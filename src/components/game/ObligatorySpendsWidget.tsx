@@ -1,5 +1,6 @@
 "use client";
 import { PAYDAY_CYCLE } from "@/store/slices/gameSlice";
+import { formatCurrency } from "@/lib/format";
 
 interface WidgetProps {
   currentTurn: number;
@@ -35,13 +36,13 @@ export function ObligatorySpendsWidget({
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600">Еда и транспорт:</span>
             <span className="font-semibold text-red-600 ml-auto">
-              -₽{weeklySpends} / неделя
+              -₽{formatCurrency(weeklySpends)} / неделя
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600">Аренда и счета:</span>
             <span className="font-semibold text-red-600">
-              -₽{monthlyBills} ({billPaymentText})
+              -₽{formatCurrency(monthlyBills)} ({billPaymentText})
             </span>
           </div>
         </div>

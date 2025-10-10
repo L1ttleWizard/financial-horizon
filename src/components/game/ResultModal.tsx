@@ -20,7 +20,7 @@ const EffectPill = ({ label, value, icon }: { label: string, value: number, icon
     if (value === 0) return null; // Не отображаем, если изменение нулевое
     
     const isPositive = value > 0;
-    const colorClasses = isPositive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+    const colorClasses = isPositive ? 'bg-green-500 text-white' : 'bg-red-500 text-white';
     const sign = isPositive ? '+' : '';
 
     return (
@@ -37,10 +37,10 @@ export function ResultModal({ result }: ResultModalProps) {
     const dispatch = useDispatch();
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-2xl w-full flex flex-col items-center text-center animate-fade-in-up">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Ваш выбор:</h2>
-                <p className="text-gray-700 text-lg mb-6">{result.outcomeText}</p>
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 modal-background">
+            <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-2xl w-full flex flex-col items-center text-center animate-fade-in-up text-white bg-gray-900 bg-opacity-50">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Ваш выбор:</h2>
+                <p className="text-gray-300 text-lg mb-6">{result.outcomeText}</p>
 
                 {/* НОВЫЙ БЛОК ДЛЯ ОТОБРАЖЕНИЯ ИЗМЕНЕНИЙ */}
                 <div className="flex flex-wrap justify-center gap-3 mb-6">
@@ -50,9 +50,9 @@ export function ResultModal({ result }: ResultModalProps) {
                     {result.effects.debt && <EffectPill label="Долг" value={result.effects.debt} icon="💳" />}
                 </div>
 
-                <div className="w-full bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg mb-8">
-                    <h3 className="font-bold text-yellow-800">💡 Что нужно знать:</h3>
-                    <p className="text-yellow-700">{result.learningPoint}</p>
+                <div className="w-full bg-yellow-500 border-l-4 border-yellow-300 p-4 rounded-r-lg mb-8">
+                    <h3 className="font-bold text-white">💡 Что нужно знать:</h3>
+                    <p className="text-yellow-100">{result.learningPoint}</p>
                 </div>
 
                 <button

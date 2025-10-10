@@ -2,6 +2,7 @@
 "use client";
 
 import { PropertyInvestment } from "@/store/slices/gameSlice";
+import { formatCurrency } from "@/lib/format";
 
 interface PropertyInvestmentCardProps {
   investment: PropertyInvestment;
@@ -44,7 +45,7 @@ export function PropertyInvestmentCard({ investment, currentTurn }: PropertyInve
         </div>
         <div className="text-right">
           <p className="text-lg font-bold text-green-600">
-            ₽{investment.amount.toLocaleString()}
+            ₽{formatCurrency(investment.amount)}
           </p>
           <p className="text-sm text-gray-500">Стоимость</p>
         </div>
@@ -54,13 +55,13 @@ export function PropertyInvestmentCard({ investment, currentTurn }: PropertyInve
         <div>
           <p className="text-sm text-gray-600">Ежемесячный доход</p>
           <p className="font-semibold text-green-600">
-            +₽{investment.monthlyIncome.toFixed(2)}
+            +₽{formatCurrency(investment.monthlyIncome)}
           </p>
         </div>
         <div>
           <p className="text-sm text-gray-600">Общий доход</p>
           <p className="font-semibold text-blue-600">
-            +₽{totalIncome.toFixed(2)}
+            +₽{formatCurrency(totalIncome)}
           </p>
         </div>
       </div>

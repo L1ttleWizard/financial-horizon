@@ -10,6 +10,7 @@ import { ActiveDepositCard } from "@/components/game/ActiveDepositCard";
 import { BankOfferCard } from "@/components/game/BankOfferCard";
 import { OpenDepositModal } from "@/components/game/OpenDepositModal";
 import { PropertyInvestmentCard } from "@/components/game/PropertyInvestmentCard";
+import { formatCurrency } from "@/lib/format";
 
 export default function SavingsPage() {
   const dispatch = useAppDispatch();
@@ -47,23 +48,23 @@ export default function SavingsPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <p className="text-blue-100">Общая сумма</p>
-              <p className="text-3xl font-bold">₽{savings.toLocaleString()}</p>
+              <p className="text-3xl font-bold">₽{formatCurrency(savings)}</p>
             </div>
             <div>
               <p className="text-blue-100">Банковские вклады</p>
               <p className="text-xl font-semibold">
-                ₽{(activeDeposits || []).reduce((sum, dep) => sum + dep.amount, 0).toLocaleString()}
+                ₽{formatCurrency((activeDeposits || []).reduce((sum, dep) => sum + dep.amount, 0))}
               </p>
             </div>
             <div>
               <p className="text-blue-100">Инвестиции</p>
               <p className="text-xl font-semibold">
-                ₽{(propertyInvestments || []).reduce((sum, inv) => sum + inv.amount, 0).toLocaleString()}
+                ₽{formatCurrency((propertyInvestments || []).reduce((sum, inv) => sum + inv.amount, 0))}
               </p>
             </div>
             <div>
               <p className="text-blue-100">Текущий баланс</p>
-              <p className="text-xl font-semibold">₽{balance.toLocaleString()}</p>
+              <p className="text-xl font-semibold">₽{formatCurrency(balance)}</p>
             </div>
           </div>
         </div>
@@ -72,7 +73,7 @@ export default function SavingsPage() {
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-4">🏦 Банковские вклады</h2>
           {(activeDeposits || []).length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bgw">
               {(activeDeposits || []).map((deposit) => (
                 <ActiveDepositCard
                   key={deposit.id}
@@ -82,7 +83,7 @@ export default function SavingsPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-10 rounded-xl shadow">
+            <div className="text-center py-10 rounded-xl shadow bg-white">
               <p className="text-gray-500">У вас пока нет активных вкладов.</p>
             </div>
           )}
@@ -112,7 +113,7 @@ export default function SavingsPage() {
         <section>
           <h2 className="text-3xl font-bold mb-4">Доступные предложения</h2>
           {availableOffers && availableOffers.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
               {availableOffers.map((offer) => (
                 <BankOfferCard
                   key={offer.id}
