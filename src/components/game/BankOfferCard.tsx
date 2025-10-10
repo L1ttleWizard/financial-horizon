@@ -1,5 +1,6 @@
 // src/components/game/BankOfferCard.tsx
 import { BankOffer } from "@/data/bankOffers";
+import { formatCurrency } from "@/lib/format";
 
 export function BankOfferCard({
   offer,
@@ -9,7 +10,7 @@ export function BankOfferCard({
   onSelect: () => void;
 }) {
   return (
-    <div className="rounded-xl shadow p-6 flex flex-col transition-all hover:shadow-lg">
+    <div className="rounded-xl shadow p-6 flex flex-col transition-all hover:shadow-lg bg-white">
       <h3 className="text-xl font-bold text-gray-800">{offer.bankName}</h3>
       <p className="text-gray-500 text-sm mb-4 flex-grow">
         {offer.description}
@@ -23,7 +24,7 @@ export function BankOfferCard({
         </div>
         <div className="flex justify-between">
           <span>Мин. вклад:</span>
-          <span className="font-semibold">₽{offer.minDeposit}</span>
+          <span className="font-semibold">₽{formatCurrency(offer.minDeposit)}</span>
         </div>
       </div>
 

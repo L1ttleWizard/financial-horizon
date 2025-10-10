@@ -1,17 +1,22 @@
 // src/components/ui/LogItem.tsx
 import { LogEntry } from '@/store/slices/gameSlice';
+import { formatCurrency } from '@/lib/format';
 
 const typeInfo = {
-  income: { icon: '🟢', color: 'text-green-600' },
-  expense: { icon: '💰', color: 'text-red-600' },
-  savings: { icon: '📈', color: 'text-blue-600' },
-  debt: { icon: '💳', color: 'text-orange-600' },
-  mood: { icon: '❤️', color: 'text-yellow-600' },
+  income: { icon: '🟢', color: 'text-green-600', isCurrency: true },
+  expense: { icon: '💰', color: 'text-red-600', isCurrency: true },
+  savings: { icon: '📈', color: 'text-blue-600', isCurrency: true },
+  debt: { icon: '💳', color: 'text-orange-600', isCurrency: true },
+  mood: { icon: '❤️', color: 'text-yellow-600', isCurrency: false },
 };
 
 export function LogItem({ entry }: { entry: LogEntry }) {
-  const { icon, color } = typeInfo[entry.type];
-  const sign = entry.amount > 0 ? '+' : '';
+  const { icon, color, isCurrency } = typeInfo[entry.type];
+  
+  const finalSign = entry.amount > 0 ? '+' : (entry.amount < 0 ? '-' : '');
+  const formattedAmount = isCurrency
+    ? `₽${formatCurrency(Math.abs(entry.amount))}`
+    : `${Math.abs(entry.amount)}`;
 
   return (
     <div className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
@@ -23,7 +28,7 @@ export function LogItem({ entry }: { entry: LogEntry }) {
         </div>
       </div>
       <p className={`font-bold text-lg ${color}`}>
-        {sign}{entry.amount}
+        {finalSign}{formattedAmount}
       </p>
     </div>
   );

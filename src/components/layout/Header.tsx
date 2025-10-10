@@ -5,6 +5,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { auth } from '@/lib/firebase-client';
 import { signOut } from 'firebase/auth';
 import { useRouter, usePathname } from 'next/navigation';
+import { FaTrophy, FaUser } from 'react-icons/fa';
+import { FiLogOut } from 'react-icons/fi';
 import { useAppSelector } from '@/store/hooks';
 
 export const Header = () => {
@@ -31,17 +33,17 @@ export const Header = () => {
             </Link>
           )}
           <Link href="/leaderboard" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
-            Таблица лидеров
+            <FaTrophy />
           </Link>
           {loading ? (
             <div className="text-lg font-medium text-gray-600">Загрузка...</div>
           ) : user ? (
             <>
               <Link href="/profile" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
-                Профиль
+                <FaUser />
               </Link>
               <button onClick={handleLogout} className="text-lg font-medium text-red-600 hover:text-red-800 transition-colors">
-                Выйти
+                <FiLogOut />
               </button>
             </>
           ) : (

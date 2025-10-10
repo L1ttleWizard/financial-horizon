@@ -3,6 +3,8 @@
 
 import Image from "next/image";
 import { treeData } from "@/data/treeData";
+import { formatCurrency } from "@/lib/format";
+
 
 const basePath = "/financial-horizon";
 
@@ -22,8 +24,12 @@ export function MoneyTreeWidget({
   const netWorth = balance + savings - debt;
   const tree = treeData.find((t) => t.stage === currentStage) || treeData[0];
 
+
+
+  
+
   return (
-    <div className="rounded-xl shadow-md p-6 flex flex-col items-center justify-between h-full bg-white">
+    <div className="relative rounded-xl shadow-md p-6 flex flex-col items-center justify-between h-full bg-white">
       <div>
         <h2 className="text-2xl font-bold text-gray-700 text-center">
           Денежное дерево
@@ -37,6 +43,7 @@ export function MoneyTreeWidget({
           alt={`Дерево на стадии ${tree.stage}`}
           fill
           style={{ objectFit: "contain" }}
+          className="transition-transform duration-500 hover:scale-105"
           priority
         />
       </div>
@@ -47,7 +54,7 @@ export function MoneyTreeWidget({
           className={`text-3xl font-bold ${
             netWorth < 0 ? "text-red-500" : "text-green-600"
           }`}>
-          ₽{netWorth}
+          ₽{formatCurrency(netWorth)}
         </p>
       </div>
     </div>

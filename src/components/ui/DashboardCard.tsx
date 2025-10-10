@@ -35,7 +35,7 @@ export function DashboardCard({
   const content = (
     <div
       style={cardStyle}
-      className={` rounded-xl   p-4 sm:p-6 flex flex-col justify-end h-full transition-all ${
+      className={`group relative rounded-xl p-4 sm:p-6 flex flex-col justify-end h-full transition-all ${
         linkTo ? " hover:scale-105" : ""
       }`}
     >
@@ -46,22 +46,22 @@ export function DashboardCard({
           </p>
           <p className="text-xl sm:text-2xl font-bold text-gray-800">{value}</p>
           {subValue && <p className="text-xs text-gray-500 mt-1">{subValue}</p>}
-          {actionLabel && (
-        <button
-          onClick={onAction}
-          disabled={actionDisabled}
-          className="mt-4 w-full bg-blue-100 text-blue-700 font-semibold py-2 rounded-lg text-sm hover:bg-blue-200 transition disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
-        >
-          {actionLabel}
-        </button>
-      )}
         </div>
         <div className="flex items-end">
           <div className="sm:text-4xl text-6xl">{icon}</div>
         </div>
-        
       </div>
-      
+      {actionLabel && (
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[calc(100%+0.5rem)] opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out pointer-events-none">
+          <button
+            onClick={onAction}
+            disabled={actionDisabled}
+            className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed pointer-events-auto"
+          >
+            {actionLabel}
+          </button>
+        </div>
+      )}
     </div>
   );
 

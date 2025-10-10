@@ -2,6 +2,7 @@
 "use client";
 import { useState } from "react";
 import { BankOffer } from "@/data/bankOffers";
+import { formatCurrency } from "@/lib/format";
 
 interface ModalProps {
   offer: BankOffer;
@@ -31,24 +32,24 @@ export function OpenDepositModal({
     amountNumber < offer.minDeposit || amountNumber > maxDeposit;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full animate-fade-in-up">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 modal-background">
+      <div className="rounded-2xl shadow-2xl p-8 max-w-md w-full animate-fade-in-up text-white bg-gray-900 bg-opacity-50">
         <h2 className="text-2xl font-bold mb-2">
           Вклад в &quot;{offer.bankName}&quot;
         </h2>
-        <p className="text-sm text-gray-500 mb-4">
-          Мин: ₽{offer.minDeposit}, Макс: ₽{offer.maxDeposit}
+        <p className="text-sm text-gray-300 mb-4">
+          Мин: ₽{formatCurrency(offer.minDeposit)}, Макс: ₽{formatCurrency(offer.maxDeposit)}
         </p>
 
         {/* НОВЫЙ БЛОК С ИНФОРМАЦИЕЙ */}
-        <div className="bg-gray-50 rounded-lg p-3 mb-4 text-sm">
+        <div className="bg-gray-800 rounded-lg p-3 mb-4 text-sm">
           <div className="flex justify-between">
             <span>Ваш баланс:</span>
-            <span className="font-bold text-green-600">₽{balance}</span>
+            <span className="font-bold text-green-400">₽{formatCurrency(balance)}</span>
           </div>
           <div className="flex justify-between">
             <span>Ваш долг:</span>
-            <span className="font-bold text-red-600">₽{debt}</span>
+            <span className="font-bold text-red-400">₽{formatCurrency(debt)}</span>
           </div>
         </div>
 
@@ -59,8 +60,8 @@ export function OpenDepositModal({
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder={`Доступно: ₽${balance}`}
-            className="w-full mt-1 p-2 border rounded-lg"
+            placeholder={`Доступно: ₽${formatCurrency(balance)}`}
+            className="w-full mt-1 p-2 border rounded-lg bg-gray-700 text-white border-gray-600"
           />
         </div>
 
@@ -70,7 +71,7 @@ export function OpenDepositModal({
           <select
             value={term}
             onChange={(e) => setTerm(Number(e.target.value))}
-            className="w-full mt-1 p-2 border rounded-lg"
+            className="w-full mt-1 p-2 border rounded-lg bg-gray-700 text-white border-gray-600"
           >
             {offer.termOptions.map((t) => (
               <option key={t} value={t}>
@@ -83,7 +84,7 @@ export function OpenDepositModal({
         <div className="flex gap-4">
           <button
             onClick={onClose}
-            className="w-full bg-gray-200 py-3 rounded-lg"
+            className="w-full bg-gray-600 py-3 rounded-lg"
           >
             Отмена
           </button>
