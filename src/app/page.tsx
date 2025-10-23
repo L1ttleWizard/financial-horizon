@@ -8,8 +8,10 @@ import { DashboardCard } from "@/components/ui/DashboardCard";
 import { PaydayProgressBar } from "@/components/ui/PaydayProgressBar";
 import { EventModal } from "@/components/game/EventModal";
 import { ResultModal } from "@/components/game/ResultModal";
-import { useDispatch } from "react-redux";
-import { startNextTurn, resetGame, payDebt } from "@/store/slices/gameSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { startNextTurn, resetGame, payDebt, startDemoEvent, setGameState } from "@/store/slices/gameSlice";
+import { playNextDemoEvent, stopDemo } from "@/store/slices/demoSlice";
+import { demoEvents } from "@/data/demoEvents";
 import { AchievementToast } from "@/components/notifications/AchievementToast";
 import { AchievementsWidget } from "@/components/game/AchievementsWidget";
 import { MoneyTreeWidget } from "@/components/game/MoneyTreeWidget";
@@ -17,7 +19,6 @@ import { NetWorthChart } from "@/components/game/NetWorthChart";
 import { GameOverModal } from "@/components/game/GameOverModal";
 import { PayDebtModal } from "@/components/game/PayDebtModal";
 import { ObligatorySpendsWidget } from "@/components/game/ObligatorySpendsWidget";
-import { useAppSelector } from "@/store/hooks";
 import { RecentLogsWidget } from "@/components/game/RecentLogsWidget";
 import { ForcedGlossaryModal } from "@/components/game/ForcedGlossaryModal";
 import { MascotWidget } from "@/components/game/MascotWidget";
@@ -72,11 +73,30 @@ const summarizeNetWorthHistory = (history: NetWorthHistoryPoint[]): NetWorthHist
 
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
+  const dispatch = useAppDispatch();
   const gameState = useAppSelector((state) => state.game);
   const gameStatus = useAppSelector((state) => state.game.status);
-  const dispatch = useDispatch();
+  const { isActive: isDemoActive, currentStep, originalGameState } = useAppSelector((state) => state.demo);
+
   const [isPayDebtModalOpen, setIsPayDebtModalOpen] = useState(false);
   const [isChartExpanded, setIsChartExpanded] = useState(false); // State for chart visibility
+
+  const handleNextTurnClick = () => {
+    if (isDemoActive) {
+      if (currentStep < demoEvents.length) {
+        dispatch(startDemoEvent(demoEvents[currentStep]));
+        dispatch(playNextDemoEvent());
+      } else {
+        // End of demo, restore original state
+        if (originalGameState) {
+          dispatch(setGameState(originalGameState));
+        }
+        dispatch(stopDemo());
+      }
+    } else {
+      dispatch(startNextTurn());
+    }
+  };
 
   const monthlyInterestRate = 0.1;
   const turnsInMonth = 4;
@@ -93,47 +113,50 @@ export default function HomePage() {
         <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr_380px] gap-6 max-w-[1920px] mx-auto">
           {/* --- Left Sidebar (Controls) --- */}
           <aside className="xl:block">
+            
             <div className="sticky top-6 flex flex-col gap-6">
+            <div className="flex-1">
+                <MascotWidget />
+              </div>
             <div
               className="flex flex-wrap items-stretch justify-center gap-6 rounded-xl justify-items-stretch w-full"
               id="conrols-panel"
             >
               <div className="w-full">
                 <button
-                  onClick={() => dispatch(startNextTurn())}
+                  onClick={handleNextTurnClick}
                   disabled={
                     gameState.isEventModalOpen ||
                     gameState.isResultModalOpen ||
                     gameState.gameOverState?.isGameOver
                   }
-                  className=" start-turn-button w-full h-full bg-blue-600 text-white font-bold py-3 px-12 rounded-lg shadow-lg hover:bg-blue-700 transition"
+                  className=" start-turn-button w-full h-full bg-blue-600 text-white font-bold py-5  px-10 rounded-lg shadow-lg hover:bg-blue-700 transition"
                 >
-                  {gameState.turn === 0 ? "Начать игру" : `Следующая неделя`}
+                  {isDemoActive ? 'Следующее демо-событие' : (gameState.turn === 0 ? "Начать игру" : `Следующая неделя`)}
                 </button>
               </div>
-              <button
-                onClick={() => dispatch(resetGame())}
-                className=" new-game-button w-full h-full bg-gray-700 text-white font-bold py-3 px-12 rounded-lg hover:bg-gray-800 transition"
-              >
-                Начать игру заново
-              </button>
+              
               <Link
                 href="/achievements"
-                className=" all-achievements-button w-full  h-full text-center bg-yellow-500 text-white font-bold py-3 px-12 rounded-lg hover:bg-yellow-600 transition flex items-center justify-center"
+                className=" all-achievements-button w-full  h-full text-center bg-yellow-500 text-white font-bold py-5 px-10 rounded-lg hover:bg-yellow-600 transition flex items-center justify-center"
               >
                 Все достижения
               </Link>
               <Link
                 id="glossary-button"
                 href="/glossary"
-                className="glossary-button w-full  h-full text-center bg-yellow-500 text-white font-bold py-3 px-12 rounded-lg hover:bg-yellow-600 transition flex flex-col items-center justify-center"
+                className="glossary-button w-full  h-full text-center bg-yellow-500 text-white font-bold py-5 px-10 rounded-lg hover:bg-yellow-600 transition flex flex-col items-center justify-center"
               >
                 <span>Словарь терминов</span>
               </Link>
+              <button
+                onClick={() => dispatch(resetGame())}
+                className=" new-game-button w-full h-full bg-gray-700 text-white font-bold py-5 px-10 rounded-lg hover:bg-gray-800 transition"
+              >
+                Начать игру заново
+              </button>
             </div>
-              <div className="flex-1">
-                <MascotWidget />
-              </div>
+              
             </div>
           </aside>
 
@@ -156,7 +179,7 @@ export default function HomePage() {
                   <DashboardCard
                     title="Баланс"
                     value={`₽${formatCurrency(gameState.balance)}`}
-                    icon={<FaRegMoneyBillAlt color="green" />}
+                    icon={<FaRegMoneyBillAlt color="green" size={70}/>}
                   />
                 </div>
                 <div id="mood-card" className="lg:col-span-1 rounded-xl flex">
@@ -173,7 +196,7 @@ export default function HomePage() {
                   <DashboardCard
                     title="Сбережения"
                     value={`₽${formatCurrency(gameState.savings)}`}
-                    icon={<BsGraphUpArrow color="blue" />}
+                    icon={<BsGraphUpArrow color="blue" size={70} />}
                     subValue={`Активных вкладов: ${gameState.activeDeposits.length}`}
                     linkTo="/savings"
                   />
@@ -182,7 +205,7 @@ export default function HomePage() {
                   <DashboardCard
                     title="Долг"
                     value={`₽${formatCurrency(gameState.debt)}`}
-                    icon={<FcDebt />}
+                    icon={<FcDebt size={70}/>}
                     subValue={`Проценты: +₽${formatCurrency(accruedInterest)}`}
                     actionLabel="Погасить"
                     onAction={() => setIsPayDebtModalOpen(true)}

@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { doc, getDoc, updateDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase-client';
 import { sendPasswordResetEmail, deleteUser } from 'firebase/auth';
+import AdminPanel from '@/components/admin/AdminPanel';
 
 // Helper function to check nickname uniqueness
 async function isNicknameUnique(nickname: string): Promise<boolean> {
@@ -18,6 +19,7 @@ async function isNicknameUnique(nickname: string): Promise<boolean> {
 interface UserData {
   nickname?: string;
   email?: string;
+  role?: 'admin' | 'user';
   gameState?: {
     turn: number;
     netWorthHistory: { week: number; netWorth: number }[];
@@ -131,13 +133,13 @@ export default function ProfilePage() {
 
   return (
     <>
-      <main className="min-h-screen p-4 sm:p-6 flex justify-center">
-        <div className="w-full max-w-2xl rounded-xl shadow-lg p-6 sm:p-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">Профиль</h1>
+      <main className="p-4 sm:p-6 flex flex-col items-center">
+        <div className="w-full max-w-2xl rounded-xl shadow-lg p-6 sm:p-8 bg-plashka">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-8 text-center">Профиль</h1>
 
           {/* --- Main Information --- */}
           <div className="space-y-4 border-b pb-6 mb-6">
-             <h2 className="text-xl font-semibold text-gray-700">Основная информация</h2>
+             <h2 className="text-xl font-semibold text-white">Основная информация</h2>
              <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <span className="font-medium text-gray-700">Никнейм:</span>
                 <span className="font-bold text-lg text-gray-900">{userData?.nickname || 'Не указан'}</span>
@@ -150,7 +152,7 @@ export default function ProfilePage() {
 
           {/* --- Game Statistics --- */}
           <div className="space-y-4 border-b pb-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-700">Игровая статистика</h2>
+            <h2 className="text-xl font-semibold text-white">Игровая статистика</h2>
             <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <span className="font-medium text-gray-700">Текущая неделя:</span>
                 <span className="font-bold text-lg text-gray-900">{userData?.gameState?.turn ?? 0}</span>
@@ -163,7 +165,7 @@ export default function ProfilePage() {
           
           {/* --- Account Management --- */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-700">Управление аккаунтом</h2>
+            <h2 className="text-xl font-semibold text-white">Управление аккаунтом</h2>
             
             {/* Change Nickname */}
             <div className="p-4 bg-gray-50 rounded-lg text-gray-600">
@@ -211,6 +213,10 @@ export default function ProfilePage() {
             </div>
           )}
         </div>
+
+        {/* Conditionally render Admin Panel */}
+        {userData?.role === 'admin' && <AdminPanel />}
+
       </main>
 
       {/* --- Delete Confirmation Modal --- */}

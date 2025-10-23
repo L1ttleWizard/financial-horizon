@@ -2,25 +2,47 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebase-client'; // Using alias based on tsconfig.json
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase-client';
 
 const basePath = '/financial-horizon';
 
+// Extend the Firebase User type to include our custom role
+export interface UserWithRole extends User {
+  role?: 'admin' | 'user';
+}
+
 interface AuthContextType {
-  user: User | null;
+  user: UserWithRole | null;
   loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserWithRole | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Listener for Firebase auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // User is signed in, now fetch their role from Firestore
+        const userDocRef = doc(db, 'users', firebaseUser.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const userWithRole: UserWithRole = Object.assign(firebaseUser, { role: userData.role || 'user' });
+          setUser(userWithRole);
+        } else {
+          // Handle case where user exists in Auth but not in Firestore
+          const userWithRole: UserWithRole = Object.assign(firebaseUser, { role: 'user' });
+          setUser(userWithRole);
+        }
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
 

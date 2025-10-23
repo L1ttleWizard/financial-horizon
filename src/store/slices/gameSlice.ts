@@ -70,7 +70,7 @@ export interface NetWorthHistoryPoint {
 type ChoiceEffects = Choice["effects"];
 
 // --- СТРУКТУРА СОСТОЯНИЯ ---
-interface GameState {
+export interface GameState {
   status: "idle" | "loading" | "succeeded" | "failed";
   balance: number;
   mood: number;
@@ -606,6 +606,10 @@ const gameSlice = createSlice({
     ) {
       state.status = action.payload;
     },
+    startDemoEvent(state, action: PayloadAction<GameEvent>) {
+      state.currentEvent = action.payload;
+      state.isEventModalOpen = true;
+    },
   },
 });
 
@@ -622,5 +626,6 @@ export const {
   resetGame,
   setGameState,
   setGameLoadingStatus,
+  startDemoEvent, // Export the new action
 } = gameSlice.actions;
 export default gameSlice.reducer;

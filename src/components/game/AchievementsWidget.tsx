@@ -25,7 +25,7 @@ export function AchievementsWidget({ unlockedIds, allAchievements }: Achievement
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-xl font-bold text-gray-800">Недавние достижения</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">Недавние достижения</h3>
           <p className="text-sm text-gray-500">{`${unlockedCount} / ${totalCount} разблокировано`}</p>
         </div>
         <button onClick={() => setIsCollapsed(!isCollapsed)} className="text-gray-500 hover:text-gray-700">
