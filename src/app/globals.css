@@ -37,6 +37,7 @@ main {
   
   background: radial-gradient(50% 191.67% at 50% 50%, #00cc73 0%, #00ff99 100%);
   border: 2px solid rgba(0, 211, 121, 0.77);
+  
 }
 .new-game-button {
   background: radial-gradient(50% 275% at 50% 50%, #da4444 0%, #ff6565 100%);

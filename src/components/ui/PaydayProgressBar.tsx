@@ -18,7 +18,7 @@ export function PaydayProgressBar({ currentTurn }: ProgressBarProps) {
   }
 
   return (
-    <div className="w-full bg-white rounded-xl shadow-md p-4">
+    <div className="w-full bg-white rounded-xl shadow-md p-4 h-full">
       <div className="flex justify-between items-center mb-2">
         <h3 className="font-bold text-gray-700">Прогресс до зарплаты</h3>
         <p className="text-sm font-semibold text-blue-600">Осталось: {getWeekText(turnsLeft)}</p>

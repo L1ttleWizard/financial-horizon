@@ -35,10 +35,11 @@ export function DashboardCard({
   const content = (
     <div
       style={cardStyle}
-      className={`group relative rounded-xl p-4 sm:p-6 flex flex-col justify-end h-full transition-all ${
-        linkTo ? " hover:scale-105" : ""
-      }`}
-    >
+      className={` ${
+        linkTo
+          ? " hover:scale-105"
+          : "group relative w-full rounded-xl p-4 sm:p-6 flex flex-col justify-end h-full transition-all"
+      }`}>
       <div className="flex-grow flex justify-between mb-6">
         <div className="flex flex-col justify-baseline pb-4 sm:pb-6 pt2">
           <p className="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wider">
@@ -56,8 +57,7 @@ export function DashboardCard({
           <button
             onClick={onAction}
             disabled={actionDisabled}
-            className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed pointer-events-auto"
-          >
+            className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed pointer-events-auto">
             {actionLabel}
           </button>
         </div>
@@ -66,7 +66,15 @@ export function DashboardCard({
   );
 
   if (linkTo) {
-    return <Link href={linkTo}>{content}</Link>;
+    return (
+      <Link
+        href={linkTo}
+        className={`group relative w-full rounded-xl p-4 sm:p-6 flex flex-col justify-end h-full transition-all ${
+          linkTo ? " hover:scale-105" : ""
+        }`}>
+        {content}
+      </Link>
+    );
   }
 
   return content;

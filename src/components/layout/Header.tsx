@@ -6,8 +6,9 @@ import { auth } from '@/lib/firebase-client';
 import { signOut } from 'firebase/auth';
 import { useRouter, usePathname } from 'next/navigation';
 import { FaTrophy, FaUser } from 'react-icons/fa';
-import { FiLogOut } from 'react-icons/fi';
+import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import { useAppSelector } from '@/store/hooks';
+import { MdAddCircleOutline } from 'react-icons/md';
 
 export const Header = () => {
   const { user, loading } = useAuth();
@@ -42,18 +43,18 @@ export const Header = () => {
               <Link href="/profile" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
                 <FaUser />
               </Link>
-              <button onClick={handleLogout} className="text-lg font-medium text-red-600 hover:text-red-800 transition-colors">
+              <button onClick={handleLogout} className=" cursor-pointer text-lg font-medium text-red-600 hover:text-red-800 transition-colors">
                 <FiLogOut />
               </button>
             </>
           ) : (
             <>
               <Link href="/login" className="text-lg font-medium text-blue-600 hover:text-blue-800 transition-colors">
-                Войти
+              <FiLogIn />
               </Link>
               {onboardingCompleted && (
                 <Link href="/register" className="text-lg font-medium text-green-600 hover:text-green-800 transition-colors">
-                  Регистрация
+                  <MdAddCircleOutline />
                 </Link>
               )}
             </>
