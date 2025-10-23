@@ -19,7 +19,7 @@ export function GameOverModal({ reason, message }: ModalProps) {
     const { title, icon } = reasonInfo[reason];
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 modal-background">
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ backgroundColor: 'rgba(45, 55, 72, 0.5)' }}>
             <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-lg w-full flex flex-col items-center text-center animate-fade-in-up text-white bg-gray-900 bg-opacity-50">
                 <div className="text-7xl mb-4">{icon}</div>
                 <h2 className="text-3xl sm:text-4xl font-bold text-red-500 mb-4">{title}</h2>

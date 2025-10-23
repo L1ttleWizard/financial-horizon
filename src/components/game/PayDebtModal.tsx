@@ -25,7 +25,7 @@ export function PayDebtModal({ currentDebt, currentBalance, onClose, onConfirm }
     }
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 modal-background">
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ backgroundColor: 'rgba(45, 55, 72, 0.5)' }}>
             <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full flex flex-col animate-fade-in-up text-white bg-gray-900 bg-opacity-50">
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Погашение долга</h2>
                 

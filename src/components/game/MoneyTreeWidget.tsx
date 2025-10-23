@@ -37,7 +37,7 @@ export function MoneyTreeWidget({
         <p className="text-center text-gray-500 mb-4">Ваш финансовый рост</p>
       </div>
 
-      <div className="relative w-48 h-48 sm:w-64 sm:h-64">
+      <div className="relative w-45 h-45 sm:w-60 sm:h-60">
         <Image
           src={`${basePath}/tree/stage-${tree.stage + 1}.png`}
           alt={`Дерево на стадии ${tree.stage}`}

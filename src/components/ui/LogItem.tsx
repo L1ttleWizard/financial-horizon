@@ -1,13 +1,16 @@
 // src/components/ui/LogItem.tsx
 import { LogEntry } from '@/store/slices/gameSlice';
 import { formatCurrency } from '@/lib/format';
+import { FaArrowUp, FaArrowDown, FaHeart } from 'react-icons/fa';
+import { BsGraphUpArrow } from 'react-icons/bs';
+import { FcDebt } from 'react-icons/fc';
 
 const typeInfo = {
-  income: { icon: '🟢', color: 'text-green-600', isCurrency: true },
-  expense: { icon: '💰', color: 'text-red-600', isCurrency: true },
-  savings: { icon: '📈', color: 'text-blue-600', isCurrency: true },
-  debt: { icon: '💳', color: 'text-orange-600', isCurrency: true },
-  mood: { icon: '❤️', color: 'text-yellow-600', isCurrency: false },
+  income: { icon: <FaArrowUp className="text-green-500" />, color: 'text-green-600', isCurrency: true },
+  expense: { icon: <FaArrowDown className="text-red-500" />, color: 'text-red-600', isCurrency: true },
+  savings: { icon: <BsGraphUpArrow className="text-blue-500" />, color: 'text-blue-600', isCurrency: true },
+  debt: { icon: <FcDebt />, color: 'text-orange-600', isCurrency: true },
+  mood: { icon: <FaHeart className="text-yellow-500" />, color: 'text-yellow-600', isCurrency: false },
 };
 
 export function LogItem({ entry }: { entry: LogEntry }) {

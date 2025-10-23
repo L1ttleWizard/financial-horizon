@@ -1,6 +1,7 @@
 // src/store/store.ts
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import gameReducer from './slices/gameSlice';
+import demoReducer from './slices/demoSlice'; // Import demo reducer
 import { loadState } from './localStorage';
 import onboardingReducer from './slices/onboardingSlice'; 
 import { storageMiddleware } from './storageMiddleware';
@@ -10,6 +11,7 @@ import { firestoreMiddleware } from './firestoreMiddleware'; // Import the new m
 const rootReducer = combineReducers({
   game: gameReducer,
   onboarding: onboardingReducer,
+  demo: demoReducer, // Add demo reducer
 });
 
 // 2. Теперь RootState определяется явно и без циклических зависимостей.

@@ -32,7 +32,7 @@ export function OpenDepositModal({
     amountNumber < offer.minDeposit || amountNumber > maxDeposit;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 modal-background">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ backgroundColor: 'rgba(45, 55, 72, 0.5)' }}>
       <div className="rounded-2xl shadow-2xl p-8 max-w-md w-full animate-fade-in-up text-white bg-gray-900 bg-opacity-50">
         <h2 className="text-2xl font-bold mb-2">
           Вклад в &quot;{offer.bankName}&quot;

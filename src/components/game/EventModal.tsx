@@ -18,7 +18,7 @@ export function EventModal({ event }: ModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 modal-background">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ backgroundColor: 'rgba(45, 55, 72, 0.5)' }}>
       <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 animate-fade-in-up bg-gray-900 bg-opacity-50">
         <div className="flex flex-col items-center justify-center bg-gray-100 rounded-xl p-4">
           <Image

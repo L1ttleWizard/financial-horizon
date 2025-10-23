@@ -78,9 +78,16 @@ export default function RegisterPage() {
       );
       const user = userCredential.user;
 
+      // Check if this is the first user
+      const usersRef = collection(db, "users");
+      const querySnapshot = await getDocs(usersRef);
+      // Temporarily, consider any new registration as a potential first user
+      const isFirstUser = querySnapshot.docs.length <= 1; // Check if 1 or 0 users exist
+
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
         nickname: nickname, // <-- Add nickname
+        role: isFirstUser ? 'admin' : 'user',
         createdAt: serverTimestamp(),
         gameState: gameState,
       });

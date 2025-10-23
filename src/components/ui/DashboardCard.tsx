@@ -35,11 +35,12 @@ export function DashboardCard({
   const content = (
     <div
       style={cardStyle}
-      className={`group relative rounded-xl p-4 sm:p-6 flex flex-col justify-end h-full transition-all ${
-        linkTo ? " hover:scale-105" : ""
-      }`}
-    >
-      <div className="flex-grow flex justify-between mb-6">
+      className={` ${
+        linkTo
+          ? " hover:scale-105"
+          : "group relative w-full rounded-xl p-4 sm:p-6 mb-6  flex flex-col justify-end h-full transition-all"
+      }`}>
+      <div className="flex-grow flex justify-between">
         <div className="flex flex-col justify-baseline pb-4 sm:pb-6 pt2">
           <p className="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wider">
             {title}
@@ -48,16 +49,15 @@ export function DashboardCard({
           {subValue && <p className="text-xs text-gray-500 mt-1">{subValue}</p>}
         </div>
         <div className="flex items-end">
-          <div className="sm:text-4xl text-6xl">{icon}</div>
+          <div className=""><span className="block" style={{height:''}}>{icon}</span></div>
         </div>
       </div>
       {actionLabel && (
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[calc(100%+0.5rem)] opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out pointer-events-none">
+        <div className="absolute bottom-3 left-2 -translate-x-1/2 translate-y-[0calc(-100%+1rem)] opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out pointer-events-none">
           <button
             onClick={onAction}
             disabled={actionDisabled}
-            className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed pointer-events-auto"
-          >
+            className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed pointer-events-auto">
             {actionLabel}
           </button>
         </div>
@@ -66,7 +66,15 @@ export function DashboardCard({
   );
 
   if (linkTo) {
-    return <Link href={linkTo}>{content}</Link>;
+    return (
+      <Link
+        href={linkTo}
+        className={`group relative w-full rounded-xl p-4 sm:p-6 flex flex-col justify-end h-full transition-all ${
+          linkTo ? " hover:scale-105" : ""
+        }`}>
+        {content}
+      </Link>
+    );
   }
 
   return content;
