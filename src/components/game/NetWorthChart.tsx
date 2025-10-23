@@ -1,8 +1,12 @@
 'use client';
-import { NetWorthHistoryPoint } from '@/store/slices/gameSlice';
+
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-export function NetWorthChart({ data }: { data: NetWorthHistoryPoint[] }) {
+import { memo } from 'react';
+import { NetWorthHistoryPoint } from '@/store/slices/gameSlice';
+
+
+const Chart = ({ data }: { data: NetWorthHistoryPoint[] }) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <AreaChart data={data}>
@@ -27,3 +31,5 @@ export function NetWorthChart({ data }: { data: NetWorthHistoryPoint[] }) {
     </ResponsiveContainer>
   );
 }
+
+export const NetWorthChart = memo(Chart);

@@ -25,10 +25,50 @@ import { useAuth } from "@/contexts/AuthContext";
 import { DashboardCardSkeleton } from "@/components/ui/DashboardCardSkeleton";
 import { getMoodEmoji } from "@/data/moodEmojis";
 import { formatCurrency } from "@/lib/format";
+import { NetWorthHistoryPoint } from "@/store/slices/gameSlice";
 import { FaRegMoneyBillAlt } from "react-icons/fa";
 import { BsGraphUpArrow } from "react-icons/bs";
 import { FcDebt } from "react-icons/fc";
+
 const basePath = '/financial-horizon';
+
+// Function to downsample chart data for performance
+const summarizeNetWorthHistory = (history: NetWorthHistoryPoint[]): NetWorthHistoryPoint[] => {
+  if (history.length <= 52) {
+    return history; // Return weekly data for the first year
+  }
+
+  const monthlyData: NetWorthHistoryPoint[] = [];
+  let monthSum = 0;
+  let monthCount = 0;
+  let monthWeek = 4;
+
+  history.forEach((point, index) => {
+    monthSum += point.netWorth;
+    monthCount++;
+
+    // Average every 4 weeks (a month)
+    if ((index + 1) % 4 === 0) {
+      monthlyData.push({
+        week: monthWeek,
+        netWorth: Math.round(monthSum / monthCount),
+      });
+      monthSum = 0;
+      monthCount = 0;
+      monthWeek += 4;
+    }
+  });
+
+  // Add any remaining weeks as the last month
+  if (monthCount > 0) {
+    monthlyData.push({
+      week: monthWeek,
+      netWorth: Math.round(monthSum / monthCount),
+    });
+  }
+
+  return monthlyData;
+};
 
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
@@ -185,7 +225,7 @@ export default function HomePage() {
               </div>
               {isChartExpanded && (
                 <div className="p-5 pt-0">
-                  <NetWorthChart data={gameState.netWorthHistory} />
+                  <NetWorthChart data={summarizeNetWorthHistory(gameState.netWorthHistory)} />
                 </div>
               )}
             </div>

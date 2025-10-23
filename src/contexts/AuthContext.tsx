@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase-client'; // Using alias based on tsconfig.json
 
+const basePath = '/financial-horizon';
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -32,7 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (user) {
         try {
           const idToken = await user.getIdToken();
-          await fetch('/api/auth/session', {
+          await fetch(`${basePath}/api/auth/session`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -44,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       } else {
         try {
-          await fetch('/api/auth/session', {
+          await fetch(`${basePath}/api/auth/session`, {
             method: 'DELETE',
           });
         } catch (error) {
