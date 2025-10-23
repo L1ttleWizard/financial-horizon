@@ -4,6 +4,8 @@ import admin from 'firebase-admin';
 import { adminAuth, adminDb } from '@/lib/firebase-admin';
 import { headers } from 'next/headers';
 
+export const dynamic = 'force-dynamic';
+
 // Helper function to verify admin privileges
 async function verifyAdmin(idToken: string): Promise<boolean> {
   try {

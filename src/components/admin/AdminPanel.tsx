@@ -12,7 +12,7 @@ export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState<Tab>('users');
 
   return (
-    <div className="w-full max-w-4xl rounded-xl shadow-lg p-6 sm:p-8 bg-gray-800 text-white mt-12">
+    <div className="w-full max-w-6xl rounded-xl shadow-lg p-6 sm:p-8 bg-gray-800 text-white mt-12">
       <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center border-b border-gray-600 pb-4">Админ-панель</h2>
       
       <div className="flex justify-center border-b border-gray-600 mb-6">
