@@ -60,7 +60,18 @@ export async function PUT(
 
     await userRef.update({ role });
 
-    return NextResponse.json({ message: `User role updated to ${role}` });
+    // Fetch the full user record to return the updated object
+    const updatedUserRecord = await adminAuth.getUser(uid);
+
+    const responseData = {
+      uid: updatedUserRecord.uid,
+      email: updatedUserRecord.email,
+      displayName: updatedUserRecord.displayName,
+      role: role,
+      disabled: updatedUserRecord.disabled,
+    };
+
+    return NextResponse.json({ message: `User role updated to ${role}`, user: responseData });
   } catch (error) {
     console.error('Error updating user role:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

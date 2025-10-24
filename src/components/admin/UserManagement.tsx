@@ -67,26 +67,32 @@ export default function UserManagement() {
     setMessage(null);
     setError(null);
     try {
-        const idToken = await user!.getIdToken();
-        const response = await fetch(`${basePath}/api/admin/users/${uid}/role`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${idToken}`,
-            },
-            body: JSON.stringify({ role: newRole }),
-        });
+      const idToken = await user!.getIdToken();
+      const response = await fetch(`${basePath}/api/admin/users/${uid}/role`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({ role: newRole }),
+      });
 
-        const data = await response.json();
-        setMessage(data.message);
-        // Refresh user list
-        fetchUsers();
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update role');
+      }
+
+      setMessage(data.message);
+      // Update the user in the local state
+      setUsers(prevUsers => 
+        prevUsers.map(u => u.uid === uid ? data.user : u)
+      );
     } catch (err: unknown) {
-        if (err instanceof Error) {
-            setError(err.message);
-        } else {
-            setError('An unexpected error occurred');
-        }
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
 
@@ -96,27 +102,27 @@ export default function UserManagement() {
     setMessage(null);
     setError(null);
     try {
-        const idToken = await user!.getIdToken();
-        const response = await fetch(`${basePath}/api/admin/users/${uid}`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        });
+      const idToken = await user!.getIdToken();
+      const response = await fetch(`${basePath}/api/admin/users/${uid}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      });
 
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.error || 'Failed to delete user');
-        }
-        setMessage(data.message);
-        // Refresh user list
-        fetchUsers();
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete user');
+      }
+      setMessage(data.message);
+      // Remove the user from the local state
+      setUsers(prevUsers => prevUsers.filter(u => u.uid !== uid));
     } catch (err: unknown) {
-        if (err instanceof Error) {
-            setError(err.message);
-        } else {
-            setError('An unexpected error occurred');
-        }
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
 
