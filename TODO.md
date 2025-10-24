@@ -49,31 +49,3 @@ localstate должен синхронизироваться с firebase
 10. разделить разряды нулей в суммах, допустим заменять 10000Р на 10 000Р -done
 11. заменить текстовые иконки в плашках на главной странице на иконки из react icons, сделать их побольше ---------
 
-https://nextjs.org/telemetry
-   ▲ Next.js 15.5.4
-   Creating an optimized production build ...
-<w> [webpack.cache.PackFileCacheStrategy] Skipped not serializable cache item 'Compilation/modules|/home/runner/work/***/***/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!/home/runner/work/***/***/node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!/home/runner/work/***/***/src/app/globals.css': No serializer registered for Warning
-<w> while serializing webpack/lib/cache/PackFileCacheStrategy.PackContentItems -> webpack/lib/NormalModule -> Array { 2 items } -> webpack/lib/ModuleWarning -> Warning
- ⚠ Compiled with warnings in 5.8s
-./src/app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/app/globals.css
-Warning
-(2:28012) autoprefixer: Gradient has outdated direction syntax. New syntax is like `closest-side at 0 0` instead of `0 0, closest-side`.
-Import trace for requested module:
-./src/app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/app/globals.css
-./src/app/globals.css
-./src/app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/app/globals.css
-Warning
-(2:28125) autoprefixer: Gradient has outdated direction syntax. New syntax is like `closest-side at 0 0` instead of `0 0, closest-side`.
-Import trace for requested module:
-./src/app/globals.css.webpack[javascript/auto]!=!./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/app/globals.css
-./src/app/globals.css
- ✓ Compiled successfully in 14.9s
-   Linting and checking validity of types ...
-./src/app/page.tsx
-28:7  Warning: 'basePath' is assigned a value but never used.  @typescript-eslint/no-unused-vars
-./src/components/game/AchievementsWidget.tsx
-3:8  Warning: 'Link' is defined but never used.  @typescript-eslint/no-unused-vars
-21:9  Warning: 'latestAchievement' is assigned a value but never used.  @typescript-eslint/no-unused-vars
-./src/components/game/MascotWidget.tsx
-6:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

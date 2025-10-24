@@ -1,7 +1,7 @@
 // src/app/api/admin/users/[uid]/role/route.ts
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebase-admin';
-import { headers } from 'next/headers';
+import { headers as nextHeaders } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,7 +25,7 @@ export async function PUT(
   request: Request,
   { params }: { params: { uid: string } }
 ) {
-  const authorization = headers().get('Authorization');
+  const authorization = (await nextHeaders()).get('Authorization');
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

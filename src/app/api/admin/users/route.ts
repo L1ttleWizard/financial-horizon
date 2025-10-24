@@ -22,13 +22,13 @@ async function verifyAdmin(idToken: string): Promise<boolean> {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   if (!admin.apps.length) {
     console.error('Firebase Admin SDK not initialized.');
     return NextResponse.json({ error: 'Internal Server Error: Firebase Admin SDK not initialized.' }, { status: 500 });
   }
 
-  const authorization = headers().get('Authorization');
+  const authorization = (await headers()).get('Authorization');
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

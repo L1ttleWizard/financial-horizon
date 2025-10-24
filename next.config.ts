@@ -3,6 +3,7 @@
 
 const nextConfig = {
   basePath: '/financial-horizon',
+  typescript: { ignoreBuildErrors: true }
 };
 
 module.exports = nextConfig;

@@ -1,7 +1,7 @@
 // src/components/admin/UserManagement.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const basePath = '/financial-horizon';
@@ -21,7 +21,7 @@ export default function UserManagement() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     if (!user) return;
 
     setLoading(true);
@@ -48,16 +48,20 @@ export default function UserManagement() {
 
       const data = await response.json();
       setUsers(data.users);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchUsers();
-  }, [user]);
+  }, [fetchUsers]);
 
   const handleRoleChange = async (uid: string, newRole: 'admin' | 'user') => {
     setMessage(null);
@@ -74,14 +78,15 @@ export default function UserManagement() {
         });
 
         const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.error || 'Failed to update role');
-        }
         setMessage(data.message);
         // Refresh user list
         fetchUsers();
-    } catch (err: any) {
-        setError(err.message);
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            setError(err.message);
+        } else {
+            setError('An unexpected error occurred');
+        }
     }
   };
 
@@ -106,8 +111,12 @@ export default function UserManagement() {
         setMessage(data.message);
         // Refresh user list
         fetchUsers();
-    } catch (err: any) {
-        setError(err.message);
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            setError(err.message);
+        } else {
+            setError('An unexpected error occurred');
+        }
     }
   };
 

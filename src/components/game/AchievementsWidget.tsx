@@ -1,6 +1,6 @@
 import { Achievement } from "@/data/achievementsData";
 import { AchievementBadge } from "./AchievementBadge";
-import Link from "next/link";
+
 import { useState } from "react";
 
 interface AchievementsWidgetProps {
@@ -18,7 +18,7 @@ export function AchievementsWidget({ unlockedIds, allAchievements }: Achievement
     .slice(-5)
     .reverse();
 
-  const latestAchievement = recentAchievements.length > 0 ? recentAchievements[0] : null;
+
 
   return (
     <div className="rounded-xl shadow-lg p-5 flex flex-col h-full bg-white">

@@ -39,4 +39,3 @@ const demoSlice = createSlice({
 
 export const { startDemo, stopDemo, playNextDemoEvent, setDemoEventIndex } = demoSlice.actions;
 export default demoSlice.reducer;
-""

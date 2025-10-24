@@ -33,11 +33,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          const userWithRole: UserWithRole = Object.assign(firebaseUser, { role: userData.role || 'user' });
+          const userWithRole: UserWithRole = Object.assign(firebaseUser, { role: (userData.role as 'admin' | 'user') || 'user' });
           setUser(userWithRole);
         } else {
           // Handle case where user exists in Auth but not in Firestore
-          const userWithRole: UserWithRole = Object.assign(firebaseUser, { role: 'user' });
+          const userWithRole: UserWithRole = Object.assign(firebaseUser, { role: 'user' as 'admin' | 'user' });
           setUser(userWithRole);
         }
       } else {

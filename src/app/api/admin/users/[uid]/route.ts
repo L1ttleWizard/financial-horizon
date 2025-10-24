@@ -25,7 +25,7 @@ export async function DELETE(
   request: Request,
   { params }: { params: { uid: string } }
 ) {
-  const authorization = headers().get('Authorization');
+  const authorization = (await headers()).get('Authorization');
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -51,9 +51,10 @@ export async function DELETE(
     await adminDb.collection('users').doc(uid).delete();
 
     return NextResponse.json({ message: 'User deleted successfully' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting user:', error);
-    if (error.code === 'auth/user-not-found') {
+    const firebaseError = error as { code?: string };
+    if (firebaseError.code === 'auth/user-not-found') {
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

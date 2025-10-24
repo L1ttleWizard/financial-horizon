@@ -31,8 +31,6 @@ import { FaRegMoneyBillAlt } from "react-icons/fa";
 import { BsGraphUpArrow } from "react-icons/bs";
 import { FcDebt } from "react-icons/fc";
 
-const basePath = '/financial-horizon';
-
 // Function to downsample chart data for performance
 const summarizeNetWorthHistory = (history: NetWorthHistoryPoint[]): NetWorthHistoryPoint[] => {
   if (history.length <= 52) {

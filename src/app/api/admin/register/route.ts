@@ -22,7 +22,7 @@ async function verifyAdmin(idToken: string): Promise<boolean> {
 }
 
 export async function POST(request: Request) {
-  const authorization = headers().get('Authorization');
+  const authorization = (await headers()).get('Authorization');
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -56,13 +56,14 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ uid: userRecord.uid });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating user:', error);
     // Provide more specific error messages
-    if (error.code === 'auth/email-already-exists') {
+    const firebaseError = error as { code?: string };
+    if (firebaseError.code === 'auth/email-already-exists') {
       return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
     }
-    if (error.code === 'auth/invalid-password') {
+    if (firebaseError.code === 'auth/invalid-password') {
       return NextResponse.json({ error: 'Password must be at least 6 characters long' }, { status: 400 });
     }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
