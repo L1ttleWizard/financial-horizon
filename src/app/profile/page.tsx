@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   doc,
-  getDoc,
   updateDoc,
   deleteDoc,
   collection,
   query,
   where,
   getDocs,
+  onSnapshot,
 } from "firebase/firestore";
 import { db, auth } from "@/lib/firebase-client";
 import { sendPasswordResetEmail, deleteUser } from "firebase/auth";
@@ -51,29 +51,27 @@ export default function ProfilePage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (user) {
-        try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDocSnap = await getDoc(userDocRef);
-          if (userDocSnap.exists()) {
-            const data = userDocSnap.data() as UserData;
-            setUserData(data);
-            setNewNickname(data.nickname || "");
-          } else {
-            console.log("No such document!");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        } finally {
-          setIsFetching(false);
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data() as UserData;
+          setUserData(data);
+          setNewNickname(data.nickname || "");
+        } else {
+          console.log("No such document!");
         }
-      } else if (!loading) {
         setIsFetching(false);
-      }
-    };
+      }, (error) => {
+        console.error("Error fetching user data:", error);
+        setIsFetching(false);
+      });
 
-    fetchUserData();
+      // Cleanup subscription on unmount
+      return () => unsubscribe();
+    } else if (!loading) {
+      setIsFetching(false);
+    }
   }, [user, loading]);
 
   const handleUpdateNickname = async () => {
