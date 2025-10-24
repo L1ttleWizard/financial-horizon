@@ -21,6 +21,88 @@ async function verifyAdmin(idToken: string): Promise<boolean> {
   }
 }
 
+export async function GET(
+  request: Request,
+  { params }: { params: { uid: string } }
+) {
+  const authorization = (await headers()).get('Authorization');
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const idToken = authorization.split('Bearer ')[1];
+  const isAdmin = await verifyAdmin(idToken);
+
+  if (!isAdmin) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  const { uid } = params;
+
+  try {
+    const userDoc = await adminDb.collection('users').doc(uid).get();
+    if (!userDoc.exists) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const firebaseUser = await adminAuth.getUser(uid);
+
+    const userData = {
+      uid: firebaseUser.uid,
+      email: firebaseUser.email || 'N/A',
+      displayName: firebaseUser.displayName || 'No Name',
+      role: userDoc.data()?.role || 'user',
+      disabled: firebaseUser.disabled,
+      gameState: userDoc.data()?.gameState, // Assuming gameState is stored here
+    };
+
+    return NextResponse.json({ user: userData });
+  } catch (error: unknown) {
+    console.error('Error fetching user:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function PUT(
+  request: Request,
+  { params }: { params: { uid: string } }
+) {
+  const authorization = (await headers()).get('Authorization');
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const idToken = authorization.split('Bearer ')[1];
+  const isAdmin = await verifyAdmin(idToken);
+
+  if (!isAdmin) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  const { uid } = params;
+  const { gameState } = await request.json();
+
+  try {
+    const userRef = adminDb.collection('users').doc(uid);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Deep merge the existing gameState with the new one
+    const existingState = userDoc.data()?.gameState || {};
+    const newState = { ...existingState, ...gameState };
+
+    await userRef.set({ gameState: newState }, { merge: true });
+
+    return NextResponse.json({ message: 'Game state updated successfully' });
+  } catch (error: unknown) {
+    console.error('Error updating game state:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   request: Request,
   { params }: { params: { uid: string } }

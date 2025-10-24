@@ -223,6 +223,7 @@ export default function HomePage() {
                     subValue={`Активных вкладов: ${gameState.activeDeposits.length}`}
                     linkTo="/savings"
                     badnessFactor={gameState.savings === 0 ? 0.5 : 0}
+                    highlightColor="yellow"
                   />
                 </div>
                 <div id="debt-card" className="lg:col-span-1 rounded-xl flex">

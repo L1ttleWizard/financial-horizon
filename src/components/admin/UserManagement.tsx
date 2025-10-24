@@ -1,8 +1,6 @@
-// src/components/admin/UserManagement.tsx
-'use client';
-
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const basePath = '';
 
@@ -16,6 +14,7 @@ interface UserForAdminView {
 
 export default function UserManagement() {
   const { user } = useAuth();
+  const router = useRouter();
   const [users, setUsers] = useState<UserForAdminView[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +62,12 @@ export default function UserManagement() {
     fetchUsers();
   }, [fetchUsers]);
 
-  const handleRoleChange = async (uid: string, newRole: 'admin' | 'user') => {
+  const handleNavigation = (uid: string) => {
+    router.push(`/admin/users/${uid}`);
+  };
+
+  const handleRoleChange = async (e: React.MouseEvent, uid: string, newRole: 'admin' | 'user') => {
+    e.stopPropagation();
     setMessage(null);
     setError(null);
     try {
@@ -96,7 +100,8 @@ export default function UserManagement() {
     }
   };
 
-  const handleDeleteUser = async (uid: string) => {
+  const handleDeleteUser = async (e: React.MouseEvent, uid: string) => {
+    e.stopPropagation();
     if (!window.confirm('Are you sure you want to permanently delete this user?')) return;
 
     setMessage(null);
@@ -144,7 +149,11 @@ export default function UserManagement() {
           </thead>
           <tbody className="bg-gray-700 divide-y divide-gray-600">
             {users.map((u) => (
-              <tr key={u.uid}>
+              <tr 
+                key={u.uid} 
+                onClick={() => handleNavigation(u.uid)}
+                className="cursor-pointer hover:bg-gray-600 transition-colors duration-200"
+              >
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-white">{u.displayName || 'No Name'}</div>
                   <div className="text-sm text-gray-400">{u.email}</div>
@@ -158,13 +167,13 @@ export default function UserManagement() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center gap-4">
                         {u.role === 'user' ? (
-                            <button onClick={() => handleRoleChange(u.uid, 'admin')} className="text-green-400 hover:text-green-300">Make Admin</button>
+                            <button onClick={(e) => handleRoleChange(e, u.uid, 'admin')} className="text-green-400 hover:text-green-300">Make Admin</button>
                         ) : (
-                            <button onClick={() => handleRoleChange(u.uid, 'user')} className="text-yellow-400 hover:text-yellow-300" disabled={u.uid === user?.uid}>
+                            <button onClick={(e) => handleRoleChange(e, u.uid, 'user')} className="text-yellow-400 hover:text-yellow-300" disabled={u.uid === user?.uid}>
                                 Revoke Admin
                             </button>
                         )}
-                        <button onClick={() => handleDeleteUser(u.uid)} className="text-red-500 hover:text-red-400" disabled={u.uid === user?.uid}>
+                        <button onClick={(e) => handleDeleteUser(e, u.uid)} className="text-red-500 hover:text-red-400" disabled={u.uid === user?.uid}>
                             Delete
                         </button>
                     </div>

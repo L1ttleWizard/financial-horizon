@@ -48,22 +48,24 @@ export async function GET() {
       displayName: user.displayName,
       photoURL: user.photoURL,
       disabled: user.disabled,
-      // Note: Custom claims and roles from Firestore need to be fetched separately if needed
     }));
 
-    // If you also need the role from Firestore for each user in the list
-    const usersWithRoles = await Promise.all(
-      users.map(async (user) => {
-        const userDoc = await adminDb.collection('users').doc(user.uid).get();
-        const userDocData = userDoc.exists ? userDoc.data() : null;
-        return {
-          ...user,
-          // Use displayName from Auth if it exists, otherwise use nickname from Firestore
-          displayName: user.displayName || userDocData?.nickname,
-          role: userDocData ? userDocData.role : 'user',
-        };
-      })
-    );
+    if (users.length === 0) {
+      return NextResponse.json({ users: [] });
+    }
+
+    const uids = users.map(user => user.uid);
+    const userDocs = await adminDb.collection('users').where(admin.firestore.FieldPath.documentId(), 'in', uids).get();
+    const roles = new Map(userDocs.docs.map(doc => [doc.id, doc.data()]));
+
+    const usersWithRoles = users.map(user => {
+      const userDocData = roles.get(user.uid);
+      return {
+        ...user,
+        displayName: user.displayName || userDocData?.nickname,
+        role: userDocData ? userDocData.role : 'user',
+      };
+    });
 
     return NextResponse.json({ users: usersWithRoles });
   } catch (error) {
