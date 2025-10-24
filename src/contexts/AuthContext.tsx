@@ -5,7 +5,7 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase-client';
 
-const basePath = '/financial-horizon';
+const basePath = '';
 
 // Extend the Firebase User type to include our custom role
 export interface UserWithRole extends User {
