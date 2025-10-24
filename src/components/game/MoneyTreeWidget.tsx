@@ -6,7 +6,7 @@ import { treeData } from "@/data/treeData";
 import { formatCurrency } from "@/lib/format";
 
 
-const basePath = "/financial-horizon";
+const basePath = "";
 
 interface WidgetProps {
   balance: number;
