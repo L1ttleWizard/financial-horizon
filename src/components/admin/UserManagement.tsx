@@ -4,7 +4,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
-const basePath = '/financial-horizon';
+const basePath = '';
 
 interface UserForAdminView {
   uid: string;
