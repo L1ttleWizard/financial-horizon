@@ -9,6 +9,7 @@ import { FaTrophy, FaUser } from 'react-icons/fa';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import { useAppSelector } from '@/store/hooks';
 import { MdAddCircleOutline } from 'react-icons/md';
+import { GoHomeFill } from 'react-icons/go';
 
 export const Header = () => {
   const { user, loading } = useAuth();
@@ -30,7 +31,7 @@ export const Header = () => {
         <nav className="flex items-center gap-6">
           {pathname !== '/' && (
             <Link href="/" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
-              Главная
+              <GoHomeFill />
             </Link>
           )}
           <Link href="/leaderboard" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
