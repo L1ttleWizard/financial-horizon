@@ -24,7 +24,7 @@ import { ForcedGlossaryModal } from "@/components/game/ForcedGlossaryModal";
 import { MascotWidget } from "@/components/game/MascotWidget";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardCardSkeleton } from "@/components/ui/DashboardCardSkeleton";
-import { getMoodEmoji } from "@/data/moodEmojis";
+import { getMoodStyle } from "@/data/moodEmojis";
 import { formatCurrency } from "@/lib/format";
 import { NetWorthHistoryPoint } from "@/store/slices/gameSlice";
 import { FaRegMoneyBillAlt } from "react-icons/fa";
@@ -105,9 +105,32 @@ export default function HomePage() {
 
   const isLoading = authLoading || (user && gameStatus === 'loading');
 
+  const MAX_NET_WORTH = 41000; // Initial net worth
+  const MIN_NET_WORTH = -50000;
+  const currentNetWorth =
+    gameState.balance + gameState.savings - gameState.debt;
+  let badnessFactor =
+    (MAX_NET_WORTH - currentNetWorth) / (MAX_NET_WORTH - MIN_NET_WORTH);
+  badnessFactor = Math.max(0, Math.min(badnessFactor, 1));
+
+  const moodStyle = getMoodStyle(gameState.mood);
+
+  const BALANCE_THRESHOLD = 10000;
+  let balanceBadnessFactor = 0;
+  if (gameState.balance < BALANCE_THRESHOLD) {
+    balanceBadnessFactor = 1 - gameState.balance / BALANCE_THRESHOLD;
+  }
+  balanceBadnessFactor = Math.max(0, Math.min(balanceBadnessFactor, 1));
+
   return (
     <>
-      <main className="min-h-screen p-4 sm:p-6">
+      <main
+        className="min-h-screen p-4 sm:p-6"
+        style={{
+          backgroundColor: `rgba(239, 68, 68, ${badnessFactor * 0.1})`,
+          transition: "background-color 0.5s ease",
+        }}
+      >
         <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr_380px] gap-6 max-w-[1920px] mx-auto">
           {/* --- Left Sidebar (Controls) --- */}
           <aside className="xl:block">
@@ -178,13 +201,15 @@ export default function HomePage() {
                     title="Баланс"
                     value={`₽${formatCurrency(gameState.balance)}`}
                     icon={<FaRegMoneyBillAlt color="green" size={70}/>}
+                    badnessFactor={balanceBadnessFactor}
                   />
                 </div>
                 <div id="mood-card" className="lg:col-span-1 rounded-xl flex">
                   <DashboardCard
                     title="Настроение"
                     value={`${gameState.mood} / 100`}
-                    icon={getMoodEmoji(gameState.mood)}
+                    icon={moodStyle.icon}
+                    highlightColor={moodStyle.color}
                   />
                 </div>
                 <div
@@ -197,6 +222,7 @@ export default function HomePage() {
                     icon={<BsGraphUpArrow color="blue" size={70} />}
                     subValue={`Активных вкладов: ${gameState.activeDeposits.length}`}
                     linkTo="/savings"
+                    badnessFactor={gameState.savings === 0 ? 0.5 : 0}
                   />
                 </div>
                 <div id="debt-card" className="lg:col-span-1 rounded-xl flex">
@@ -208,11 +234,11 @@ export default function HomePage() {
                     actionLabel="Погасить"
                     onAction={() => setIsPayDebtModalOpen(true)}
                     actionDisabled={gameState.debt === 0}
+                    badnessFactor={badnessFactor}
                   />
                 </div>
               </>
             )}
-
             {/* --- Progress Bar --- */}
             <div className="lg:col-span-4">
               <PaydayProgressBar currentTurn={gameState.turn} />
@@ -270,6 +296,7 @@ export default function HomePage() {
                 savings={gameState.savings}
                 debt={gameState.debt}
                 currentStage={gameState.treeStage}
+                badnessFactor={badnessFactor}
               />
               <AchievementsWidget
                 unlockedIds={gameState.unlockedAchievements}
@@ -293,6 +320,7 @@ export default function HomePage() {
                   savings={gameState.savings}
                   debt={gameState.debt}
                   currentStage={gameState.treeStage}
+                  badnessFactor={badnessFactor}
                 />
               </div>
             </div>

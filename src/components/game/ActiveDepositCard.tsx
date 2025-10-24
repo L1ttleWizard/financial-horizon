@@ -14,7 +14,7 @@ export function ActiveDepositCard({
   const turnsLeft = deposit.endTurn - currentTurn;
 
   return (
-    <div className="rounded-xl shadow p-4">
+    <div className="rounded-xl shadow p-4 bg-white">
       <h3 className="font-bold text-lg text-gray-800">{deposit.bankName}</h3>
       <div className="flex justify-between items-baseline my-2">
         <span className="text-2xl font-bold text-blue-600">

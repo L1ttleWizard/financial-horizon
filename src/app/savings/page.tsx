@@ -19,6 +19,14 @@ export default function SavingsPage() {
   const { activeDeposits, propertyInvestments, availableOffers, turn, balance, debt, savings } =
     useAppSelector((state) => state.game);
 
+  const MAX_NET_WORTH = 41000; // Initial net worth
+  const MIN_NET_WORTH = -50000;
+  const currentNetWorth =
+    balance + savings - debt;
+  let badnessFactor =
+    (MAX_NET_WORTH - currentNetWorth) / (MAX_NET_WORTH - MIN_NET_WORTH);
+  badnessFactor = Math.max(0, Math.min(badnessFactor, 1));
+
   const [selectedOffer, setSelectedOffer] = useState<BankOffer | null>(null);
 
   const handleConfirmDeposit = (payload: {
