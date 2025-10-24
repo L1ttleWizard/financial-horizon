@@ -1,5 +1,5 @@
 // src/app/api/admin/users/[uid]/role/route.ts
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebase-admin';
 import { headers as nextHeaders } from 'next/headers';
 
@@ -22,9 +22,11 @@ async function verifyAdmin(idToken: string): Promise<string | null> {
 }
 
 export async function PUT(
-  request: Request,
-  { params }: { params: { uid: string } }
+  request: NextRequest,
+  context: { params: { uid: string } }
 ) {
+  const { params } = context;
+
   const authorization = (await nextHeaders()).get('Authorization');
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -44,7 +46,6 @@ export async function PUT(
     return NextResponse.json({ error: 'Invalid role specified' }, { status: 400 });
   }
 
-  // Prevent an admin from accidentally revoking their own admin status
   if (adminUid === uid && role === 'user') {
     return NextResponse.json({ error: 'Admin cannot revoke their own admin status' }, { status: 400 });
   }
@@ -54,7 +55,7 @@ export async function PUT(
     const userDoc = await userRef.get();
 
     if (!userDoc.exists) {
-        return NextResponse.json({ error: 'User not found in Firestore' }, { status: 404 });
+      return NextResponse.json({ error: 'User not found in Firestore' }, { status: 404 });
     }
 
     await userRef.update({ role });
