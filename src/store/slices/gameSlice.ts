@@ -134,6 +134,35 @@ const initialState: GameState = {
   monthlySalary: 131200,
 };
 
+const applyBalanceChange = (
+  state: GameState,
+  amount: number,
+  description: string
+) => {
+  if (amount === 0) return;
+
+  if (amount > 0) {
+    state.balance += amount;
+    addLogEntry(state, "income", description, amount);
+  } else {
+    const expense = Math.abs(amount);
+    if (state.balance >= expense) {
+      state.balance -= expense;
+      addLogEntry(state, "expense", description, -expense);
+    } else {
+      const shortfall = expense - state.balance;
+      if (state.balance > 0) {
+        addLogEntry(state, "expense", `Частичная оплата: ${description}`, -state.balance);
+        state.balance = 0;
+      }
+      state.debt += shortfall;
+      state.mood += MOOD_PENALTY_FOR_DEBT;
+      addLogEntry(state, "debt", `Экстренный кредит: ${description}`, shortfall);
+      addLogEntry(state, "mood", "Стресс из-за нового долга", MOOD_PENALTY_FOR_DEBT);
+    }
+  }
+};
+
 // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
 const addLogEntry = (
   state: GameState,
@@ -251,8 +280,7 @@ const gameSlice = createSlice({
         updateNetWorthAndTree(state);
       }
 
-      state.balance -= state.weeklySpends;
-      addLogEntry(state, "expense", "Еда и транспорт", -state.weeklySpends);
+      applyBalanceChange(state, -state.weeklySpends, "Еда и транспорт");
 
       const shuffled = [...gameEventsPool].sort(() => 0.5 - Math.random());
       state.currentEvent = shuffled[0];
@@ -296,35 +324,7 @@ const gameSlice = createSlice({
       }
 
       // Затем обрабатываем оплату счетов
-      if (state.balance >= state.monthlyBills) {
-        state.balance -= state.monthlyBills;
-        addLogEntry(state, "expense", "Аренда и коммуналка", -state.monthlyBills);
-      } else {
-        const shortfall = state.monthlyBills - state.balance;
-        if (state.balance > 0) {
-          addLogEntry(
-            state,
-            "expense",
-            "Частичная оплата счетов",
-            -state.balance
-          );
-          state.balance = 0;
-        }
-        state.debt += shortfall;
-        state.mood += MOOD_PENALTY_FOR_DEBT;
-        addLogEntry(
-          state,
-          "debt",
-          "Экстренный кредит на оплату счетов",
-          shortfall
-        );
-        addLogEntry(
-          state,
-          "mood",
-          "Стресс из-за неуплаты счетов",
-          MOOD_PENALTY_FOR_DEBT
-        );
-      }
+      applyBalanceChange(state, -state.monthlyBills, "Аренда и коммуналка");
       state.balance += state.monthlySalary;
       addLogEntry(state, "income", "Месячная зарплата", state.monthlySalary);
       state.mood += MOOD_BOOST_ON_PAYDAY;
@@ -355,13 +355,7 @@ const gameSlice = createSlice({
       const choice = action.payload;
       const effects = choice.effects;
       if (effects.balance) {
-        state.balance += effects.balance;
-        addLogEntry(
-          state,
-          effects.balance > 0 ? "income" : "expense",
-          choice.text,
-          effects.balance
-        );
+        applyBalanceChange(state, effects.balance, choice.text);
       }
       if (effects.mood) {
         state.mood += effects.mood;

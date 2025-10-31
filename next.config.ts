@@ -1,11 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   basePath: '',
-  typescript: { ignoreBuildErrors: true },
-  eslint: { ignoreDuringBuilds: true },
+  typescript: { },
+  eslint: {},
   experimental: {
-    typedRoutes: false, // 🚫 disables strict route type validation
+    
   },
 };
 
 module.exports = nextConfig;
+// typescript: { ignoreBuildErrors: true },
+// eslint: { ignoreDuringBuilds: true },
