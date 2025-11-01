@@ -69,6 +69,8 @@ export interface NetWorthHistoryPoint {
 }
 type ChoiceEffects = Choice["effects"];
 
+type SerializableGameEvent = Omit<GameEvent, 'triggerCondition'>;
+
 // --- СТРУКТУРА СОСТОЯНИЯ ---
 export interface GameState {
   status: "idle" | "loading" | "succeeded" | "failed";
@@ -83,7 +85,7 @@ export interface GameState {
   availableOffers: BankOffer[];
   moodAtZeroTurns: number;
   gameOverState: { isGameOver: false } | GameOverState;
-  currentEvent: GameEvent | null;
+  currentEvent: SerializableGameEvent | null;
   log: LogEntry[];
   netWorthHistory: NetWorthHistoryPoint[];
   lastChoiceResult: {
@@ -97,6 +99,9 @@ export interface GameState {
   newlyUnlockedAchievement: Achievement | null;
   isGlossaryForced: boolean;
   forcedGlossaryTerm: Term | null;
+  negativeEventCounter: number;
+  lastEventId: string | null;
+  areOffersInitialized: boolean;
   // Системные переменные
   monthlyBills: number;
   weeklySpends: number;
@@ -114,9 +119,7 @@ const initialState: GameState = {
   turn: 0,
   activeDeposits: [],
   propertyInvestments: [],
-  availableOffers: [...bankOffersPool]
-    .sort(() => 0.5 - Math.random())
-    .slice(0, 3),
+  availableOffers: [],
   moodAtZeroTurns: 0,
   gameOverState: { isGameOver: false },
   currentEvent: null,
@@ -129,6 +132,9 @@ const initialState: GameState = {
   newlyUnlockedAchievement: null,
   isGlossaryForced: false,
   forcedGlossaryTerm: null,
+  negativeEventCounter: 0,
+  lastEventId: null,
+  areOffersInitialized: false,
   monthlyBills: 49200,
   weeklySpends: 10000,
   monthlySalary: 131200,
@@ -235,6 +241,41 @@ const checkGameOverConditions = (state: GameState) => {
   }
 };
 
+const checkAllAchievements = (state: GameState) => {
+  const checkAndUnlock = (id: string) => {
+    if (!state.unlockedAchievements.includes(id)) {
+      state.unlockedAchievements.push(id);
+      state.newlyUnlockedAchievement = getAchievementById(id) || null;
+    }
+  };
+
+  // Tier 1
+  if (state.turn >= PAYDAY_CYCLE) checkAndUnlock("FIRST_STEPS");
+  if (state.savings > 0) checkAndUnlock("FIRST_SAVINGS");
+  if (state.debt > 0) checkAndUnlock("CREDIT_BAPTISM");
+  if (state.debt === 0 && state.log.some(e => e.type === 'debt')) checkAndUnlock("DEBT_FREE");
+  if (state.log.filter(e => e.description.includes("Экономный") || e.description.includes("недорогой")).length >= 3) checkAndUnlock("WISE_SHOPPER");
+  if (state.log.filter(e => e.description.includes("Подработка")).length >= 3) checkAndUnlock("SIDE_HUSTLER");
+
+  // Tier 2
+  const totalExpenses = state.monthlyBills + (state.weeklySpends * 4);
+  if (state.savings >= totalExpenses * 3) checkAndUnlock("RAINY_DAY_FUND");
+  if (state.activeDeposits.length > 0 && state.propertyInvestments.length > 0) checkAndUnlock("DIVERSIFIER");
+  if (state.propertyInvestments.length > 0) checkAndUnlock("REAL_ESTATE_MOGUL");
+  if (state.log.some(e => e.description.includes("Завершение вклада"))) checkAndUnlock("COMPOUND_MAGIC");
+  if (state.debt === 0 && state.turn > 12) checkAndUnlock("DEBT_AVOIDER");
+  if (state.log.some(e => e.description.includes("Благотворительность"))) checkAndUnlock("PHILANTHROPIST");
+
+  // Tier 3
+  const netWorth = state.balance + state.savings - state.debt;
+  if (netWorth >= 1000000) checkAndUnlock("MILLIONAIRE");
+  // More complex logic for passive income would be needed here
+  if (state.log.some(e => e.description.includes("Глобальная рецессия"))) checkAndUnlock("CRISIS_MANAGER");
+  if (state.log.some(e => e.description.includes("Написать книгу"))) checkAndUnlock("BOOK_AUTHOR");
+  const totalDebtPaid = state.log.filter(e => e.description === 'Погашение долга').reduce((sum, entry) => sum + Math.abs(entry.amount), 0);
+  if (totalDebtPaid > 200000) checkAndUnlock("ZERO_DEBT_MASTER");
+};
+
 // --- СОЗДАНИЕ СЛАЙСА ---
 const gameSlice = createSlice({
   name: "game",
@@ -247,15 +288,18 @@ const gameSlice = createSlice({
         state.isResultModalOpen
       )
         return;
+
       state.turn += 1;
 
+      // --- PAYDAY LOGIC ---
       if (state.turn > 0 && state.turn % PAYDAY_CYCLE === 0) {
         const randomIndex = Math.floor(Math.random() * glossaryData.length);
         state.forcedGlossaryTerm = glossaryData[randomIndex];
         state.isGlossaryForced = true;
-        return;
+        return; // Skip event selection on payday
       }
 
+      // --- DEPOSIT COMPLETION ---
       const completedDeposits = state.activeDeposits.filter(
         (dep) => state.turn >= dep.endTurn
       );
@@ -280,10 +324,53 @@ const gameSlice = createSlice({
         updateNetWorthAndTree(state);
       }
 
+      // --- WEEKLY SPENDS ---
       applyBalanceChange(state, -state.weeklySpends, "Еда и транспорт");
 
-      const shuffled = [...gameEventsPool].sort(() => 0.5 - Math.random());
-      state.currentEvent = shuffled[0];
+      // --- EVENT DIRECTOR LOGIC ---
+
+      // 1. Determine eligible difficulty tiers
+      const netWorth = state.balance + state.savings - state.debt;
+      let maxDifficulty = 1;
+      if (state.turn > 8 || netWorth > 100000) maxDifficulty = 2;
+      if (state.turn > 24 || netWorth > 300000) maxDifficulty = 3;
+
+      // 2. Filter events by difficulty and cooldown
+      let eligibleEvents = gameEventsPool.filter(
+        (event) => event.difficulty <= maxDifficulty && event.id !== state.lastEventId
+      );
+
+      // 3. Prevent "death spiral" of negative events
+      if (state.negativeEventCounter >= 2) {
+        eligibleEvents = eligibleEvents.filter(event => !event.isNegative);
+      }
+
+      console.log("Eligible events:", JSON.stringify(eligibleEvents.map(e => e.id), null, 2));
+
+      let chosenEvent: GameEvent | null = null;
+      // 4. Select a random event from the eligible pool
+      if (eligibleEvents.length > 0) {
+        const randomIndex = Math.floor(Math.random() * eligibleEvents.length);
+        chosenEvent = eligibleEvents[randomIndex];
+      }
+
+      // If no event is found (e.g., all are on cooldown or filtered out), pick a default one
+      if (!chosenEvent) {
+        chosenEvent = gameEventsPool.find(event => event.id === 'celebrate_payday') || gameEventsPool[0];
+      }
+
+      console.log("Chosen event:", JSON.stringify(chosenEvent, null, 2));
+
+      // 6. Update state based on chosen event
+      const { triggerCondition, ...serializableEvent } = chosenEvent;
+      state.currentEvent = serializableEvent;
+      state.lastEventId = chosenEvent.id;
+      if (chosenEvent.isNegative) {
+        state.negativeEventCounter += 1;
+      } else {
+        state.negativeEventCounter = 0;
+      }
+
       state.isEventModalOpen = true;
     },
     confirmGlossaryRead(state) {
@@ -291,7 +378,7 @@ const gameSlice = createSlice({
       state.forcedGlossaryTerm = null;
 
       const shuffled = [...bankOffersPool].sort(() => 0.5 - Math.random());
-      state.availableOffers = shuffled.slice(0, 3);
+      state.availableOffers = shuffled.slice(0, 6);
 
       const completedDeposits = state.activeDeposits.filter(
         (dep) => state.turn >= dep.endTurn
@@ -330,12 +417,6 @@ const gameSlice = createSlice({
       state.mood += MOOD_BOOST_ON_PAYDAY;
       addLogEntry(state, "mood", "Бонус к настроению", MOOD_BOOST_ON_PAYDAY);
       
-      // FIRST_STEPS - завершить первый игровой месяц (4 недели)
-      if (state.turn === PAYDAY_CYCLE && !state.unlockedAchievements.includes("FIRST_STEPS")) {
-        state.unlockedAchievements.push("FIRST_STEPS");
-        state.newlyUnlockedAchievement = getAchievementById("FIRST_STEPS") || null;
-      }
-      
       // Повышение зарплаты после обучения (через 8 недель после обучения)
       if (state.turn === PAYDAY_CYCLE * 2) {
         // Проверяем, было ли обучение в логе
@@ -350,6 +431,7 @@ const gameSlice = createSlice({
       
       updateNetWorthAndTree(state);
       checkGameOverConditions(state);
+      checkAllAchievements(state);
     },
     makeChoice(state, action: PayloadAction<Choice>) {
       const choice = action.payload;
@@ -409,9 +491,22 @@ const gameSlice = createSlice({
           addLogEntry(state, "savings", choice.text, effects.savings);
         }
         else {
-          // Обычные сбережения (банковские вклады)
-          state.savings += effects.savings;
-          addLogEntry(state, "savings", choice.text, effects.savings);
+          // Create a generic, instant deposit for unhandled savings effects
+          const savingsAmount = effects.savings;
+          if (savingsAmount > 0) {
+            const newDeposit: ActiveDeposit = {
+              id: `${Date.now()}-${Math.random()}`,
+              bankId: 'generic_savings',
+              bankName: 'Накопительный счет',
+              amount: savingsAmount,
+              annualRate: 0.05, // Default low rate
+              term: 4, // Default short term
+              startTurn: state.turn,
+              endTurn: state.turn + 4,
+            };
+            state.activeDeposits.push(newDeposit);
+            addLogEntry(state, "savings", choice.text, savingsAmount);
+          }
         }
       }
       if (effects.debt) {
@@ -448,41 +543,7 @@ const gameSlice = createSlice({
       state.isEventModalOpen = false;
       state.isResultModalOpen = true;
       updateNetWorthAndTree(state);
-      const checkAndUnlock = (id: string) => {
-        if (!state.unlockedAchievements.includes(id)) {
-          state.unlockedAchievements.push(id);
-          state.newlyUnlockedAchievement = getAchievementById(id) || null;
-        }
-      };
-      
-      // FIRST_SAVINGS - открыть первый накопительный счет
-      if ((effects.savings || 0) > 0 && state.savings > 0) {
-        checkAndUnlock("FIRST_SAVINGS");
-      }
-      
-      // CREDIT_BAPTISM - взять первый кредит (только через выборы, не экстренный)
-      if ((effects.debt || 0) > 0 && state.debt > 0 && choice.text !== "Экстренный кредит на оплату счетов") {
-        checkAndUnlock("CREDIT_BAPTISM");
-      }
-      
-      // MONEY_BOX - накопить более 82000₽ на балансе и сбережениях
-      if (state.balance + state.savings > 82000) {
-        checkAndUnlock("MONEY_BOX");
-      }
-      
-      // FINANCIAL_WISDOM - отказаться от дорогой покупки
-      if (choice.text === "Вежливо отказаться") {
-        checkAndUnlock("FINANCIAL_WISDOM");
-      }
-      
-      // ANTIFRAGILITY - справиться с непредвиденными расходами без долгов
-      if (
-        (choice.text === "Починить старый в мастерской" ||
-         choice.text === "Купить новый, но недорогой") &&
-        state.debt === 0
-      ) {
-        checkAndUnlock("ANTIFRAGILITY");
-      }
+      checkAllAchievements(state);
     },
     payDebt(state, action: PayloadAction<number>) {
       let amountToPay = action.payload;
@@ -497,6 +558,7 @@ const gameSlice = createSlice({
       state.debt -= amountToPay;
       addLogEntry(state, "expense", "Погашение долга", -amountToPay);
       updateNetWorthAndTree(state);
+      checkAllAchievements(state);
     },
     openDeposit(
       state,
@@ -528,6 +590,7 @@ const gameSlice = createSlice({
         amount
       );
       updateNetWorthAndTree(state);
+      checkAllAchievements(state);
     },
     closeResultModal(state) {
       state.isResultModalOpen = false;
@@ -583,6 +646,9 @@ const gameSlice = createSlice({
       state.newlyUnlockedAchievement = null;
       state.isGlossaryForced = false;
       state.forcedGlossaryTerm = null;
+      state.negativeEventCounter = 0;
+      state.lastEventId = null;
+      state.areOffersInitialized = false;
       state.monthlyBills = initialState.monthlyBills;
       state.weeklySpends = initialState.weeklySpends;
       state.monthlySalary = initialState.monthlySalary;
@@ -601,8 +667,14 @@ const gameSlice = createSlice({
       state.status = action.payload;
     },
     startDemoEvent(state, action: PayloadAction<GameEvent>) {
-      state.currentEvent = action.payload;
+      const { triggerCondition, ...serializableEvent } = action.payload;
+      state.currentEvent = serializableEvent;
       state.isEventModalOpen = true;
+    },
+    initializeOffers(state) {
+      const shuffled = [...bankOffersPool].sort(() => 0.5 - Math.random());
+      state.availableOffers = shuffled.slice(0, 6);
+      state.areOffersInitialized = true;
     },
   },
 });
@@ -621,5 +693,6 @@ export const {
   setGameState,
   setGameLoadingStatus,
   startDemoEvent, // Export the new action
+  initializeOffers,
 } = gameSlice.actions;
 export default gameSlice.reducer;

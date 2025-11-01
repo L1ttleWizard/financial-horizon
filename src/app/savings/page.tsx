@@ -2,7 +2,6 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-// 1. Убедитесь, что используются правильные типизированные хуки
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { openDeposit } from "@/store/slices/gameSlice";
 import { BankOffer } from "@/data/bankOffers";
@@ -16,7 +15,7 @@ export default function SavingsPage() {
   const dispatch = useAppDispatch();
 
   // 2. Используем useAppSelector для получения всего нужного из state
-  const { activeDeposits, propertyInvestments, availableOffers, turn, balance, debt, savings } =
+  const { activeDeposits, propertyInvestments, availableOffers, turn, balance, debt, savings, areOffersInitialized } =
     useAppSelector((state) => state.game);
 
   const MAX_NET_WORTH = 41000; // Initial net worth
@@ -120,7 +119,13 @@ export default function SavingsPage() {
         {/* Секция доступных предложений */}
         <section>
           <h2 className="text-3xl font-bold mb-4">Доступные предложения</h2>
-          {availableOffers && availableOffers.length > 0 ? (
+          {!areOffersInitialized || availableOffers.length === 0 ? (
+            <div className="text-center py-10 bg-white rounded-xl shadow">
+              <p className="text-gray-500">
+                {!areOffersInitialized ? "Загрузка предложений..." : "В данный момент нет новых предложений от банков."}
+              </p>
+            </div>
+          ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
               {availableOffers.map((offer) => (
                 <BankOfferCard
@@ -129,12 +134,6 @@ export default function SavingsPage() {
                   onSelect={() => setSelectedOffer(offer)}
                 />
               ))}
-            </div>
-          ) : (
-            <div className="text-center py-10 bg-white rounded-xl shadow">
-              <p className="text-gray-500">
-                В данный момент нет новых предложений от банков.
-              </p>
             </div>
           )}
         </section>
