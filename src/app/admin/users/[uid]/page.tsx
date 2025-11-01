@@ -5,7 +5,14 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { GameState, initialState } from '@/store/slices/gameSlice';
+import { GameState } from '@/store/slices/gameSlice';
+
+interface UserData {
+  displayName: string | null;
+  email: string | null;
+  uid: string;
+  gameState?: Partial<GameState>;
+}
 
 // A simplified initial state for the form
 const initialFormState: Partial<GameState> = {
@@ -21,7 +28,7 @@ export default function UserGameManagementPage() {
   const params = useParams();
   const uid = params.uid as string;
 
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [gameState, setGameState] = useState<Partial<GameState>>(initialFormState);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,8 +57,8 @@ export default function UserGameManagementPage() {
         // Assuming the game state is stored in a 'gameState' field
         // If it's not, we might need to adjust this
         setGameState(data.user.gameState || initialFormState);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }
@@ -95,8 +102,8 @@ export default function UserGameManagementPage() {
       }
 
       setMessage('Game state updated successfully!');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     }
   };
 

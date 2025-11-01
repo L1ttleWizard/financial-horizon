@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDispatch } from 'react-redux';
 import { doc, onSnapshot } from 'firebase/firestore';

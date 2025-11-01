@@ -362,7 +362,16 @@ const gameSlice = createSlice({
       console.log("Chosen event:", JSON.stringify(chosenEvent, null, 2));
 
       // 6. Update state based on chosen event
-      const { triggerCondition, ...serializableEvent } = chosenEvent;
+      const { id, title, description, illustration, choices, difficulty, isNegative } = chosenEvent;
+      const serializableEvent: SerializableGameEvent = {
+        id,
+        title,
+        description,
+        illustration,
+        choices,
+        difficulty,
+        isNegative,
+      };
       state.currentEvent = serializableEvent;
       state.lastEventId = chosenEvent.id;
       if (chosenEvent.isNegative) {
@@ -667,7 +676,16 @@ const gameSlice = createSlice({
       state.status = action.payload;
     },
     startDemoEvent(state, action: PayloadAction<GameEvent>) {
-      const { triggerCondition, ...serializableEvent } = action.payload;
+      const { id, title, description, illustration, choices, difficulty, isNegative } = action.payload;
+      const serializableEvent: SerializableGameEvent = {
+        id,
+        title,
+        description,
+        illustration,
+        choices,
+        difficulty,
+        isNegative,
+      };
       state.currentEvent = serializableEvent;
       state.isEventModalOpen = true;
     },
