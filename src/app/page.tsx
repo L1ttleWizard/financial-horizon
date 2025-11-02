@@ -48,7 +48,7 @@ const summarizeNetWorthHistory = (
   const monthlyData: NetWorthHistoryPoint[] = [];
   let monthSum = 0;
   let monthCount = 0;
-  let monthWeek = 4;
+  let monthDay = 4;
 
   history.forEach((point, index) => {
     monthSum += point.netWorth;
@@ -57,19 +57,19 @@ const summarizeNetWorthHistory = (
     // Average every 4 weeks (a month)
     if ((index + 1) % 4 === 0) {
       monthlyData.push({
-        week: monthWeek,
+        day: monthDay,
         netWorth: Math.round(monthSum / monthCount),
       });
       monthSum = 0;
       monthCount = 0;
-      monthWeek += 4;
+      monthDay += 4;
     }
   });
 
   // Add any remaining weeks as the last month
   if (monthCount > 0) {
     monthlyData.push({
-      week: monthWeek,
+      day: monthDay,
       netWorth: Math.round(monthSum / monthCount),
     });
   }
@@ -110,7 +110,7 @@ export default function HomePage() {
 
   const monthlyInterestRate = 0.1;
   const turnsInMonth = 4;
-  const turnsPassedInMonth = gameState.turn % turnsInMonth;
+  const turnsPassedInMonth = gameState.day % turnsInMonth;
   const accruedInterest = Math.ceil(
     gameState.debt * monthlyInterestRate * (turnsPassedInMonth / turnsInMonth)
   );
@@ -163,7 +163,7 @@ export default function HomePage() {
                     className=" start-turn-button w-full h-full bg-blue-600 text-white font-bold py-5  px-10 rounded-lg shadow-lg hover:bg-blue-700 transition">
                     {isDemoActive
                       ? "Следующее демо-событие"
-                      : gameState.turn === 0
+                      : gameState.day === 0
                       ? "Начать игру"
                       : `Следующая неделя`}
                   </button>
@@ -252,7 +252,7 @@ export default function HomePage() {
             )}
             {/* --- Progress Bar --- */}
             <div className="lg:col-span-4">
-              <PaydayProgressBar currentTurn={gameState.turn} />
+              <PaydayProgressBar currentDay={gameState.day} />
             </div>
 
             {/* --- Collapsible Net Worth Chart --- */}
@@ -291,7 +291,7 @@ export default function HomePage() {
             {/* --- Widgets --- */}
             <div className="lg:col-span-2">
               <ObligatorySpendsWidget
-                currentTurn={gameState.turn}
+                currentDay={gameState.day}
                 weeklySpends={gameState.weeklySpends}
                 monthlyBills={gameState.monthlyBills}
               />

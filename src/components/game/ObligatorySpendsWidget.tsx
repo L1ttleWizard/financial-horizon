@@ -3,17 +3,17 @@ import { PAYDAY_CYCLE } from "@/store/slices/gameSlice";
 import { formatCurrency } from "@/lib/format";
 
 interface WidgetProps {
-  currentTurn: number;
+  currentDay: number;
   weeklySpends: number;
   monthlyBills: number;
 }
 
 export function ObligatorySpendsWidget({
-  currentTurn,
+  currentDay,
   weeklySpends,
   monthlyBills,
 }: WidgetProps) {
-  const turnsLeftForBills = PAYDAY_CYCLE - (currentTurn % PAYDAY_CYCLE);
+  const turnsLeftForBills = PAYDAY_CYCLE - (currentDay % PAYDAY_CYCLE);
 
   const getWeekText = (weeks: number) => {
     if (weeks === 1) return "через 1 неделю";
@@ -22,7 +22,7 @@ export function ObligatorySpendsWidget({
   };
 
   const billPaymentText =
-    turnsLeftForBills === PAYDAY_CYCLE && currentTurn > 0
+    turnsLeftForBills === PAYDAY_CYCLE && currentDay > 0
       ? "в этом ходу"
       : getWeekText(turnsLeftForBills);
 

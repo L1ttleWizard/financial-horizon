@@ -33,10 +33,17 @@ type GameOverReason = "DEBT_SPIRAL" | "EMOTIONAL_BURNOUT" | "BANKRUPTCY";
 
 export interface LogEntry {
   id: string;
-  week: number;
+  day: number;
   type: LogType;
   description: string;
   amount: number;
+  metrics: {
+    balance: number;
+    mood: number;
+    savings: number;
+    debt: number;
+    netWorth: number;
+  };
 }
 export interface ActiveDeposit {
   id: string;
@@ -64,7 +71,7 @@ interface GameOverState {
   message: string;
 }
 export interface NetWorthHistoryPoint {
-  week: number;
+  day: number;
   netWorth: number;
 }
 type ChoiceEffects = Choice["effects"];
@@ -79,7 +86,7 @@ export interface GameState {
   savings: number;
   debt: number;
   treeStage: number;
-  turn: number;
+  day: number; // RENAMED from turn
   activeDeposits: ActiveDeposit[];
   propertyInvestments: PropertyInvestment[];
   availableOffers: BankOffer[];
@@ -116,7 +123,7 @@ const initialState: GameState = {
   savings: 0,
   debt: 0,
   treeStage: 1,
-  turn: 0,
+  day: 0, // RENAMED from turn
   activeDeposits: [],
   propertyInvestments: [],
   availableOffers: [],
@@ -124,7 +131,7 @@ const initialState: GameState = {
   gameOverState: { isGameOver: false },
   currentEvent: null,
   log: [],
-  netWorthHistory: [{ week: 0, netWorth: 41000 }],
+  netWorthHistory: [{ day: 0, netWorth: 41000 }], // RENAMED from week
   lastChoiceResult: null,
   isEventModalOpen: false,
   isResultModalOpen: false,
@@ -138,6 +145,43 @@ const initialState: GameState = {
   monthlyBills: 49200,
   weeklySpends: 10000,
   monthlySalary: 131200,
+};
+
+const getNetWorth = (state: GameState) => {
+    const bankSavings = (state.activeDeposits || []).reduce(
+        (sum, dep) => sum + dep.amount,
+        0
+    );
+    const propertyValue = (state.propertyInvestments || []).reduce(
+        (sum, prop) => sum + prop.amount,
+        0
+    );
+    const savings = bankSavings + propertyValue;
+    return state.balance + savings - state.debt;
+}
+
+const addLogEntry = (
+  state: GameState,
+  type: LogType,
+  description: string,
+  amount: number
+) => {
+  if (amount === 0 && type !== 'income' && type !== 'expense') return;
+  const netWorth = getNetWorth(state);
+  state.log.push({
+    id: `${Date.now()}-${Math.random()}`,
+    day: state.day,
+    type,
+    description,
+    amount,
+    metrics: {
+      balance: state.balance,
+      mood: state.mood,
+      savings: state.savings,
+      debt: state.debt,
+      netWorth: netWorth,
+    },
+  });
 };
 
 const applyBalanceChange = (
@@ -170,21 +214,7 @@ const applyBalanceChange = (
 };
 
 // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
-const addLogEntry = (
-  state: GameState,
-  type: LogType,
-  description: string,
-  amount: number
-) => {
-  if (amount === 0) return;
-  state.log.push({
-    id: `${Date.now()}-${Math.random()}`,
-    week: state.turn,
-    type,
-    description,
-    amount,
-  });
-};
+
 const updateNetWorthAndTree = (state: GameState) => {
   // Считаем сбережения как сумму банковских вкладов + инвестиций в недвижимость
   const bankSavings = (state.activeDeposits || []).reduce(
@@ -198,7 +228,7 @@ const updateNetWorthAndTree = (state: GameState) => {
   state.savings = bankSavings + propertyValue;
   
   const netWorth = state.balance + state.savings - state.debt;
-  state.netWorthHistory.push({ week: state.turn, netWorth });
+  state.netWorthHistory.push({ day: state.day, netWorth });
   const newStage = getTreeStageForNetWorth(netWorth);
   state.treeStage = newStage.stage;
 };
@@ -250,7 +280,7 @@ const checkAllAchievements = (state: GameState) => {
   };
 
   // Tier 1
-  if (state.turn >= PAYDAY_CYCLE) checkAndUnlock("FIRST_STEPS");
+  if (state.day >= PAYDAY_CYCLE) checkAndUnlock("FIRST_STEPS");
   if (state.savings > 0) checkAndUnlock("FIRST_SAVINGS");
   if (state.debt > 0) checkAndUnlock("CREDIT_BAPTISM");
   if (state.debt === 0 && state.log.some(e => e.type === 'debt')) checkAndUnlock("DEBT_FREE");
@@ -263,7 +293,7 @@ const checkAllAchievements = (state: GameState) => {
   if (state.activeDeposits.length > 0 && state.propertyInvestments.length > 0) checkAndUnlock("DIVERSIFIER");
   if (state.propertyInvestments.length > 0) checkAndUnlock("REAL_ESTATE_MOGUL");
   if (state.log.some(e => e.description.includes("Завершение вклада"))) checkAndUnlock("COMPOUND_MAGIC");
-  if (state.debt === 0 && state.turn > 12) checkAndUnlock("DEBT_AVOIDER");
+  if (state.debt === 0 && state.day > 12) checkAndUnlock("DEBT_AVOIDER");
   if (state.log.some(e => e.description.includes("Благотворительность"))) checkAndUnlock("PHILANTHROPIST");
 
   // Tier 3
@@ -289,10 +319,10 @@ const gameSlice = createSlice({
       )
         return;
 
-      state.turn += 1;
+      state.day += 1;
 
       // --- PAYDAY LOGIC ---
-      if (state.turn > 0 && state.turn % PAYDAY_CYCLE === 0) {
+      if (state.day > 0 && state.day % PAYDAY_CYCLE === 0) {
         const randomIndex = Math.floor(Math.random() * glossaryData.length);
         state.forcedGlossaryTerm = glossaryData[randomIndex];
         state.isGlossaryForced = true;
@@ -301,7 +331,7 @@ const gameSlice = createSlice({
 
       // --- DEPOSIT COMPLETION ---
       const completedDeposits = state.activeDeposits.filter(
-        (dep) => state.turn >= dep.endTurn
+        (dep) => state.day >= dep.endTurn
       );
       if (completedDeposits.length > 0) {
         completedDeposits.forEach((dep) => {
@@ -319,7 +349,7 @@ const gameSlice = createSlice({
           );
         });
         state.activeDeposits = state.activeDeposits.filter(
-          (dep) => state.turn < dep.endTurn
+          (dep) => state.day < dep.endTurn
         );
         updateNetWorthAndTree(state);
       }
@@ -332,8 +362,8 @@ const gameSlice = createSlice({
       // 1. Determine eligible difficulty tiers
       const netWorth = state.balance + state.savings - state.debt;
       let maxDifficulty = 1;
-      if (state.turn > 8 || netWorth > 100000) maxDifficulty = 2;
-      if (state.turn > 24 || netWorth > 300000) maxDifficulty = 3;
+      if (state.day > 8 || netWorth > 100000) maxDifficulty = 2;
+      if (state.day > 24 || netWorth > 300000) maxDifficulty = 3;
 
       // 2. Filter events by difficulty and cooldown
       let eligibleEvents = gameEventsPool.filter(
@@ -390,7 +420,7 @@ const gameSlice = createSlice({
       state.availableOffers = shuffled.slice(0, 6);
 
       const completedDeposits = state.activeDeposits.filter(
-        (dep) => state.turn >= dep.endTurn
+        (dep) => state.day >= dep.endTurn
       );
       if (completedDeposits.length > 0) {
         completedDeposits.forEach((dep) => {
@@ -408,7 +438,7 @@ const gameSlice = createSlice({
           );
         });
         state.activeDeposits = state.activeDeposits.filter(
-          (dep) => state.turn < dep.endTurn
+          (dep) => state.day < dep.endTurn
         );
       }
 
@@ -427,7 +457,7 @@ const gameSlice = createSlice({
       addLogEntry(state, "mood", "Бонус к настроению", MOOD_BOOST_ON_PAYDAY);
       
       // Повышение зарплаты после обучения (через 8 недель после обучения)
-      if (state.turn === PAYDAY_CYCLE * 2) {
+      if (state.day === PAYDAY_CYCLE * 2) {
         // Проверяем, было ли обучение в логе
         const hasEducation = state.log.some(entry => 
           entry.description.includes("Инвестиция в образование")
@@ -465,7 +495,7 @@ const gameSlice = createSlice({
             type: "apartment",
             amount: Math.abs(effects.savings),
             monthlyIncome: Math.abs(effects.savings) * 0.01, // 1% в месяц
-            purchaseTurn: state.turn,
+            purchaseTurn: state.day,
             description: "Инвестиционная недвижимость, приносящая пассивный доход"
           };
           state.propertyInvestments.push(propertyInvestment);
@@ -479,7 +509,7 @@ const gameSlice = createSlice({
             type: "crypto",
             amount: Math.abs(effects.savings),
             monthlyIncome: 0, // Криптовалюта не приносит регулярный доход
-            purchaseTurn: state.turn,
+            purchaseTurn: state.day,
             description: "Высокорисковая инвестиция в криптовалюту"
           };
           state.propertyInvestments.push(cryptoInvestment);
@@ -493,7 +523,7 @@ const gameSlice = createSlice({
             type: "stocks",
             amount: Math.abs(effects.savings),
             monthlyIncome: Math.abs(effects.savings) * 0.005, // 0.5% в месяц
-            purchaseTurn: state.turn,
+            purchaseTurn: state.day,
             description: "Инвестиция в фондовый рынок"
           };
           state.propertyInvestments.push(stockInvestment);
@@ -510,8 +540,8 @@ const gameSlice = createSlice({
               amount: savingsAmount,
               annualRate: 0.05, // Default low rate
               term: 4, // Default short term
-              startTurn: state.turn,
-              endTurn: state.turn + 4,
+              startTurn: state.day,
+              endTurn: state.day + 4,
             };
             state.activeDeposits.push(newDeposit);
             addLogEntry(state, "savings", choice.text, savingsAmount);
@@ -585,8 +615,8 @@ const gameSlice = createSlice({
         amount,
         annualRate: offer.annualRate,
         term,
-        startTurn: state.turn,
-        endTurn: state.turn + term,
+        startTurn: state.day,
+        endTurn: state.day + term,
       };
       state.activeDeposits.push(newDeposit);
       state.availableOffers = state.availableOffers.filter(
@@ -637,7 +667,7 @@ const gameSlice = createSlice({
       state.savings = initialState.savings;
       state.debt = initialState.debt;
       state.treeStage = initialState.treeStage;
-      state.turn = initialState.turn;
+      state.day = initialState.day;
       state.activeDeposits = [];
       state.propertyInvestments = [];
       state.availableOffers = [...bankOffersPool]
@@ -647,7 +677,7 @@ const gameSlice = createSlice({
       state.gameOverState = { isGameOver: false };
       state.currentEvent = null;
       state.log = [];
-      state.netWorthHistory = [{ week: 0, netWorth: initialState.balance }];
+      state.netWorthHistory = [{ day: 0, netWorth: initialState.balance }];
       state.lastChoiceResult = null;
       state.isEventModalOpen = false;
       state.isResultModalOpen = false;
