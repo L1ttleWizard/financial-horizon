@@ -9,7 +9,13 @@ import { PaydayProgressBar } from "@/components/ui/PaydayProgressBar";
 import { EventModal } from "@/components/game/EventModal";
 import { ResultModal } from "@/components/game/ResultModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { startNextTurn, resetGame, payDebt, startDemoEvent, setGameState } from "@/store/slices/gameSlice";
+import {
+  startNextTurn,
+  resetGame,
+  payDebt,
+  startDemoEvent,
+  setGameState,
+} from "@/store/slices/gameSlice";
 import { playNextDemoEvent, stopDemo } from "@/store/slices/demoSlice";
 import { demoEvents } from "@/data/demoEvents";
 import { AchievementToast } from "@/components/notifications/AchievementToast";
@@ -32,7 +38,9 @@ import { BsGraphUpArrow } from "react-icons/bs";
 import { FcDebt } from "react-icons/fc";
 
 // Function to downsample chart data for performance
-const summarizeNetWorthHistory = (history: NetWorthHistoryPoint[]): NetWorthHistoryPoint[] => {
+const summarizeNetWorthHistory = (
+  history: NetWorthHistoryPoint[]
+): NetWorthHistoryPoint[] => {
   if (history.length <= 52) {
     return history; // Return weekly data for the first year
   }
@@ -74,7 +82,11 @@ export default function HomePage() {
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state) => state.game);
   const gameStatus = useAppSelector((state) => state.game.status);
-  const { isActive: isDemoActive, currentStep, originalGameState } = useAppSelector((state) => state.demo);
+  const {
+    isActive: isDemoActive,
+    currentStep,
+    originalGameState,
+  } = useAppSelector((state) => state.demo);
 
   const [isPayDebtModalOpen, setIsPayDebtModalOpen] = useState(false);
   const [isChartExpanded, setIsChartExpanded] = useState(false); // State for chart visibility
@@ -103,7 +115,7 @@ export default function HomePage() {
     gameState.debt * monthlyInterestRate * (turnsPassedInMonth / turnsInMonth)
   );
 
-  const isLoading = authLoading || (user && gameStatus === 'loading');
+  const isLoading = authLoading || (user && gameStatus === "loading");
 
   const MAX_NET_WORTH = 41000; // Initial net worth
   const MIN_NET_WORTH = -50000;
@@ -129,55 +141,51 @@ export default function HomePage() {
         style={{
           backgroundColor: `rgba(239, 68, 68, ${badnessFactor * 0.1})`,
           transition: "background-color 0.5s ease",
-        }}
-      >
+        }}>
         <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr_380px] gap-6 max-w-[1920px] mx-auto">
           {/* --- Left Sidebar (Controls) --- */}
           <aside className="xl:block">
-            
             <div className="sticky top-6 flex flex-col gap-6">
-            <div className="flex-1">
+              <div className="flex-1">
                 <MascotWidget />
               </div>
-            <div
-              className="flex flex-wrap items-stretch justify-center gap-6 rounded-xl justify-items-stretch w-full"
-              id="conrols-panel"
-            >
-              <div className="w-full">
+              <div
+                className="flex flex-wrap items-stretch justify-center gap-6 rounded-xl justify-items-stretch w-full"
+                id="conrols-panel">
+                <div className="w-full">
+                  <button
+                    onClick={handleNextTurnClick}
+                    disabled={
+                      gameState.isEventModalOpen ||
+                      gameState.isResultModalOpen ||
+                      gameState.gameOverState?.isGameOver
+                    }
+                    className=" start-turn-button w-full h-full bg-blue-600 text-white font-bold py-5  px-10 rounded-lg shadow-lg hover:bg-blue-700 transition">
+                    {isDemoActive
+                      ? "Следующее демо-событие"
+                      : gameState.turn === 0
+                      ? "Начать игру"
+                      : `Следующая неделя`}
+                  </button>
+                </div>
+
+                <Link
+                  href="/achievements"
+                  className=" all-achievements-button w-full  h-full text-center bg-yellow-500 text-white font-bold py-5 px-10 rounded-lg hover:bg-yellow-600 transition flex items-center justify-center">
+                  Все достижения
+                </Link>
+                <Link
+                  id="glossary-button"
+                  href="/glossary"
+                  className="glossary-button w-full  h-full text-center bg-yellow-500 text-white font-bold py-5 px-10 rounded-lg hover:bg-yellow-600 transition flex flex-col items-center justify-center">
+                  <span>Словарь терминов</span>
+                </Link>
                 <button
-                  onClick={handleNextTurnClick}
-                  disabled={
-                    gameState.isEventModalOpen ||
-                    gameState.isResultModalOpen ||
-                    gameState.gameOverState?.isGameOver
-                  }
-                  className=" start-turn-button w-full h-full bg-blue-600 text-white font-bold py-5  px-10 rounded-lg shadow-lg hover:bg-blue-700 transition"
-                >
-                  {isDemoActive ? 'Следующее демо-событие' : (gameState.turn === 0 ? "Начать игру" : `Следующая неделя`)}
+                  onClick={() => dispatch(resetGame())}
+                  className=" new-game-button w-full h-full bg-gray-700 text-white font-bold py-5 px-10 rounded-lg hover:bg-gray-800 transition">
+                  Начать игру заново
                 </button>
               </div>
-              
-              <Link
-                href="/achievements"
-                className=" all-achievements-button w-full  h-full text-center bg-yellow-500 text-white font-bold py-5 px-10 rounded-lg hover:bg-yellow-600 transition flex items-center justify-center"
-              >
-                Все достижения
-              </Link>
-              <Link
-                id="glossary-button"
-                href="/glossary"
-                className="glossary-button w-full  h-full text-center bg-yellow-500 text-white font-bold py-5 px-10 rounded-lg hover:bg-yellow-600 transition flex flex-col items-center justify-center"
-              >
-                <span>Словарь терминов</span>
-              </Link>
-              <button
-                onClick={() => dispatch(resetGame())}
-                className=" new-game-button w-full h-full bg-gray-700 text-white font-bold py-5 px-10 rounded-lg hover:bg-gray-800 transition"
-              >
-                Начать игру заново
-              </button>
-            </div>
-              
             </div>
           </aside>
 
@@ -195,13 +203,13 @@ export default function HomePage() {
               <>
                 <div
                   id="balance-card"
-                  className="lg:col-span-1 rounded-xl flex"
-                >
+                  className="lg:col-span-1 rounded-xl flex">
                   <DashboardCard
                     title="Баланс"
                     value={`₽${formatCurrency(gameState.balance)}`}
-                    icon={<FaRegMoneyBillAlt color="green" size={70}/>}
+                    icon={<FaRegMoneyBillAlt color="green" size={70} />}
                     badnessFactor={balanceBadnessFactor}
+                    optionalStyles="relative left-2"
                   />
                 </div>
                 <div id="mood-card" className="lg:col-span-1 rounded-xl flex">
@@ -210,32 +218,34 @@ export default function HomePage() {
                     value={`${gameState.mood} / 100`}
                     icon={moodStyle.icon}
                     highlightColor={moodStyle.color}
+                    optionalStyles="relative left-2"
                   />
                 </div>
                 <div
                   id="savings-card"
-                  className="lg:col-span-1 hover:scale-105 transition-all rounded-xl flex"
-                >
+                  className="lg:col-span-1 hover:scale-105 transition-all rounded-xl flex">
                   <DashboardCard
                     title="Сбережения"
                     value={`₽${formatCurrency(gameState.savings)}`}
-                    icon={<BsGraphUpArrow color="blue" size={70} />}
+                    icon={<BsGraphUpArrow color="blue" size={62} />}
                     subValue={`Активных вкладов: ${gameState.activeDeposits.length}`}
                     linkTo="/savings"
                     badnessFactor={gameState.savings === 0 ? 0.5 : 0}
                     highlightColor="yellow"
+                    optionalStyles="relative left-2"
                   />
                 </div>
                 <div id="debt-card" className="lg:col-span-1 rounded-xl flex">
                   <DashboardCard
                     title="Долг"
                     value={`₽${formatCurrency(gameState.debt)}`}
-                    icon={<FcDebt size={70}/>}
+                    icon={<FcDebt size={70} />}
                     subValue={`Проценты: +₽${formatCurrency(accruedInterest)}`}
                     actionLabel="Погасить"
                     onAction={() => setIsPayDebtModalOpen(true)}
                     actionDisabled={gameState.debt === 0}
                     badnessFactor={badnessFactor}
+                    optionalStyles="relative left-4"
                   />
                 </div>
               </>
@@ -249,8 +259,7 @@ export default function HomePage() {
             <div className="lg:col-span-4 bg-white rounded-xl shadow-lg">
               <div
                 className="flex justify-between items-center p-5 cursor-pointer"
-                onClick={() => setIsChartExpanded(!isChartExpanded)}
-              >
+                onClick={() => setIsChartExpanded(!isChartExpanded)}>
                 <h3 className="text-xl font-bold text-gray-800">
                   Динамика капитала
                 </h3>
@@ -262,8 +271,7 @@ export default function HomePage() {
                   stroke="currentColor"
                   className={`w-6 h-6 transition-transform ${
                     isChartExpanded ? "rotate-180" : ""
-                  }`}
-                >
+                  }`}>
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -273,7 +281,9 @@ export default function HomePage() {
               </div>
               {isChartExpanded && (
                 <div className="p-5 pt-0">
-                  <NetWorthChart data={summarizeNetWorthHistory(gameState.netWorthHistory)} />
+                  <NetWorthChart
+                    data={summarizeNetWorthHistory(gameState.netWorthHistory)}
+                  />
                 </div>
               )}
             </div>
@@ -299,7 +309,7 @@ export default function HomePage() {
                 currentStage={gameState.treeStage}
                 badnessFactor={badnessFactor}
               />
-              <AchievementsWidget
+              <AchievementsWidget 
                 unlockedIds={gameState.unlockedAchievements}
                 allAchievements={achievementsData}
               />
@@ -309,7 +319,7 @@ export default function HomePage() {
           {/* --- Right Sidebar (Achievements & Tree) --- */}
           <aside className="hidden xl:block">
             <div className="sticky top-4 flex flex-col gap-6 h-full">
-              <div className="flex-1">
+              <div className="">
                 <AchievementsWidget
                   unlockedIds={gameState.unlockedAchievements}
                   allAchievements={achievementsData}

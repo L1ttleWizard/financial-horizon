@@ -21,9 +21,9 @@ export function AchievementsWidget({ unlockedIds, allAchievements }: Achievement
 
 
   return (
-    <div className="rounded-xl shadow-lg p-5 flex flex-col h-full bg-white">
+    <div className="rounded-xl shadow-lg p-5 flex flex-col pb-8  bg-white">
       {/* Header */}
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start mb-6 ">
         <div>
           <h3 className="text-xl font-bold text-gray-800 mb-2">Недавние достижения</h3>
           <p className="text-sm text-gray-500">{`${unlockedCount} / ${totalCount} разблокировано`}</p>
@@ -49,7 +49,7 @@ export function AchievementsWidget({ unlockedIds, allAchievements }: Achievement
       </div>
 
       {/* Content */}
-      <div className="flex-grow overflow-y-auto">
+      <div className=" overflow-y-auto">
         {recentAchievements.length > 0 ? (
           <div>
             {/* Always show the latest achievement */}

@@ -27,8 +27,8 @@ export function ObligatorySpendsWidget({
       : getWeekText(turnsLeftForBills);
 
   return (
-    <div className="rounded-xl shadow-md p-6 h-full bg-white">
-      <h2 className="text-2xl font-bold text-gray-700">
+    <div className="flex flex-col justify-center rounded-xl shadow-md p-6 h-full bg-white">
+      <h2 className="text-2xl font-bold text-gray-700 text-center">
         Обязательные расходы
       </h2>
       <div className="flex"></div>
