@@ -13,6 +13,7 @@ interface CardProps {
   backgroundImage?: string;
   badnessFactor?: number;
   highlightColor?: string;
+  optionalStyles?:string;
 }
 
 const hexToRgba = (hex: string, alpha: number): string => {
@@ -34,6 +35,7 @@ export function DashboardCard({
   backgroundImage,
   badnessFactor,
   highlightColor,
+  optionalStyles
 }: CardProps) {
   let dynamicStyle = {};
   if (highlightColor) {
@@ -82,7 +84,7 @@ export function DashboardCard({
         </div>
         <div className="flex items-end">
           <div className="">
-            <span className="block" style={{ height: "" }}>
+            <span className={`${optionalStyles}`}>
               {icon}
             </span>
           </div>

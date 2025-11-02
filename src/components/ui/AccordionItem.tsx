@@ -1,9 +1,12 @@
 'use client';
 
+import Link from "next/link";
+
 interface AccordionItemProps {
   term: {
     title: string;
     definition: string;
+    wikiLink: string;
   };
   isOpen: boolean;
   onClick: () => void;
@@ -35,7 +38,15 @@ export function AccordionItem({ term, isOpen, onClick }: AccordionItemProps) {
         }`}
       >
         <div className="pb-4 px-2 text-gray-600">
-          {term.definition}
+          <p>{term.definition}</p>
+          <Link
+            href={term.wikiLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline mt-2 inline-block"
+          >
+            Подробнее в google
+          </Link>
         </div>
       </div>
     </div>

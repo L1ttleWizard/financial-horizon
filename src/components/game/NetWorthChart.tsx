@@ -17,7 +17,7 @@ const Chart = ({ data }: { data: NetWorthHistoryPoint[] }) => {
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-        <XAxis dataKey="week" stroke="#6b7280" />
+        <XAxis dataKey="day" stroke="#6b7280" />
         <YAxis stroke="#6b7280" />
         <Tooltip
             contentStyle={{ 

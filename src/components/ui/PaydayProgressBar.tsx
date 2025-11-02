@@ -2,12 +2,12 @@
 'use client';
 
 interface ProgressBarProps {
-  currentTurn: number; // Принимаем turn
+  currentDay: number; // Принимаем day
 }
 
-export function PaydayProgressBar({ currentTurn }: ProgressBarProps) {
+export function PaydayProgressBar({ currentDay }: ProgressBarProps) {
   const weeksInCycle = 4;
-  const turnsPassedInCycle = currentTurn % weeksInCycle;
+  const turnsPassedInCycle = currentDay % weeksInCycle;
   const turnsLeft = weeksInCycle - turnsPassedInCycle;
   const progressPercentage = (turnsPassedInCycle / weeksInCycle) * 100;
 

@@ -1,4 +1,4 @@
-// src/components/game/AchievementBadge.tsx
+  // src/components/game/AchievementBadge.tsx
 import type { Achievement } from '@/data/achievementsData';
 
 interface BadgeProps {
