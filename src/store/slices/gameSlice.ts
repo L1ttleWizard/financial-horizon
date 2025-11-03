@@ -552,17 +552,52 @@ const gameSlice = createSlice({
         state.debt += effects.debt;
         addLogEntry(state, "debt", choice.text, effects.debt);
       }
+
+      if (effects.system_variables) {
+        if (effects.system_variables.weeklySpends) {
+          state.weeklySpends += effects.system_variables.weeklySpends;
+          addLogEntry(
+            state,
+            "expense",
+            "Изменение еженедельных трат",
+            effects.system_variables.weeklySpends
+          );
+        }
+        if (effects.system_variables.monthlyBills) {
+          state.monthlyBills += effects.system_variables.monthlyBills;
+          addLogEntry(
+            state,
+            "expense",
+            "Изменение ежемесячных счетов",
+            effects.system_variables.monthlyBills
+          );
+        }
+        if (effects.system_variables.weeklySpends_multiplier) {
+          state.weeklySpends = Math.round(
+            state.weeklySpends * effects.system_variables.weeklySpends_multiplier
+          );
+          addLogEntry(
+            state,
+            "expense",
+            "Изменение еженедельных трат",
+            0
+          );
+        }
+        if (effects.system_variables.monthlyBills_multiplier) {
+          state.monthlyBills = Math.round(
+            state.monthlyBills * effects.system_variables.monthlyBills_multiplier
+          );
+          addLogEntry(
+            state,
+            "expense",
+            "Изменение ежемесячных счетов",
+            0
+          );
+        }
+      }
       
       // Обработка изменений системных переменных
-      if (choice.text.includes("Согласиться на повышение")) {
-        // Повышение арендной платы на 20%
-        state.monthlyBills = Math.round(state.monthlyBills * 1.2);
-        addLogEntry(state, "expense", "Повышение арендной платы", 0);
-      } else if (choice.text.includes("Попытаться договориться")) {
-        // Повышение арендной платы на 10% (компромисс)
-        state.monthlyBills = Math.round(state.monthlyBills * 1.1);
-        addLogEntry(state, "expense", "Компромиссное повышение аренды", 0);
-      } else if (choice.text.includes("Согласиться на обучение")) {
+      if (choice.text.includes("Согласиться на обучение")) {
         // Повышение зарплаты после обучения (через 8 недель)
         // Пока просто логируем, реальное повышение будет в confirmGlossaryRead
         addLogEntry(state, "income", "Инвестиция в образование", 0);
