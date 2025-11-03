@@ -8,6 +8,12 @@ export interface Choice {
     mood?: number;
     savings?: number;
     debt?: number;
+    system_variables?: {
+      weeklySpends?: number;
+      monthlyBills?: number;
+      weeklySpends_multiplier?: number;
+      monthlyBills_multiplier?: number;
+    };
   };
   outcomeText: string;
   learningPoint: string;
@@ -111,7 +117,7 @@ export const gameEventsPool: GameEvent[] = [
     difficulty: 1,
     isNegative: false,
     choices: [
-      { text: 'Отменить все ненужные', effects: { balance: 3280, mood: 10 }, outcomeText: 'Вы отменили лишние подписки и освободили часть денег в бюджете.', learningPoint: 'Регулярный аудит подписок — отличная финансовая привычка, которая экономит деньги в долгосрочной перспективе.' },
+      { text: 'Отменить все ненужные', effects: { system_variables: { monthlyBills: -3280 }, mood: 10 }, outcomeText: 'Вы отменили лишние подписки и освободили часть денег в бюджете.', learningPoint: 'Регулярный аудит подписок — отличная финансовая привычка, которая экономит деньги в долгосрочной перспективе.' },
       { text: 'Оставить все как есть', effects: {}, outcomeText: 'Вы решили не тратить время на отмену подписок.', learningPoint: 'Маленькие, но регулярные траты со временем превращаются в большие суммы. Это называется "эффект латте".' },
     ],
   },
@@ -136,7 +142,7 @@ export const gameEventsPool: GameEvent[] = [
     difficulty: 1,
     isNegative: false,
     choices: [
-      { text: 'Купить проездной', effects: { balance: -10000 }, outcomeText: 'Вы купили проездной, теперь ваши еженедельные траты на транспорт снизятся.', learningPoint: 'Инвестиции в снижение регулярных расходов — это умный способ оптимизировать бюджет.' },
+      { text: 'Купить проездной', effects: { balance: -10000, system_variables: { weeklySpends: -2000 } }, outcomeText: 'Вы купили проездной, теперь ваши еженедельные траты на транспорт снизятся.', learningPoint: 'Инвестиции в снижение регулярных расходов — это умный способ оптимизировать бюджет.' },
       { text: 'Продолжать платить за каждую поездку', effects: {}, outcomeText: 'Вы решили не покупать проездной.', learningPoint: 'Иногда стоит потратить деньги сейчас, чтобы сэкономить в будущем.' },
     ],
   },
@@ -173,7 +179,7 @@ export const gameEventsPool: GameEvent[] = [
     difficulty: 1,
     isNegative: false,
     choices: [
-      { text: 'Купить абонемент', effects: { balance: -5000, mood: 5 }, outcomeText: 'Вы начали заниматься спортом, что улучшило ваше настроение и самочувствие.', learningPoint: 'Инвестиции в здоровье — это инвестиции в ваше будущее и продуктивность.' },
+      { text: 'Купить абонемент', effects: { system_variables: { monthlyBills: 5000 }, mood: 5 }, outcomeText: 'Вы начали заниматься спортом, что улучшило ваше настроение и самочувствие.', learningPoint: 'Инвестиции в здоровье — это инвестиции в ваше будущее и продуктивность.' },
       { text: 'Заниматься дома', effects: { mood: 5 }, outcomeText: 'Вы решили заниматься дома, экономя деньги.', learningPoint: 'Для поддержания формы не всегда нужны большие затраты. Главное — дисциплина.' },
       { text: 'Проигнорировать', effects: {}, outcomeText: 'Вы решили, что у вас нет времени на спорт.', learningPoint: 'Недостаток физической активности может негативно сказаться на настроении и здоровье в долгосрочной перспективе.' },
     ],
@@ -311,10 +317,10 @@ export const gameEventsPool: GameEvent[] = [
     illustration: 'illustrations/rent_increase.svg',
     difficulty: 2,
     isNegative: true,
-    triggerCondition: (state) => state.turn > 12 && state.turn % 12 === 0, // Happens on a yearly basis
+    triggerCondition: (state) => state.day > 12 && state.day % 12 === 0, // Happens on a yearly basis
     choices: [
-      { text: 'Согласиться на повышение', effects: { mood: -10 }, outcomeText: 'Вы остались в квартире, но теперь ваши ежемесячные расходы вырастут.', learningPoint: 'Рост постоянных расходов — серьезная угроза бюджету. Нужно либо увеличивать доход, либо сокращать другие траты.' },
-      { text: 'Попытаться договориться', effects: { mood: 5 }, outcomeText: 'Вы успешно договорились о меньшем повышении.', learningPoint: 'Переговоры — важный навык, который может сэкономить вам много денег.' },
+      { text: 'Согласиться на повышение', effects: { system_variables: { monthlyBills_multiplier: 1.2 }, mood: -10 }, outcomeText: 'Вы остались в квартире, но теперь ваши ежемесячные расходы вырастут.', learningPoint: 'Рост постоянных расходов — серьезная угроза бюджету. Нужно либо увеличивать доход, либо сокращать другие траты.' },
+      { text: 'Попытаться договориться', effects: { system_variables: { monthlyBills_multiplier: 1.1 }, mood: 5 }, outcomeText: 'Вы успешно договорились о меньшем повышении.', learningPoint: 'Переговоры — важный навык, который может сэкономить вам много денег.' },
       { text: 'Начать искать новое жилье', effects: { balance: -16400, mood: -5 }, outcomeText: 'Вы потратили время и деньги на поиск нового жилья. Возможно, в будущем это окупится.', learningPoint: 'Иногда переезд — это не только расходы, но и возможность найти более выгодный вариант.' },
     ],
   },
@@ -363,7 +369,7 @@ export const gameEventsPool: GameEvent[] = [
     difficulty: 2,
     isNegative: false,
     choices: [
-      { text: 'Оформить страховку', effects: { balance: -4100, mood: 5 }, outcomeText: 'Вы начали платить за страховку, но теперь чувствуете себя более защищенным.', learningPoint: 'Страхование — это покупка спокойствия. Оно не приносит доход, но защищает от катастрофических убытков.' },
+      { text: 'Оформить страховку', effects: { system_variables: { monthlyBills: 4100 }, mood: 5 }, outcomeText: 'Вы начали платить за страховку, но теперь чувствуете себя более защищенным.', learningPoint: 'Страхование — это покупка спокойствия. Оно не приносит доход, но защищает от катастрофических убытков.' },
       { text: 'Отказаться, это дорого', effects: { mood: -5 }, outcomeText: 'Вы решили сэкономить, надеясь, что ничего плохого не случится.', learningPoint: 'Отказ от страховки — это осознанный риск, который может как сэкономить деньги, так и привести к большим потерям.' },
     ],
   },
