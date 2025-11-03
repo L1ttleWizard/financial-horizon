@@ -113,10 +113,16 @@ export default function SavingsPage() {
         {/* Секция доступных предложений */}
         <section>
           <h2 className="text-3xl font-bold mb-4">Доступные предложения</h2>
-          {!areOffersInitialized || availableOffers.length === 0 ? (
+          {!areOffersInitialized && availableOffers.length === 0 ? (
             <div className="text-center py-10 bg-white rounded-xl shadow">
               <p className="text-gray-500">
-                {!areOffersInitialized ? "Загрузка предложений..." : "В данный момент нет новых предложений от банков."}
+                Загрузка предложений...
+              </p>
+            </div>
+          ) : availableOffers.length === 0 ? (
+            <div className="text-center py-10 bg-white rounded-xl shadow">
+              <p className="text-gray-500">
+                В данный момент нет новых предложений от банков.
               </p>
             </div>
           ) : (

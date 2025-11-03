@@ -21,34 +21,38 @@ export const GameStateSync = () => {
       return;
     }
 
-    if (user) {
-      const userDocRef = doc(db, 'users', user.uid);
-
-      const unsubscribe = onSnapshot(userDocRef, (doc) => {
-        if (doc.exists()) {
-          const userData = doc.data();
-          if (userData.gameState) {
-            dispatch(setGameState(userData.gameState));
-          } else {
-            dispatch(resetGame());
-          }
-        } else {
-          console.error("User document not found! Starting a new game.");
-          dispatch(resetGame());
-        }
-      }, (error) => {
-        console.error("Error fetching user game state:", error);
-        dispatch(setGameLoadingStatus('failed'));
-      });
-
-      // Cleanup subscription on unmount
-      return () => unsubscribe();
-
-    } else {
-      // If there is no user, reset the game state
+    if (!user) {
       dispatch(resetGame());
     }
-  }, [user, authLoading, dispatch]);
+  }, [authLoading, user, dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      const userDocRef = doc(db, 'users', user.uid);
+      const unsubscribe = onSnapshot(
+        userDocRef,
+        (doc) => {
+          if (doc.exists()) {
+            const userData = doc.data();
+            if (userData.gameState) {
+              dispatch(setGameState(userData.gameState));
+            } else {
+              dispatch(resetGame());
+            }
+          } else {
+            console.error('User document not found! Starting a new game.');
+            dispatch(resetGame());
+          }
+        },
+        (error) => {
+          console.error('Error fetching user game state:', error);
+          dispatch(setGameLoadingStatus('failed'));
+        }
+      );
+
+      return () => unsubscribe();
+    }
+  }, [user, dispatch]);
 
   return null;
 };

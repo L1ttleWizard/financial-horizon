@@ -672,7 +672,7 @@ const gameSlice = createSlice({
       state.propertyInvestments = [];
       state.availableOffers = [...bankOffersPool]
         .sort(() => 0.5 - Math.random())
-        .slice(0, 3);
+        .slice(0, 6);
       state.moodAtZeroTurns = initialState.moodAtZeroTurns;
       state.gameOverState = { isGameOver: false };
       state.currentEvent = null;
@@ -687,7 +687,7 @@ const gameSlice = createSlice({
       state.forcedGlossaryTerm = null;
       state.negativeEventCounter = 0;
       state.lastEventId = null;
-      state.areOffersInitialized = false;
+      state.areOffersInitialized = true;
       state.monthlyBills = initialState.monthlyBills;
       state.weeklySpends = initialState.weeklySpends;
       state.monthlySalary = initialState.monthlySalary;
@@ -698,6 +698,11 @@ const gameSlice = createSlice({
     setGameState(state, action: PayloadAction<GameState>) {
       const loadedState = action.payload;
       Object.assign(state, loadedState, { status: "succeeded" });
+      if (!state.availableOffers || state.availableOffers.length === 0) {
+        const shuffled = [...bankOffersPool].sort(() => 0.5 - Math.random());
+        state.availableOffers = shuffled.slice(0, 6);
+      }
+      state.areOffersInitialized = true;
     },
     setGameLoadingStatus(
       state,
