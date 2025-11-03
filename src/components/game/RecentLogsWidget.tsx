@@ -64,12 +64,12 @@ export function RecentLogsWidget({ log }: { log: LogEntry[] }) {
 
   return (
     <Link href="/log" className="text-center">
-      <div className="bg-white rounded-xl shadow-md p-6 h-full flex flex-col hover:scale-105 transition-all duration-125 justify-center">
+      <div className="bg-white rounded-xl shadow-md p-6 h-full flex flex-col hover:scale-105 transition-all duration-125 justify-center ">
         <h2 className="text-2xl font-bold text-gray-700 mb-4">
           Изменения за день {lastDay}
         </h2>
-        <div className="grid grid-cols-4 gap-4 text-center">
-            <div className="flex flex-col items-center">
+        <div className="grid grid-cols-4 gap-4 text-center bg-gray-100 p-2 rounded-2xl">
+            <div className="flex flex-col items-center ">
                 <RiWallet3Line size={24} className="text-gray-500" />
                 <p className="text-sm text-gray-600 mt-1">Баланс</p>
                 <DeltaIndicator delta={balanceDelta} isCurrency={true} />
