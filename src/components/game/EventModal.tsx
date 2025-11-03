@@ -18,8 +18,8 @@ export function EventModal({ event }: ModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ backgroundColor: 'rgba(45, 55, 72, 0.5)' }}>
-      <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 animate-fade-in-up bg-gray-900 bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ backgroundColor: 'rgba(72, 59, 114, 0.5)' }}>
+      <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 animate-fade-in-up bg-event-modal bg-opacity-50 border-event-modal-stroke border-2" style={{borderColor:"#00C8FF", boxShadow: `0 0 100px 17px #79D7FF`}}>
         <div className="flex flex-col items-center justify-center bg-gray-100 rounded-xl p-4">
           <Image
             src={event.illustration}
@@ -38,7 +38,7 @@ export function EventModal({ event }: ModalProps) {
               <button
                 key={index}
                 onClick={() => handleChoice(choice)}
-                className="w-full text-left p-4 bg-gray-800 rounded-lg hover:bg-blue-900 hover:shadow-md border-2 border-gray-700 hover:border-blue-500 transition-all transform hover:scale-102"
+                className="w-full text-left p-4 bg-event-modal-button rounded-lg hover:bg-blue-900 hover:shadow-md border-2 border-gray-700 hover:border-blue-500 transition-all transform hover:scale-102"
               >
                 <p className="font-semibold text-white">{choice.text}</p>
               </button>

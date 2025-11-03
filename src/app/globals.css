@@ -11,6 +11,9 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-plashka: #2A176D;
+  --color-event-modal:#2A176D;
+  --color-event-modal-stroke:#00C8FF;
+  --color-event-modal-button:#1C0D52;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -46,24 +49,34 @@ main {
 
 .start-turn-button {
   
-  background: radial-gradient(50% 191.67% at 50% 50%, #00cc73 0%, #00ff99 100%);
-  border: 2px solid rgba(0, 211, 121, 0.77);
+  background: radial-gradient(50% 191.67% at 50% 50%, #00D477 0%, #75FFC8 100%);
+border: 1px solid rgba(0, 211, 121, 0.77);
+border-radius: 8px;
+
+
   
 }
 .new-game-button {
-  background: radial-gradient(50% 275% at 50% 50%, #da4444 0%, #ff6565 100%);
-  border: 2px solid rgba(221, 70, 70, 0.66);
+  background: radial-gradient(50% 275% at 50% 50%, #E94B4B 0%, #FF7B7B 100%);
+border: 1px solid rgba(221, 70, 70, 0.66);
+border-radius: 8px;
+
+
 }
 
 .all-achievements-button {
-  background: radial-gradient(50% 275% at 50% 50%, #003cff 0%, #3593ff 100%);
-  border: 2px solid rgba(57, 106, 255, 0.66);
+  background: radial-gradient(50% 275% at 50% 50%, #2C5DFF 0%, #5D87FF 100%);
+  border: 1px solid rgba(57, 106, 255, 0.66);
+  border-radius: 8px;
+
 }
 
 .glossary-button {
-  background: radial-gradient(50% 191.67% at 50% 50%, #e88f00 0%, #ffd445 100%);
+  background: radial-gradient(50% 191.67% at 50% 50%, #FFAA21 0%, #FFE079 100%);
+border-radius: 8px;
   border:2px solid transparent;
-}
+
+  }
 
 #balance-card {
   background-image: url("../../public/background/balance-card-background.svg");

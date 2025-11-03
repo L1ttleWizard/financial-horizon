@@ -258,7 +258,7 @@ export default function HomePage() {
             {/* --- Collapsible Net Worth Chart --- */}
             <div className="lg:col-span-4 bg-white rounded-xl shadow-lg">
               <div
-                className="flex justify-between items-center p-5 cursor-pointer"
+                className="flex justify-between items-center p-5 cursor-pointe pb-0"
                 onClick={() => setIsChartExpanded(!isChartExpanded)}>
                 <h3 className="text-xl font-bold text-gray-800">
                   Динамика капитала
@@ -268,7 +268,7 @@ export default function HomePage() {
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
-                  stroke="currentColor"
+                  stroke="gray"
                   className={`w-6 h-6 transition-transform ${
                     isChartExpanded ? "rotate-180" : ""
                   }`}>
