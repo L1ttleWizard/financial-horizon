@@ -51,28 +51,39 @@ export default function ProfilePage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      const userDocRef = doc(db, "users", user.uid);
-      const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data() as UserData;
-          setUserData(data);
-          setNewNickname(data.nickname || "");
-        } else {
-          console.log("No such document!");
-        }
-        setIsFetching(false);
-      }, (error) => {
-        console.error("Error fetching user data:", error);
-        setIsFetching(false);
-      });
-
-      // Cleanup subscription on unmount
-      return () => unsubscribe();
-    } else if (!loading) {
+    if (loading) {
+      setIsFetching(true);
+      return;
+    }
+    if (!user) {
       setIsFetching(false);
     }
   }, [user, loading]);
+
+  useEffect(() => {
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const unsubscribe = onSnapshot(
+        userDocRef,
+        (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data() as UserData;
+            setUserData(data);
+            setNewNickname(data.nickname || "");
+          } else {
+            console.log("No such document!");
+          }
+          setIsFetching(false);
+        },
+        (error) => {
+          console.error("Error fetching user data:", error);
+          setIsFetching(false);
+        }
+      );
+
+      return () => unsubscribe();
+    }
+  }, [user]);
 
   const handleUpdateNickname = async () => {
     setMessage(null);
