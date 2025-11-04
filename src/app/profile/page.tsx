@@ -1,5 +1,5 @@
 "use client";
-
+import { useTheme } from "@/contexts/ThemeContext";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
@@ -36,6 +36,7 @@ interface UserData {
 }
 
 export default function ProfilePage() {
+  const { theme } = useTheme();
   const { user, loading } = useAuth();
   const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -172,156 +173,247 @@ export default function ProfilePage() {
   const currentNetWorth =
     userData?.gameState?.netWorthHistory?.slice(-1)[0]?.netWorth ?? 0;
 
-  return (
-    <>
-      <main className="p-4 sm:p-6 flex flex-col items-center">
-        <div className="w-full max-w-6xl rounded-xl shadow-lg p-6 sm:p-8 bg-plashka">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-8 text-center">
-            Профиль
-          </h1>
+  return <>
+    <main className="p-4 sm:p-6 flex flex-col items-center">
+      <div
+        className={`w-full max-w-6xl rounded-xl shadow-md p-6 sm:p-8 ${
+          theme === "dark"
+            ? "bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),_0px_2px_4px_-2px_rgba(0,0,0,0.1)]"
+            : "bg-white"
+        }`}>
+        <h1
+          className={`text-3xl sm:text-4xl font-bold mb-8 text-center ${
+            theme === "dark" ? "text-white" : "text-gray-800"
+          }`}>
+          Профиль
+        </h1>
 
-          {/* --- Main Information --- */}
-          <div className="space-y-4 border-b pb-6 mb-6">
-            <h2 className="text-xl font-semibold text-white">
-              Основная информация
-            </h2>
-            <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-              <span className="font-medium text-gray-700">Никнейм:</span>
-              <span className="font-bold text-lg text-gray-900">
+        {/* --- Main Information --- */}
+        <div
+          className={`p-4 rounded-xl mt-4 ${
+            theme === "dark" ? "bg-[rgba(13,4,32,0.35)]" : "bg-gray-100"
+          }`}>
+          <h2
+            className={`text-xl font-semibold mb-4 ${
+              theme === "dark" ? "text-white" : "text-gray-800"
+            }`}>
+            Основная информация
+          </h2>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center text-sm">
+              <span
+                className={`${
+                  theme === "dark" ? "text-[#C6B9D9]" : "text-gray-600"
+                }`}>
+                Никнейм:
+              </span>
+              <span
+                className={`font-semibold text-lg ml-auto ${
+                  theme === "dark" ? "text-white" : "text-gray-900"
+                }`}>
                 {userData?.nickname || "Не указан"}
               </span>
             </div>
-            <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-              <span className="font-medium text-gray-700">Email:</span>
-              <span className="text-gray-800">{userData?.email}</span>
+            <div className="flex justify-between items-center text-sm">
+              <span
+                className={`${
+                  theme === "dark" ? "text-[#C6B9D9]" : "text-gray-600"
+                }`}>
+                Email:
+              </span>
+              <span
+                className={`ml-auto ${
+                  theme === "dark" ? "text-white" : "text-gray-800"
+                }`}>
+                {userData?.email}
+              </span>
             </div>
           </div>
+        </div>
 
-          {/* --- Game Statistics --- */}
-          <div className="space-y-4 border-b pb-6 mb-6">
-            <h2 className="text-xl font-semibold text-white">
-              Игровая статистика
-            </h2>
-            <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-              <span className="font-medium text-gray-700">Текущая неделя:</span>
-              <span className="font-bold text-lg text-gray-900">
+        {/* --- Game Statistics --- */}
+        <div
+          className={`p-4 rounded-xl mt-4 ${
+            theme === "dark" ? "bg-[rgba(13,4,32,0.35)]" : "bg-gray-100"
+          }`}>
+          <h2
+            className={`text-xl font-semibold mb-4 ${
+              theme === "dark" ? "text-white" : "text-gray-800"
+            }`}>
+            Игровая статистика
+          </h2>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center text-sm">
+              <span
+                className={`${
+                  theme === "dark" ? "text-[#C6B9D9]" : "text-gray-600"
+                }`}>
+                Текущая неделя:
+              </span>
+              <span
+                className={`font-semibold text-lg ml-auto ${
+                  theme === "dark" ? "text-white" : "text-gray-900"
+                }`}>
                 {userData?.gameState?.turn ?? 0}
               </span>
             </div>
-            <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-              <span className="font-medium text-gray-700">Капитал:</span>
-              <span className="font-bold text-lg text-gray-900">
+            <div className="flex justify-between items-center text-sm">
+              <span
+                className={`${
+                  theme === "dark" ? "text-[#C6B9D9]" : "text-gray-600"
+                }`}>
+                Капитал:
+              </span>
+              <span
+                className={`font-semibold text-lg ml-auto ${
+                  theme === "dark" ? "text-white" : "text-gray-900"
+                }`}>
                 ₽{currentNetWorth.toLocaleString()}
               </span>
             </div>
           </div>
+        </div>
 
-          {/* --- Account Management --- */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">
+        {/* --- Account Management --- */}
+        <div
+          className={`text-sm p-4 rounded-xl mt-4 ${
+            theme === "dark" ? "bg-[rgba(13,4,32,0.35)]" : "bg-gray-100 text-gray-600"
+          }`}>
+          <div
+            className={`p-4 rounded-xl mt-4 ${
+              theme === "dark" ? "bg-[rgba(13,4,32,0.35)]" : "bg-gray-100"
+            }`}>
+            <h2
+              className={`text-xl font-semibold mb-4 ${
+                theme === "dark" ? "text-white" : "text-gray-800"
+              }`}>
               Управление аккаунтом
             </h2>
 
-            {/* Change Nickname */}
-            <div className="p-4 bg-gray-50 rounded-lg text-gray-600">
-              <label
-                htmlFor="nickname-input"
-                className="block font-medium text-gray-600 mb-2">
-                Сменить никнейм
-              </label>
-              <div className="flex items-center gap-4">
-                <input
-                  id="nickname-input"
-                  type="text"
-                  value={newNickname}
-                  onChange={(e) => setNewNickname(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                />
-                <button
-                  onClick={handleUpdateNickname}
-                  disabled={isUpdatingNickname}
-                  className="py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-sm disabled:bg-gray-400 whitespace-nowrap">
-                  {isUpdatingNickname ? "Сохранение..." : "Сохранить"}
-                </button>
-              </div>
-            </div>
-
-            {/* Password Reset */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <span className="font-medium text-gray-600">Сбросить пароль</span>
-              <button
-                onClick={handlePasswordReset}
-                className="text-blue-600 hover:underline">
-                Отправить письмо
-              </button>
-            </div>
-
-            {/* Delete Account */}
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold text-red-600">
-                Опасная зона
-              </h3>
-              <div className="mt-2 flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg">
-                <div className="max-w-sm">
-                  <span className="font-medium text-red-700">
-                    Удалить аккаунт
-                  </span>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Это действие необратимо. Все ваши данные, включая игровой
-                    прогресс, будут удалены навсегда.
-                  </p>
+            <div className="space-y-3">
+              <div className="text-sm">
+                <label
+                  htmlFor="nickname-input"
+                  className={`block mb-2 ${
+                    theme === "dark" ? "text-[#C6B9D9]" : "text-gray-600"
+                  }`}>
+                  Сменить никнейм
+                </label>
+                <div className="flex items-center gap-4">
+                  <input
+                    id="nickname-input"
+                    type="text"
+                    value={newNickname}
+                    onChange={(e) => setNewNickname(e.target.value)}
+                    className={'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'}
+                  />
+                  <button
+                    onClick={handleUpdateNickname}
+                    disabled={isUpdatingNickname}
+                    className="py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-sm disabled:bg-gray-400 whitespace-nowrap">
+                    {isUpdatingNickname ? "Сохранение..." : "Сохранить"}
+                  </button>
                 </div>
-                <button
-                  onClick={() => setIsDeleteModalOpen(true)}
-                  className="py-2 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md shadow-sm whitespace-nowrap">
-                  Удалить
-                </button>
               </div>
             </div>
           </div>
-
-          {message && (
-            <div
-              className={`mt-6 p-4 rounded-md ${
-                message.type === "success"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
+          <div
+            className={`flex justify-between items-center text-sm p-4 rounded-xl mt-4 ${
+              theme === "dark" ? "bg-[rgba(13,4,32,0.35)]" : "bg-gray-100"
+            }`}>
+            <span
+              className={`${
+                theme === "dark" ? "text-[#C6B9D9]" : "text-gray-600"
               }`}>
-              {message.text}
-            </div>
-          )}
+              Сбросить пароль
+            </span>
+            <button
+              onClick={handlePasswordReset}
+              className="text-blue-600 hover:underline">
+              Отправить письмо
+            </button>
+          </div>
         </div>
+
+        {/* --- Danger Zone --- */}
+        <div
+          className={`p-4 rounded-xl mt-4 ${
+            theme === "dark" ? "bg-[rgba(13,4,32,0.35)]" : "bg-gray-100"
+          }`}>
+          <h3 className="text-lg font-semibold text-red-600 ">
+            Опасная зона
+          </h3>
+          <div className="mt-2 flex items-center justify-between p-4  rounded-lg">
+            <div className="max-w-sm">
+              <span className="font-medium text-red-700">
+                Удалить аккаунт
+              </span>
+              <p className="text-sm text-gray-500 mt-1">
+                Это действие необратимо. Все ваши данные, включая игровой
+                прогресс, будут удалены навсегда.
+              </p>
+            </div>
+            <button
+              onClick={() => setIsDeleteModalOpen(true)}
+              className="py-2 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md shadow-sm whitespace-nowrap">
+              Удалить
+            </button>
+          </div>
+        </div>
+
+        {message && (
+          <div
+            className={`mt-6 p-4 rounded-md ${
+              message.type === "success"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}>
+            {message.text}
+          </div>
+        )}
 
         {/* Conditionally render Admin Panel */}
         {userData?.role === "admin" && <AdminPanel />}
-      </main>
+      </div>
+    </main>
 
-      {/* --- Delete Confirmation Modal --- */}
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-2xl p-8 m-4 max-w-sm w-full">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Вы уверены?
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Это действие приведет к полному удалению вашего аккаунта и всех
-              связанных с ним данных. Отменить это будет невозможно.
-            </p>
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={() => setIsDeleteModalOpen(false)}
-                className="py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-md">
-                Отмена
-              </button>
-              <button
-                onClick={handleDeleteAccount}
-                className="py-2 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md">
-                Да, удалить аккаунт
-              </button>
-            </div>
+    {isDeleteModalOpen && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+          className={`rounded-lg shadow-2xl p-8 m-4 max-w-sm w-full ${
+            theme === "dark" ? "bg-gray-800" : "bg-white"
+          }`}>
+          <h2
+            className={`text-2xl font-bold mb-4 ${
+              theme === "dark" ? "text-white" : "text-gray-900"
+            }`}>
+            Вы уверены?
+          </h2>
+          <p
+            className={`${
+              theme === "dark" ? "text-gray-300" : "text-gray-600"
+            } mb-6`}>
+            Это действие приведет к полному удалению вашего аккаунта и всех
+            связанных с ним данных. Отменить это будет невозможно.
+          </p>
+          <div className="flex justify-end gap-4">
+            <button
+              onClick={() => setIsDeleteModalOpen(false)}
+              className={`py-2 px-4 font-semibold rounded-md ${
+                theme === "dark"
+                  ? "bg-gray-600 hover:bg-gray-700 text-gray-200"
+                  : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+              }`}>
+              Отмена
+            </button>
+            <button
+              onClick={handleDeleteAccount}
+              className="py-2 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md">
+              Да, удалить аккаунт
+            </button>
           </div>
         </div>
-      )}
-    </>
-  );
+      </div>
+    )}
+  </>;
 }

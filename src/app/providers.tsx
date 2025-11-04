@@ -9,6 +9,8 @@ import { Header } from "@/components/layout/Header";
 import { GameStateSync } from "@/components/game/GameStateSync";
 import { initializeOffers } from '@/store/slices/gameSlice';
 
+import { ThemeProvider } from "@/contexts/ThemeContext";
+
 function ClientSideInitializer() {
   const dispatch = useDispatch();
 
@@ -21,14 +23,16 @@ function ClientSideInitializer() {
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <StoreProvider>
-      <ClientSideInitializer />
-      <AuthProvider>
-        <Header />
-        <GameStateSync />
-        {children}
-        <OnboardingController />
-      </AuthProvider>
-    </StoreProvider>
+    <ThemeProvider>
+      <StoreProvider>
+        <ClientSideInitializer />
+        <AuthProvider>
+          <Header />
+          <GameStateSync />
+          {children}
+          <OnboardingController />
+        </AuthProvider>
+      </StoreProvider>
+    </ThemeProvider>
   );
 }

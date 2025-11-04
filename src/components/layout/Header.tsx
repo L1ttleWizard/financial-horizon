@@ -11,7 +11,12 @@ import { useAppSelector } from '@/store/hooks';
 import { MdAddCircleOutline } from 'react-icons/md';
 import { GoHomeFill } from 'react-icons/go';
 
+import { ThemeToggleButton } from '@/components/ui/ThemeToggleButton';
+
+import { useTheme } from "@/contexts/ThemeContext";
+
 export const Header = () => {
+  const { theme } = useTheme();
   const { user, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -23,25 +28,30 @@ export const Header = () => {
   };
 
   return (
-    <header className="w-full bg-white shadow-md">
+    <header className={`w-full shadow-md ${
+      theme === 'dark'
+        ? 'bg-[rgba(34,13,55,0.65)] shadow-[0px_4px_4px_rgba(0,0,0,0.2),_0px_4px_6px_-1px_rgba(0,0,0,0.5),_0px_2px_4px_-2px_rgba(0,0,0,0.1)]'
+        : 'bg-white'
+    }`}>
       <div className="container mx-auto flex justify-between items-center p-4">
-        <Link href="/" className="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors">
+        <Link href="/" className={`text-2xl font-bold hover:text-blue-600 transition-colors ${theme === 'dark' ? 'text-[#E8E1F0]' : 'text-gray-800'}`}>
           Финансовый Горизонт
         </Link>
-        <nav className="flex items-center gap-6">
+        <nav className={`flex items-center gap-6 `} >
+          <ThemeToggleButton/>
           {pathname !== '/' && (
-            <Link href="/" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
+            <Link href="/" className={`text-lg font-medium hover:text-blue-600 transition-colors ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
               <GoHomeFill />
             </Link>
           )}
-          <Link href="/leaderboard" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
+          <Link href="/leaderboard" className={`text-lg font-medium hover:text-blue-600 transition-colors ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
             <FaTrophy />
           </Link>
           {loading ? (
-            <div className="text-lg font-medium text-gray-600">Загрузка...</div>
+            <div className={`text-lg font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Загрузка...</div>
           ) : user ? (
             <>
-              <Link href="/profile" className="text-lg font-medium text-gray-600 hover:text-blue-600 transition-colors">
+              <Link href="/profile" className={`text-lg font-medium hover:text-blue-600 transition-colors ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                 <FaUser />
               </Link>
               <button onClick={handleLogout} className=" cursor-pointer text-lg font-medium text-red-600 hover:text-red-800 transition-colors">

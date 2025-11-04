@@ -3,12 +3,15 @@ import { AchievementBadge } from "./AchievementBadge";
 
 import { useState } from "react";
 
+import { useTheme } from "@/contexts/ThemeContext";
+
 interface AchievementsWidgetProps {
   unlockedIds: string[];
   allAchievements: Achievement[];
 }
 
 export function AchievementsWidget({ unlockedIds, allAchievements }: AchievementsWidgetProps) {
+  const { theme } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(true);
   const unlockedCount = unlockedIds.length;
   const totalCount = allAchievements.length;
@@ -21,14 +24,18 @@ export function AchievementsWidget({ unlockedIds, allAchievements }: Achievement
 
 
   return (
-    <div className="rounded-xl shadow-lg p-5 flex flex-col pb-8  bg-white">
+    <div className={`rounded-xl shadow-lg p-5 flex flex-col pb-8 ${
+      theme === 'dark'
+        ? 'bg-[rgba(48,19,110,0.6)] border border-[rgba(255,255,255,0.3)] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),_0px_4px_6px_-4px_rgba(0,0,0,0.1)] rounded-[12px]'
+        : 'bg-white'
+    }`}>
       {/* Header */}
       <div className="flex justify-between items-start mb-8 ">
         <div>
-          <h3 className="text-xl font-bold text-gray-800 mb-2">Недавние достижения</h3>
-          <p className="text-sm text-gray-500">{`${unlockedCount} / ${totalCount} разблокировано`}</p>
+          <h3 className={`text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Недавние достижения</h3>
+          <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{`${unlockedCount} / ${totalCount} разблокировано`}</p>
         </div>
-        <button onClick={() => setIsCollapsed(!isCollapsed)} className="text-gray-500 hover:text-gray-700">
+        <button onClick={() => setIsCollapsed(!isCollapsed)} className={`hover:text-gray-700 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -78,7 +85,7 @@ export function AchievementsWidget({ unlockedIds, allAchievements }: Achievement
           </div>
         ) : (
           <div className="flex items-center justify-center h-full">
-            <p className="text-center text-gray-500">
+            <p className={`text-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>
               Вы еще не открыли ни одного достижения.
             </p>
           </div>

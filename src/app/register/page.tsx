@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "@/contexts/ThemeContext";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -26,6 +27,7 @@ async function isNicknameUnique(nickname: string): Promise<boolean> {
 }
 
 export default function RegisterPage() {
+  const { theme } = useTheme();
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
@@ -129,15 +131,16 @@ export default function RegisterPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen text-gray-700">
-      <div className="w-full max-w-md p-8 space-y-6 rounded-lg bg-white shadow-md">
-        <h2 className="text-3xl font-bold text-center text-gray-900">
+      <div className={`w-full max-w-md p-8 space-y-6 rounded-lg shadow-md ${theme === 'dark' ? 'bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),_0px_2px_4px_-2px_rgba(0,0,0,0.1)]' : 'bg-white'}`}>
+
+        <h2 className={`text-3xl font-bold text-center ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
           Создать аккаунт
         </h2>
         <form onSubmit={handleRegister} className="space-y-6">
           <div>
             <label
               htmlFor="email"
-              className="text-sm font-medium text-gray-700">
+              className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
               Email
             </label>
             <input
@@ -153,7 +156,7 @@ export default function RegisterPage() {
           <div>
             <label
               htmlFor="nickname"
-              className="text-sm font-medium text-gray-700">
+              className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
               Никнейм
             </label>
             <input
@@ -169,7 +172,7 @@ export default function RegisterPage() {
           <div className="relative">
             <label
               htmlFor="password"
-              className="text-sm font-medium text-gray-700">
+              className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
               Пароль
             </label>
             <input
@@ -196,7 +199,7 @@ export default function RegisterPage() {
           <div className="relative">
             <label
               htmlFor="confirm-password"
-              className="text-sm font-medium text-gray-700">
+              className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
               Подтвердите пароль
             </label>
             <input
@@ -225,7 +228,7 @@ export default function RegisterPage() {
             </button>
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}  
+          {error && <p className={`text-sm ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}> {error}</p>}  
 
           <button
             type="submit"
@@ -234,7 +237,7 @@ export default function RegisterPage() {
             {isLoading ? "Регистрация..." : "Зарегистрироваться"}
           </button>
         </form>
-        <p className="text-sm text-center text-gray-600">
+        <p className={`text-sm text-center ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
           Уже есть аккаунт?{" "}
           <Link
             href="/login"
