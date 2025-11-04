@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "@/contexts/ThemeContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase-client";
 
 export default function LoginPage() {
+  const { theme } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -34,16 +36,17 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen text-gray-700">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-3xl font-bold text-center text-gray-900">
+      <div className={`w-full max-w-md p-8 space-y-6 rounded-lg shadow-md ${theme === 'dark' ? 'bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),_0px_2px_4px_-2px_rgba(0,0,0,0.1)]' : 'bg-white'}`}>
+
+        <h2 className={`text-3xl font-bold text-center ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
           Вход в аккаунт
         </h2>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label
-              htmlFor="email"
-              className="text-sm font-medium text-gray-700"
-            >
+                          htmlFor="email"
+                          className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+            
               Email
             </label>
             <input
@@ -58,9 +61,9 @@ export default function LoginPage() {
           </div>
           <div className="relative">
             <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-700"
-            >
+                          htmlFor="password"
+                          className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+            
               Пароль
             </label>
             <input
@@ -86,7 +89,7 @@ export default function LoginPage() {
             </button>
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className={`text-sm ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}>{error}</p>}
 
           <button
             type="submit"
@@ -96,7 +99,7 @@ export default function LoginPage() {
             {isLoading ? "Вход..." : "Войти"}
           </button>
         </form>
-        <p className="text-sm text-center text-gray-600">
+        <p className={`text-sm text-center ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
           Нет аккаунта?{" "}
           <Link
             href="/register"
