@@ -30,7 +30,7 @@ export function AchievementsWidget({ unlockedIds, allAchievements }: Achievement
         : 'bg-white'
     }`}>
       {/* Header */}
-      <div className="flex justify-between items-start mb-8 ">
+      <div className="flex justify-between items-start mb-3.5 ">
         <div>
           <h3 className={`text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Недавние достижения</h3>
           <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{`${unlockedCount} / ${totalCount} разблокировано`}</p>
