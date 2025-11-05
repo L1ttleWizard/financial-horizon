@@ -1,12 +1,13 @@
 "use client";
 
 import { useTheme } from "@/contexts/ThemeContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase-client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const { theme } = useTheme();
@@ -16,6 +17,13 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/profile");
+    }
+  }, [user, loading, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +32,7 @@ export default function LoginPage() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/"); // Redirect to home page on successful login
+      router.push("/"); // Redirect to profile page on successful login
     } catch (err: unknown) {
       // Provide a more user-friendly error message
       setError("Неверный email или пароль. Пожалуйста, попробуйте снова.");

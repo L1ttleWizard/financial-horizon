@@ -12,7 +12,7 @@ export function ActiveDepositCard({
   
 }) {
   const { theme } = useTheme();
-  const currentTurn:number = useAppSelector((state) => state.turn);
+  const currentTurn:number = useAppSelector((state) => state.game.day);
   console.log(currentTurn,deposit.startTurn,deposit.endTurn,deposit.term);
   const actualTurnsPassed = currentTurn - deposit.startTurn;
   const turnsPassedForProgress = Math.min(actualTurnsPassed, deposit.term);

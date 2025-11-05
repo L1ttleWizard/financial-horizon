@@ -2,55 +2,22 @@
 
 import { useTheme } from "@/contexts/ThemeContext";
 import { useState, useEffect } from "react";
-import { collection, getDocs, orderBy, query, limit } from "firebase/firestore";
-import { db } from "@/lib/firebase-client";
 
 interface UserData {
   uid: string;
   nickname: string;
-  turn: number;
+  week: number;
   netWorth: number;
 }
 
 async function getLeaderboardData(): Promise<UserData[]> {
   try {
-    const usersRef = collection(db, "users");
-    // Fetch more users than needed to account for potential filtering in the future
-    // or for users with incomplete data.
-    const q = query(usersRef, orderBy("gameState.turn", "desc"), limit(40));
-
-    const usersSnapshot = await getDocs(q);
-
-    if (usersSnapshot.empty) {
-      return [];
+    const response = await fetch('/api/leaderboard');
+    if (!response.ok) {
+      throw new Error('Failed to fetch leaderboard data');
     }
-
-    // Use a Map to filter out duplicate UIDs and ensure data integrity.
-    const uniqueUsers = new Map<string, UserData>();
-
-    usersSnapshot.docs.forEach((doc) => {
-      const data = doc.data();
-      const uid = doc.id;
-
-      // Basic validation to ensure essential data exists
-      if (
-        data.gameState &&
-        data.gameState.netWorthHistory &&
-        !uniqueUsers.has(uid)
-      ) {
-        const lastNetWorthPoint = data.gameState.netWorthHistory.slice(-1)[0];
-
-        uniqueUsers.set(uid, {
-          uid: uid,
-          nickname: data.nickname || data.email || "Anonymous",
-          turn: data.gameState.turn || 0,
-          netWorth: lastNetWorthPoint ? lastNetWorthPoint.netWorth : 0,
-        });
-      }
-    });
-
-    // Return the top 20 unique users
-    return Array.from(uniqueUsers.values()).slice(0, 20);
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error fetching leaderboard data:", error);
     return [];
@@ -114,7 +81,7 @@ export default function LeaderboardPage() {
                   className={`flex flex-col sm:flex-row sm:gap-6 text-right text-sm sm:text-base text-gray-600 w-48 ${
                     theme === "dark" ? "text-gray-300" : "text-gray-600"
                   }`}>
-                  <span className={`font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Неделя: {user.turn}</span>
+                  <span className={`font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Неделя: {user.week}</span>
                   <span className={`font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                     Капитал: ₽{user.netWorth.toLocaleString()}
                   </span>

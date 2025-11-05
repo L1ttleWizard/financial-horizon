@@ -153,7 +153,7 @@ export default function HomePage() {
                 <MascotWidget />
               </div>
               <div
-                className="flex flex-wrap items-stretch justify-center gap-6 rounded-xl justify-items-stretch w-full"
+                className="flex text- xl flex-wrap items-stretch justify-center gap-6 rounded-xl justify-items-stretch w-full"
                 id="conrols-panel">
                 <div className="w-full">
                   <button
@@ -163,10 +163,10 @@ export default function HomePage() {
                       gameState.isResultModalOpen ||
                       gameState.gameOverState?.isGameOver
                     }
-                    className={`start-turn-button w-full h-full text-white font-bold py-5 px-10 rounded-lg shadow-lg transition ${
-                      theme === 'dark'
-                        ? 'bg-[radial-gradient(50%_191.67%_at_50%_50%,rgba(0,212,119,0.8)_0%,rgba(117,255,200,0.8)_100%)] border border-[rgba(0,211,121,0.77)]'
-                        : 'bg-blue-600 hover:bg-blue-700'
+                    className={`start-turn-button w-full h-full text-white font-bold py-5 px-10 rounded-lg shadow-lg transition hover:scale-105 ${
+                      theme === "dark"
+                        ? "bg-[radial-gradient(50%_191.67%_at_50%_50%,rgba(0,212,119,0.8)_0%,rgba(117,255,200,0.8)_100%)] border border-[rgba(0,211,121,0.77)]"
+                        : "bg-blue-600 hover:bg-blue-700"
                     }`}>
                     {isDemoActive
                       ? "Следующее демо-событие"
@@ -178,29 +178,29 @@ export default function HomePage() {
 
                 <Link
                   href="/achievements"
-                  className={`all-achievements-button w-full h-full text-center text-white font-bold py-5 px-10 rounded-lg transition flex items-center justify-center ${
-                    theme === 'dark'
-                      ? 'bg-[radial-gradient(50%_275%_at_50%_50%,rgba(44,93,255,0.8)_0%,rgba(93,135,255,0.8)_100%)] border border-[#396AFF]'
-                      : 'bg-yellow-500 hover:bg-yellow-600'
+                  className={`all-achievements-button w-full h-full text-center text-white font-bold py-5 px-10 rounded-lg transition flex items-center justify-center hover:scale-105 ${
+                    theme === "dark"
+                      ? "bg-[radial-gradient(50%_275%_at_50%_50%,rgba(44,93,255,0.8)_0%,rgba(93,135,255,0.8)_100%)] border border-[#396AFF]"
+                      : "bg-yellow-500 hover:bg-yellow-600"
                   }`}>
-                  Все достижения
+                  Достижения
                 </Link>
                 <Link
                   id="glossary-button"
                   href="/glossary"
-                  className={`glossary-button w-full h-full text-center text-white font-bold py-5 px-10 rounded-lg transition flex flex-col items-center justify-center ${
-                    theme === 'dark'
-                      ? 'bg-[radial-gradient(50%_191.67%_at_50%_50%,#FFAA21_0%,#FFE079_100%)] border border-[#FFAF29]'
-                      : 'bg-yellow-500 hover:bg-yellow-600'
+                  className={`glossary-button w-full h-full text-center text-white font-bold py-5 px-10 rounded-lg transition flex flex-col items-center justify-center hover:scale-105  ${
+                    theme === "dark"
+                      ? "bg-[radial-gradient(50%_191.67%_at_50%_50%,#FFAA21_0%,#FFE079_100%)] border border-[#FFAF29]"
+                      : "bg-yellow-500 hover:bg-yellow-600"
                   }`}>
                   <span>Словарь терминов</span>
                 </Link>
                 <button
                   onClick={() => dispatch(resetGame())}
-                  className={`new-game-button w-full h-full text-white font-bold py-5 px-10 rounded-lg transition ${
-                    theme === 'dark'
-                      ? 'bg-[radial-gradient(50%_275%_at_50%_50%,rgba(233,75,75,0.8)_0%,rgba(255,123,123,0.8)_100%)] border border-[rgba(221,70,70,0.66)]'
-                      : 'bg-gray-700 hover:bg-gray-800'
+                  className={`new-game-button w-full h-full text-white font-bold py-5 px-10 rounded-lg transition  hover:scale-105 ${
+                    theme === "dark"
+                      ? "bg-[radial-gradient(50%_275%_at_50%_50%,rgba(233,75,75,0.8)_0%,rgba(255,123,123,0.8)_100%)] border border-[rgba(221,70,70,0.66)]"
+                      : "bg-gray-700 hover:bg-gray-800"
                   }`}>
                   Начать игру заново
                 </button>
@@ -275,29 +275,41 @@ export default function HomePage() {
             </div>
 
             {/* --- Collapsible Net Worth Chart --- */}
-            <div className={`lg:col-span-4 rounded-xl shadow-lg ${
-              theme === 'dark'
-                ? 'bg-[rgba(60,28,130,0.55)] border border-[rgba(255,255,255,0.3)] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),_0px_4px_6px_-4px_rgba(0,0,0,0.1)]'
-                : 'bg-white'
-            }`}>
+            <div
+              className={`lg:col-span-4 rounded-xl shadow-lg ${
+                theme === "dark"
+                  ? "bg-[rgba(60,28,130,0.55)] border border-[rgba(255,255,255,0.3)] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)]"
+                  : "bg-white"
+              }`}>
               <div
                 className="flex justify-between items-center p-5 cursor-pointe pb-0"
                 onClick={() => setIsChartExpanded(!isChartExpanded)}>
-                <h3 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                <h3
+                  className={`text-xl font-bold ${
+                    theme === "dark" ? "text-white" : "text-gray-800"
+                  }`}>
                   Динамика капитала
                 </h3>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  className={`w-6 h-6 transition-transform ${theme === 'dark' ? 'stroke-white' : 'stroke-gray'}`}>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                  />
-                </svg>
+                <button
+                  className={`hover:text-gray-700 ${
+                    theme === "dark" ? "text-gray-300" : "text-gray-700"
+                  }`}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className={`w-6 h-6 transition-transform duration-300 ${
+                      !isChartExpanded ? "rotate-180" : ""
+                    }`}>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m19.5 9-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
+                </button>
               </div>
               {isChartExpanded && (
                 <div className="p-5 pt-0">
@@ -329,7 +341,7 @@ export default function HomePage() {
                 currentStage={gameState.treeStage}
                 badnessFactor={badnessFactor}
               />
-              <AchievementsWidget 
+              <AchievementsWidget
                 unlockedIds={gameState.unlockedAchievements}
                 allAchievements={achievementsData}
               />
