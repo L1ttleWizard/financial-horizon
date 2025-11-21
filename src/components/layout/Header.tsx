@@ -10,10 +10,14 @@ import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import { useAppSelector } from '@/store/hooks';
 import { MdAddCircleOutline } from 'react-icons/md';
 import { GoHomeFill } from 'react-icons/go';
+import { GrPowerReset } from 'react-icons/gr';
 
 import { ThemeToggleButton } from '@/components/ui/ThemeToggleButton';
 
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAppDispatch } from '@/store/hooks';
+import { resetGame } from '@/store/slices/gameSlice';
+import { resetOnboarding, startOnboarding } from '@/store/slices/onboardingSlice';
 
 export const Header = () => {
   const { theme } = useTheme();
@@ -21,10 +25,20 @@ export const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const onboardingCompleted = useAppSelector((state) => state.onboarding.hasCompleted);
+  const dispatch = useAppDispatch();
 
   const handleLogout = async () => {
     await signOut(auth);
     router.push('/'); // Redirect to home after logout
+  };
+
+  const handleReset = () => {
+    if (window.confirm('Вы уверены, что хотите начать игру заново? Весь прогресс будет потерян.')) {
+      dispatch(resetGame());
+      dispatch(resetOnboarding());
+      dispatch(startOnboarding());
+      router.push('/');
+    }
   };
 
   return (
@@ -39,6 +53,9 @@ export const Header = () => {
         </Link>
         <nav className={`flex items-center gap-6 `} >
           <ThemeToggleButton/>
+          <button onClick={handleReset} className={`text-lg font-medium hover:text-blue-600 transition-colors ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+            <GrPowerReset />
+          </button>
           {pathname !== '/' && (
             <Link href="/" className={`text-lg font-medium hover:text-blue-600 transition-colors ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
               <GoHomeFill />

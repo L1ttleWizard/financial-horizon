@@ -26,13 +26,16 @@ export const firestoreMiddleware: Middleware = store => next => action => {
     action !== null &&
     'type' in action &&
     typeof (action as { type: string }).type === 'string' &&
-    (action as { type: string }).type.startsWith('game/')
+    ((action as { type: string }).type.startsWith('game/') || (action as { type: string }).type.startsWith('onboarding/'))
   ) {
     debounce(() => {
       const userDocRef = doc(db, 'users', user.uid);
-      // We update only the gameState field, leaving other fields (like email, createdAt) untouched
-      updateDoc(userDocRef, { gameState: state.game }).catch(error => {
-        console.error("Failed to save game state to Firestore:", error);
+      // We update both gameState and onboardingState fields
+      updateDoc(userDocRef, { 
+        gameState: state.game,
+        onboardingState: state.onboarding 
+      }).catch(error => {
+        console.error("Failed to save state to Firestore:", error);
       });
     }, 1500); // Debounce for 1.5 seconds
   }

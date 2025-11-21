@@ -39,6 +39,8 @@ import { FcDebt } from "react-icons/fc";
 
 import { useTheme } from "@/contexts/ThemeContext";
 
+import { resetOnboarding, startOnboarding } from "@/store/slices/onboardingSlice";
+
 // Function to downsample chart data for performance
 const summarizeNetWorthHistory = (
   history: NetWorthHistoryPoint[]
@@ -195,16 +197,21 @@ export default function HomePage() {
                   }`}>
                   <span>Словарь терминов</span>
                 </Link>
-                <button
-                  onClick={() => dispatch(resetGame())}
-                  className={`new-game-button w-full h-full text-white font-bold py-5 px-10 rounded-lg transition  hover:scale-105 ${
-                    theme === "dark"
-                      ? "bg-[radial-gradient(50%_275%_at_50%_50%,rgba(233,75,75,0.8)_0%,rgba(255,123,123,0.8)_100%)] border border-[rgba(221,70,70,0.66)]"
-                      : "bg-gray-700 hover:bg-gray-800"
-                  }`}>
-                  Начать игру заново
-                </button>
-              </div>
+                                  <button
+                                    onClick={() => {
+                                      if (window.confirm('Вы уверены, что хотите начать игру заново? Весь прогресс будет потерян.')) {
+                                        dispatch(resetGame());
+                                        dispatch(resetOnboarding());
+                                        dispatch(startOnboarding());
+                                      }
+                                    }}
+                                    className={`new-game-button w-full h-full text-white font-bold py-5 px-10 rounded-lg transition  hover:scale-105 ${
+                                      theme === "dark"
+                                        ? "bg-[radial-gradient(50%_275%_at_50%_50%,rgba(233,75,75,0.8)_0%,rgba(255,123,123,0.8)_100%)] border border-[rgba(221,70,70,0.66)]"
+                                        : "bg-gray-700 hover:bg-gray-800"
+                                    }`}>
+                                    Начать игру заново
+                                  </button>              </div>
             </div>
           </aside>
 

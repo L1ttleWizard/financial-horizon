@@ -37,7 +37,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'celebrate_payday',
     title: '🎉 Время отпраздновать!',
     description: 'Вы отлично поработали. Как вы решите отдохнуть и развеяться?',
-    illustration: 'illustrations/week1.svg',
+    illustration: '/illustrations/week1.png',
     difficulty: 1,
     isNegative: false,
     choices: [
@@ -50,7 +50,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'broken_phone',
     title: '📱 Внезапная поломка!',
     description: 'Ваш смартфон упал и больше не включается. Нужно срочно найти замену.',
-    illustration: 'illustrations/week2.svg',
+    illustration: '/illustrations/week2.png',
     difficulty: 1,
     isNegative: true,
     choices: [
@@ -63,7 +63,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'first_savings',
     title: '🌱 Время сажать семена',
     description: 'У вас на счете скопилась приличная сумма. Может, заставить эти деньги работать?',
-    illustration: 'illustrations/week3.svg',
+    illustration: '/illustrations/week3.png',
     difficulty: 1,
     isNegative: false,
     triggerCondition: (state) => state.balance > 40000 && state.savings === 0,
@@ -77,7 +77,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'freelance_gig',
     title: '💻 Подработка',
     description: 'Появилась возможность взять небольшой проект на выходные и подзаработать.',
-    illustration: 'illustrations/freelance.svg',
+    illustration: '/illustrations/freelance.png',
     difficulty: 1,
     isNegative: false,
     choices: [
@@ -89,7 +89,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'unexpected_gift',
     title: '🎁 Неожиданный подарок',
     description: 'Дальний родственник прислал вам в подарок немного денег.',
-    illustration: 'illustrations/gift.svg',
+    illustration: '/illustrations/gift.png',
     difficulty: 1,
     isNegative: false,
     choices: [
@@ -100,7 +100,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'sale_temptation',
     title: '🛍️ Большая распродажа',
     description: 'В любимом магазине скидки до 70% на вещи, о которых вы давно мечтали.',
-    illustration: 'illustrations/sale.svg',
+    illustration: '/illustrations/sale.png',
     difficulty: 1,
     isNegative: true,
     choices: [
@@ -111,9 +111,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'subscription_audit',
-    title: '갱️ Ревизия подписок',
+    title: 'Ревизия подписок',
     description: 'Вы заметили, что каждый месяц с вашей карты списываются деньги за подписки на сервисы, которыми вы почти не пользуетесь.',
-    illustration: 'illustrations/subscriptions.svg',
+    illustration: '/illustrations/subscriptions.png',
     difficulty: 1,
     isNegative: false,
     choices: [
@@ -123,9 +123,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'simple_pleasures',
-    title: '☕ Маленькие радости',
+    title: 'Маленькие радости',
     description: 'Вы проходите мимо уютной кофейни с невероятным запахом свежей выпечки. Может, стоит себя немного побаловать?',
-    illustration: 'illustrations/coffee.svg',
+    illustration: '/illustrations/coffee.png',
     difficulty: 1,
     isNegative: false,
     triggerCondition: (state) => state.mood < 50,
@@ -136,9 +136,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'public_transport_pass',
-    title: '🚌 Проездной на транспорт',
+    title: 'Проездной на транспорт',
     description: 'Вы можете купить проездной на месяц. Это разовая трата, которая уменьшит ваши еженедельные расходы на транспорт.',
-    illustration: 'illustrations/transport.svg',
+    illustration: '/illustrations/transport.png',
     difficulty: 1,
     isNegative: false,
     choices: [
@@ -148,9 +148,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'grocery_shopping_strategy',
-    title: '🛒 Стратегия покупок',
+    title: 'Стратегия покупок',
     description: 'Вы в супермаркете. Как вы будете закупаться продуктами на неделю?',
-    illustration: 'illustrations/grocery.svg',
+    illustration: '/illustrations/groceries.png',
     difficulty: 1,
     isNegative: false,
     choices: [
@@ -161,9 +161,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'birthday_gift_choice',
-    title: '🎂 Подарок на день рождения',
+    title: 'Подарок на день рождения',
     description: 'На ваш день рождения семья предлагает подарить вам либо деньги, либо новый гаджет.',
-    illustration: 'illustrations/gift.svg',
+    illustration: '/illustrations/birthday_gift.png',
     difficulty: 1,
     isNegative: false,
     choices: [
@@ -173,9 +173,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'gym_membership',
-    title: '💪 Абонемент в спортзал',
+    title: 'Абонемент в спортзал',
     description: 'Рядом с домом открылся новый спортзал с выгодным предложением.',
-    illustration: 'illustrations/gym.svg',
+    illustration: '/illustrations/gym.png',
     difficulty: 1,
     isNegative: false,
     choices: [
@@ -186,9 +186,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'bulk_buying',
-    title: '📦 Оптовая закупка',
+    title: 'Оптовая закупка',
     description: 'В оптовом магазине большая скидка на товары, которыми вы регулярно пользуетесь. Можно сэкономить в долгосрочной перспективе.',
-    illustration: 'illustrations/bulk.svg',
+    illustration: '/illustrations/bulk.png',
     difficulty: 1,
     isNegative: false,
     choices: [
@@ -198,9 +198,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'diy_repair',
-    title: '🔧 Ремонт своими руками',
+    title: 'Ремонт своими руками',
     description: 'Сломался мелкий бытовой прибор. Можно попробовать починить самостоятельно по видео-инструкции или вызвать мастера.',
-    illustration: 'illustrations/repair.svg',
+    illustration: '/illustrations/repair.png',
     difficulty: 1,
     isNegative: true,
     choices: [
@@ -210,9 +210,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'lost_wallet',
-    title: '💸 Потерянный кошелек',
+    title: 'Потерянный кошелек',
     description: 'Вы не можете найти свой кошелек. Возможно, вы его где-то обронили.',
-    illustration: 'illustrations/lost_wallet.svg',
+    illustration: '/illustrations/lost_wallet.png',
     difficulty: 1,
     isNegative: true,
     choices: [
@@ -222,9 +222,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'minor_appliance_failure',
-    title: '🔌 Сломалась микроволновка',
+    title: 'Сломалась микроволновка',
     description: 'Ваша микроволновая печь внезапно перестала работать.',
-    illustration: 'illustrations/microwave.svg',
+    illustration: '/illustrations/microwave.png',
     difficulty: 1,
     isNegative: true,
     choices: [
@@ -236,9 +236,9 @@ export const gameEventsPool: GameEvent[] = [
   // --- УРОВЕНЬ 2: "Трудности роста" ---
   {
     id: 'expensive_vacation',
-    title: '✈️ Отпуск мечты?',
+    title: 'Отпуск мечты?',
     description: 'Коллеги зовут вас в дорогой заграничный отпуск. Поездка обойдется почти в две зарплаты.',
-    illustration: 'illustrations/week4.svg',
+    illustration: '/illustrations/week4.png',
     difficulty: 2,
     isNegative: true,
     triggerCondition: (state) => state.balance > 80000 && state.debt < 10000,
@@ -250,9 +250,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'overtime_opportunity',
-    title: '⏰ Сверхурочная работа',
+    title: 'Сверхурочная работа',
     description: 'Начальник предлагает поработать в выходные за двойную оплату.',
-    illustration: 'illustrations/overtime.svg',
+    illustration: '/illustrations/overtime.png',
     difficulty: 2,
     isNegative: false,
     choices: [
@@ -262,9 +262,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'career_development',
-    title: '📚 Курсы повышения квалификации',
+    title: 'Курсы повышения квалификации',
     description: 'Компания предлагает оплатить 50% стоимости полезного для работы курса.',
-    illustration: 'illustrations/education.svg',
+    illustration: '/illustrations/education.png',
     difficulty: 2,
     isNegative: false,
     triggerCondition: (state) => !state.log.some(entry => entry.description.includes("Инвестиция в образование")),
@@ -275,9 +275,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'medical_emergency',
-    title: '🏥 Зубная боль',
+    title: 'Зубная боль',
     description: 'У вас разболелся зуб, и визит к стоматологу нельзя откладывать.',
-    illustration: 'illustrations/medical.svg',
+    illustration: '/illustrations/medical.png',
     difficulty: 2,
     isNegative: true,
     choices: [
@@ -287,9 +287,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'friend_loan_request',
-    title: '🤝 Просьба о займе',
+    title: 'Просьба о займе',
     description: 'Близкий друг просит у вас в долг крупную сумму на "срочные дела".',
-    illustration: 'illustrations/friend_loan.svg',
+    illustration: '/illustrations/friend_loan.png',
     difficulty: 2,
     isNegative: true,
     choices: [
@@ -300,9 +300,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'wedding_invitation',
-    title: '💒 Свадебное приглашение',
+    title: 'Свадебное приглашение',
     description: 'Вас пригласили на свадьбу в другом городе. Поездка и подарок обойдутся дорого.',
-    illustration: 'illustrations/wedding.svg',
+    illustration: '/illustrations/wedding.png',
     difficulty: 2,
     isNegative: true,
     choices: [
@@ -312,9 +312,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'rent_increase',
-    title: '🏠 Повышение арендной платы',
-    description: 'Хозяин квартиры объявил о повышении арендной платы на 20% со следующего месяца.',
-    illustration: 'illustrations/rent_increase.svg',
+      title: 'Повышение арендной платы',
+      description: 'Хозяин квартиры объявил о повышении арендной платы на 20% со следующего месяца.',
+    illustration: '/illustrations/rent_increase.png',
     difficulty: 2,
     isNegative: true,
     triggerCondition: (state) => state.day > 12 && state.day % 12 === 0, // Happens on a yearly basis
@@ -326,9 +326,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'laptop_upgrade',
-    title: '💻 Обновление техники',
+    title: 'Обновление техники',
     description: 'Ваш ноутбук устарел, и работа на нем стала неэффективной.',
-    illustration: 'illustrations/laptop.svg',
+    illustration: '/illustrations/laptop.png',
     difficulty: 2,
     isNegative: true,
     choices: [
@@ -338,9 +338,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'hobby_equipment',
-    title: '🎨 Хобби требует вложений',
+    title: 'Хобби требует вложений',
     description: 'Вы увлеклись фотографией и хотите купить профессиональную камеру.',
-    illustration: 'illustrations/camera.svg',
+    illustration: '/illustrations/camera.png',
     difficulty: 2,
     isNegative: false,
     choices: [
@@ -351,9 +351,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'online_course',
-    title: '📖 Онлайн-курс по инвестициям',
+    title: 'Онлайн-курс по инвестициям',
     description: 'Вы нашли интересный курс по финансовой грамотности, но он стоит почти все ваши свободные деньги.',
-    illustration: 'illustrations/online_course.svg',
+    illustration: '/illustrations/online_course.png',
     difficulty: 2,
     isNegative: false,
     choices: [
@@ -363,9 +363,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'insurance_offer',
-    title: '🛡️ Предложение по страхованию',
+    title: 'Предложение по страхованию',
     description: 'Страховой агент предлагает вам оформить полис страхования здоровья. Это ежемесячный платеж, но он защитит вас в случае беды.',
-    illustration: 'illustrations/insurance.svg',
+    illustration: '/illustrations/insurance.png',
     difficulty: 2,
     isNegative: false,
     choices: [
@@ -375,9 +375,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'tax_refund',
-    title: '💸 Налоговый вычет',
+    title: 'Налоговый вычет',
     description: 'Отличные новости! Вы получили неожиданный налоговый вычет.',
-    illustration: 'illustrations/tax_refund.svg',
+    illustration: '/illustrations/tax_refund.png',
     difficulty: 2,
     isNegative: false,
     choices: [
@@ -388,9 +388,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'side_hustle_burnout',
-    title: '😩 Выгорание от подработок',
+    title: 'Выгорание от подработок',
     description: 'Вы много работали в последнее время, и силы на исходе.',
-    illustration: 'illustrations/burnout.svg',
+    illustration: '/illustrations/burnout.png',
     difficulty: 2,
     isNegative: true,
     triggerCondition: (state) => state.log.filter(e => e.description.includes("Подработка")).length > 2 && state.mood < 40,
@@ -401,9 +401,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'jury_duty',
-    title: '⚖️ Суд присяжных',
+    title: 'Суд присяжных',
     description: 'Вас вызвали в суд в качестве присяжного. Вы получите небольшую компенсацию, но пропустите несколько рабочих дней.',
-    illustration: 'illustrations/jury.svg',
+    illustration: '/illustrations/jury.png',
     difficulty: 2,
     isNegative: true,
     choices: [
@@ -413,9 +413,9 @@ export const gameEventsPool: GameEvent[] = [
   },
   {
     id: 'identity_theft_scare',
-    title: '🔒 Угроза кражи данных',
+    title: 'Угроза кражи данных',
     description: 'Вы получили уведомление о подозрительной попытке входа в ваш онлайн-банк. Деньги не пропали, но это был тревожный звонок.',
-    illustration: 'illustrations/security.svg',
+    illustration: '/illustrations/security.png',
     difficulty: 2,
     isNegative: true,
     choices: [
@@ -428,7 +428,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'charity_donation',
     title: '💖 Благотворительность',
     description: 'Местная благотворительная организация проводит сбор средств на дело, которое вам небезразлично.',
-    illustration: 'illustrations/charity.svg',
+    illustration: '/illustrations/charity.svg',
     difficulty: 2,
     isNegative: false,
     choices: [
@@ -441,7 +441,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'unexpected_vet_bill',
     title: '🐾 Внезапный визит к ветеринару',
     description: 'Ваш домашний питомец заболел и требует срочного визита к ветеринару.',
-    illustration: 'illustrations/vet.svg',
+    illustration: '/illustrations/vet.svg',
     difficulty: 2,
     isNegative: true,
     triggerCondition: (state) => state.mood > 60, // More likely if mood is high (implies having a pet)
@@ -456,7 +456,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'car_breakdown',
     title: '🚗 Поломка автомобиля',
     description: 'Ваша машина сломалась, и ремонт обойдется в круглую сумму.',
-    illustration: 'illustrations/car_repair.svg',
+    illustration: '/illustrations/car_repair.svg',
     difficulty: 3,
     isNegative: true,
     choices: [
@@ -469,7 +469,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'crypto_opportunity',
     title: '₿ Криптовалютная лихорадка',
     description: 'Друг предлагает вложиться в "гарантированно прибыльную" криптовалюту.',
-    illustration: 'illustrations/crypto.svg',
+    illustration: '/illustrations/crypto.svg',
     difficulty: 3,
     isNegative: false,
     triggerCondition: (state) => state.mood < 40 && (state.balance + state.savings - state.debt) < 50000,
@@ -483,7 +483,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'stock_market_crash',
     title: '📉 Падение рынка',
     description: 'Фондовый рынок резко упал, и ваши сбережения (если они есть) потеряли в цене.',
-    illustration: 'illustrations/market_crash.svg',
+    illustration: '/illustrations/market_crash.svg',
     difficulty: 3,
     isNegative: true,
     triggerCondition: (state) => state.savings > 0.3 * (state.balance + state.savings - state.debt), // More likely if savings are a large part of net worth
@@ -497,7 +497,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'investment_property',
     title: '🏘️ Возможность купить недвижимость',
     description: 'Вам предлагают купить небольшую квартиру для сдачи в аренду с первоначальным взносом.',
-    illustration: 'illustrations/investment_property.svg',
+    illustration: '/illustrations/investment_property.svg',
     difficulty: 3,
     isNegative: false,
     triggerCondition: (state) => state.balance > 100000 && (state.debt / state.monthlySalary < 0.5),
@@ -510,7 +510,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'job_offer_rival',
     title: '💼 Предложение от конкурентов',
     description: 'Конкурирующая компания предлагает вам работу с повышением зарплаты, но у них плохая репутация.',
-    illustration: 'illustrations/job_offer.svg',
+    illustration: '/illustrations/job_offer.svg',
     difficulty: 3,
     isNegative: false,
     triggerCondition: (state) => state.turn > 52 && state.monthlySalary > 150000,
@@ -524,7 +524,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'inheritance',
     title: '✉️ Наследство',
     description: 'Вы получили небольшое наследство от дальнего родственника.',
-    illustration: 'illustrations/inheritance.svg',
+    illustration: '/illustrations/inheritance.svg',
     difficulty: 3,
     isNegative: false,
     triggerCondition: (state) => state.turn > 40 && !state.log.some(e => e.id === 'inheritance'),
@@ -537,7 +537,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'global_recession',
     title: '📉 Глобальная рецессия',
     description: 'Начался мировой экономический спад. Как вы поступите?',
-    illustration: 'illustrations/recession.svg',
+    illustration: '/illustrations/recession.svg',
     difficulty: 3,
     isNegative: true,
     triggerCondition: (state) => state.turn > 60 && Math.random() < 0.1,
@@ -551,7 +551,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'stock_market_bubble',
     title: '📈 Рыночный пузырь?',
     description: 'Акции растут как на дрожжах! Все вокруг говорят о легких деньгах. Ваши вложения значительно выросли.',
-    illustration: 'illustrations/bubble.svg',
+    illustration: '/illustrations/bubble.svg',
     difficulty: 3,
     isNegative: false,
     triggerCondition: (state) => state.savings > 150000 && state.turn > 50,
@@ -565,7 +565,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'small_business_idea',
     title: '💡 Идея для бизнеса',
     description: 'У вас появилась идея для небольшого онлайн-бизнеса. Это потребует вложений и времени.',
-    illustration: 'illustrations/business_idea.svg',
+    illustration: '/illustrations/business_idea.svg',
     difficulty: 3,
     isNegative: false,
     triggerCondition: (state) => state.balance > 100000,
@@ -578,7 +578,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'political_unrest',
     title: '🌍 Политическая нестабильность',
     description: 'В стране, где находятся ваши активы, началась политическая нестабильность, что привело к падению рынка.',
-    illustration: 'illustrations/political_unrest.svg',
+    illustration: '/illustrations/political_unrest.svg',
     difficulty: 3,
     isNegative: true,
     triggerCondition: (state) => state.savings > 100000,
@@ -592,7 +592,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'book_deal',
     title: '📖 Предложение написать книгу',
     description: 'Издательство предложило вам написать книгу по вашей специальности. Это займет много времени, но сулит хороший гонорар.',
-    illustration: 'illustrations/book.svg',
+    illustration: '/illustrations/book.svg',
     difficulty: 3,
     isNegative: false,
     triggerCondition: (state) => state.turn > 70,
@@ -605,7 +605,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'traffic_ticket',
     title: '🚦 Штраф за превышение',
     description: 'Вас остановили за превышение скорости. Теперь нужно заплатить штраф.',
-    illustration: 'illustrations/traffic_ticket.svg',
+    illustration: '/illustrations/traffic_ticket.svg',
     difficulty: 2,
     isNegative: true,
     choices: [
@@ -617,7 +617,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'friends_financial_trouble',
     title: '😥 Финансовые трудности друга',
     description: 'Друг, которому вы одалживали деньги, говорит, что не может вернуть долг вовремя.',
-    illustration: 'illustrations/friend_loan.svg',
+    illustration: '/illustrations/friend_loan.svg',
     difficulty: 2,
     isNegative: true,
     triggerCondition: (state) => state.log.some(e => e.description.includes("Дать в долг")),
@@ -630,7 +630,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'major_housing_issue',
     title: '🏚️ Крупная авария в доме',
     description: 'В вашем доме прорвало трубу, и теперь требуется дорогостоящий ремонт.',
-    illustration: 'illustrations/housing_issue.svg',
+    illustration: '/illustrations/housing_issue.svg',
     difficulty: 3,
     isNegative: true,
     triggerCondition: (state) => state.propertyInvestments.length > 0,
@@ -643,7 +643,7 @@ export const gameEventsPool: GameEvent[] = [
     id: 'professional_setback',
     title: '📉 Профессиональная неудача',
     description: 'Ваш крупный проект на работе провалился. Ваша репутация под угрозой.',
-    illustration: 'illustrations/setback.svg',
+    illustration: '/illustrations/setback.svg',
     difficulty: 3,
     isNegative: true,
     choices: [

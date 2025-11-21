@@ -41,9 +41,17 @@ const onboardingSlice = createSlice({
         // Редьюсер для загрузки статуса из LocalStorage
         setOnboardingCompleted(state, action: { payload: boolean }) {
             state.hasCompleted = action.payload;
+        },
+        setOnboardingState(state, action: { payload: OnboardingState }) {
+            return action.payload;
+        },
+        resetOnboarding(state) {
+            state.isActive = false;
+            state.currentStep = 0;
+            state.hasCompleted = false;
         }
     }
 });
 
-export const { startOnboarding, nextStep, goToStep, finishOnboarding, setOnboardingCompleted } = onboardingSlice.actions;
+export const { startOnboarding, nextStep, goToStep, finishOnboarding, setOnboardingCompleted, setOnboardingState, resetOnboarding } = onboardingSlice.actions;
 export default onboardingSlice.reducer;

@@ -42,15 +42,17 @@ export function AccordionItem({ term, isOpen, onClick }: AccordionItemProps) {
       >
         <div className={`pb-4 px-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
 
-          <p>{term.definition}</p>
-          <Link
-            href={term.wikiLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline mt-2 inline-block"
-          >
-            Подробнее в google
-          </Link>
+          <div dangerouslySetInnerHTML={{ __html: term.definition }} />
+          {term.wikiLink && (
+            <Link
+              href={term.wikiLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline mt-2 inline-block"
+            >
+              Подробнее в google
+            </Link>
+          )}
         </div>
       </div>
     </div>

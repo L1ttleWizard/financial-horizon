@@ -10,6 +10,7 @@ import {
   resetGame,
   setGameLoadingStatus,
 } from '@/store/slices/gameSlice';
+import { setOnboardingState } from '@/store/slices/onboardingSlice';
 
 export const GameStateSync = () => {
   const { user, loading: authLoading } = useAuth();
@@ -38,6 +39,9 @@ export const GameStateSync = () => {
               dispatch(setGameState(userData.gameState));
             } else {
               dispatch(resetGame());
+            }
+            if (userData.onboardingState) {
+              dispatch(setOnboardingState(userData.onboardingState));
             }
           } else {
             console.error('User document not found! Starting a new game.');
