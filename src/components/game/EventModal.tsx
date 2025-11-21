@@ -20,13 +20,13 @@ export function EventModal({ event }: ModalProps) {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ backgroundColor: 'rgba(72, 59, 114, 0.5)' }}>
       <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 animate-fade-in-up bg-event-modal bg-opacity-50 border-event-modal-stroke border-2" style={{borderColor:"#00C8FF", boxShadow: `0 0 100px 17px #79D7FF`}}>
-        <div className="flex flex-col items-center justify-center bg-gray-100 rounded-xl p-4">
+        <div className="flex flex-col items-center justify-center bg-gray-100 rounded-xl">
           <Image
             src={event.illustration}
             alt={event.title}
             width={300}
             height={300}
-            className="mb-4"
+            className="rounded-xl p-1"
             priority
           />
         </div>
