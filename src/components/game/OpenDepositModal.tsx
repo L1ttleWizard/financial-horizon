@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { BankOffer } from "@/data/bankOffers";
 import { formatCurrency } from "@/lib/format";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface ModalProps {
   offer: BankOffer;
@@ -30,10 +31,11 @@ export function OpenDepositModal({
   const maxDeposit = Math.min(balance, offer.maxDeposit);
   const isInvalid =
     amountNumber < offer.minDeposit || amountNumber > maxDeposit;
-
+  const {theme} = useTheme();
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ backgroundColor: 'rgba(45, 55, 72, 0.5)' }}>
-      <div className="rounded-2xl shadow-2xl p-8 max-w-md w-full animate-fade-in-up text-white bg-gray-900 bg-opacity-50">
+      <div className={`rounded-2xl shadow-2xl p-8 max-w-md w-full animate-fade-in-up  bg-opacity-50 ${theme==="dark" ?"bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] rounded-xl":"bg-gray-100"
+      }`}>
         <h2 className="text-2xl font-bold mb-2">
           Вклад в &quot;{offer.bankName}&quot;
         </h2>

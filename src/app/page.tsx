@@ -406,6 +406,13 @@ export default function HomePage() {
       {gameState.isGlossaryForced && (
         <ForcedGlossaryModal term={gameState.forcedGlossaryTerm!} />
       )}
+            <svg width="0" height="0" style={{position:"absolute"}}>
+      <filter id="liquidGlass">
+        <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="turbulence" />
+        <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="50" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </svg>
     </>
   );
 }

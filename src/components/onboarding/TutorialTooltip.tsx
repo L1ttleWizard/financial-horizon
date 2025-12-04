@@ -5,6 +5,7 @@ import { TutorialStep } from "@/data/onboardingData";
 import { CSSProperties } from "react";
 import { nextStep, finishOnboarding } from "@/store/slices/onboardingSlice";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface TooltipProps {
   step: TutorialStep;
@@ -16,6 +17,7 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
   const router = useRouter();
 
   const getPositionStyles = (): CSSProperties => {
+    
     const tooltipWidth = 320; // Ширина тултипа (w-80)
     const tooltipHeight = 200; // Примерная высота тултипа
     const offset = 16; // Отступ в 1rem
@@ -105,7 +107,7 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
       dispatch({ type: action.type, payload: action.payload });
     }
   };
-
+  const { theme } = useTheme();
   const handleSkip = () => {
     localStorage.setItem("onboardingCompleted", "true");
     dispatch(finishOnboarding());
@@ -114,19 +116,20 @@ export function TutorialTooltip({ step, targetRect }: TooltipProps) {
   return (
     <div
       style={getPositionStyles()}
-      className="fixed z-[101] bg-white rounded-lg shadow-2xl p-6 w-80 transition-opacity duration-300 animate-fade-in">
-      <h3 className="text-xl font-bold text-gray-800 mb-2">{step.title}</h3>
-      <p className="text-gray-600 mb-4 text-sm">{step.text}</p>
+      className={`fixed z-101 text-white rounded-lg shadow-2xl p-6 w-80 transition-opacity duration-300 animate-fade-in ${theme==="dark" ?"bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] rounded-xl":"bg-gray-100 text-gray-400"
+      }`}>
+      <h3 className="text-xl font-bold  mb-2">{step.title}</h3>
+      <p className=" mb-4 text-sm">{step.text}</p>
       <div className="flex flex-col space-y-2">
         <button
           onClick={handleNext}
-          className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+          className="w-full bg-blue-600 text-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">
           {step.buttonText}
         </button>
         {step.step <= 1 && (
           <button
             onClick={handleSkip}
-            className="w-full bg-transparent text-gray-500 text-sm font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition">
+            className="w-full bg-transparent  text-sm font-medium py-2 px-4 rounded-lg hover:bg-gray-800 transition">
             Пропустить обучение
           </button>
         )}

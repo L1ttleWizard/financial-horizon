@@ -40,9 +40,9 @@ export function MoneyTreeWidget({
 
   return (
     <div
-      className={`relative rounded-xl shadow-md p-6 flex flex-col items-center justify-between h-full transition-all border-2 ${
+      className={`,relative rounded-xl shadow-md p-6 flex flex-col items-center justify-between  h-full transition-all border-2 ${
         theme === 'dark'
-          ? 'bg-[rgba(48,19,110,0.6)] border-[rgba(255,255,255,0.3)] shadow-[0_0_15px_5px_rgba(239,68,68,0.082)]'
+          ? 'bg-[rgba(48,19,110,0.65)] border-[rgba(255,255,255,0.3)] shadow-[0_0_15px_5px_rgba(239,68,68,0.082)]'
           : 'bg-white'
       }`}>
       <div>

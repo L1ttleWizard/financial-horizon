@@ -11,11 +11,11 @@ export function AchievementBadge({ achievement, isUnlocked }: BadgeProps) {
   const { theme } = useTheme();
   return (
     <div
-      className={`bg-gray-50  rounded-lg  p-3 flex items-center gap-4 transition-all ${
+      className={` rounded-lg  p-3 flex items-center gap-4 transition-all ${
         isUnlocked ? "opacity-100" : "opacity-60 grayscale"
       } ${
         theme === "dark"
-          ? "dark:bg-[rgba(48,19,110,0.65)] dark:border dark:border-[rgba(255,255,255,0.3)] dark:shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] dark:rounded-xl"
+          ? "bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] rounded-xl"
           : "bg-gray-100"
       }`}>
       <div className="text-3xl ">{achievement.icon}</div>

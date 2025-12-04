@@ -114,3 +114,10 @@ border-radius: 8px;
   background-repeat: no-repeat;
   
 }
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  filter: url(#liquidGlass); /* Apply the SVG filter for distortion */
+  border-radius: 15px;
+  /* Other styling as needed */
+}
