@@ -44,7 +44,7 @@ export async function GET() {
         return {
           uid: user.uid,
           nickname: firestoreUser.nickname || user.email || 'Anonymous',
-          week: Math.floor((firestoreUser.gameState.day || 0) / PAYDAY_CYCLE),
+          week: Math.floor((firestoreUser.gameState.day || 0) ),
           netWorth: lastNetWorthPoint ? lastNetWorthPoint.netWorth : 0,
         };
       } else {
