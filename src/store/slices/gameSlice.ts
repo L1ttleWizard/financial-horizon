@@ -356,8 +356,9 @@ const gameSlice = createSlice({
 
       // --- PAYDAY LOGIC ---
       if (state.day > 0 && state.day % PAYDAY_CYCLE === 0) {
-        const randomIndex = Math.floor(Math.random() * glossaryData.length);
-        state.forcedGlossaryTerm = glossaryData[randomIndex];
+        const filteredGlossary = glossaryData.filter(term => term.id !== 99);
+        const randomIndex = Math.floor(Math.random() * filteredGlossary.length);
+        state.forcedGlossaryTerm = filteredGlossary[randomIndex];
         state.isGlossaryForced = true;
         return; // Skip event selection on payday
       }
