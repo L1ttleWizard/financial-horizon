@@ -37,7 +37,7 @@ export function OpenDepositModal({
       <div className={`rounded-2xl shadow-2xl p-8 max-w-md w-full animate-fade-in-up bg-[rgba(48,19,110,0.75)]  bg-opacity-50 ${theme==="dark" ?"bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] rounded-xl":''
       }` } style={{borderColor:"#00C8FF", boxShadow: `0 0 100px 17px #79D7FF`}}>
         <h2 className="text-2xl font-bold mb-2">
-          Вклад в {offer.bankName}
+          Вклад в {offer.bankName} 
         </h2>
         <p className="text-sm text-gray-300 mb-4">
           Мин: ₽{formatCurrency(offer.minDeposit)}, Макс: ₽{formatCurrency(offer.maxDeposit)}
