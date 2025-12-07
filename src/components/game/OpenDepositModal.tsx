@@ -34,17 +34,17 @@ export function OpenDepositModal({
   const {theme} = useTheme();
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ backgroundColor: 'rgba(45, 55, 72, 0.5)' }}>
-      <div className={`rounded-2xl shadow-2xl p-8 max-w-md w-full animate-fade-in-up  bg-opacity-50 ${theme==="dark" ?"bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] rounded-xl":"bg-gray-100"
-      }`}>
+      <div className={`rounded-2xl shadow-2xl p-8 max-w-md w-full animate-fade-in-up bg-[rgba(48,19,110,0.75)]  bg-opacity-50 ${theme==="dark" ?"bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] rounded-xl":''
+      }` } style={{borderColor:"#00C8FF", boxShadow: `0 0 100px 17px #79D7FF`}}>
         <h2 className="text-2xl font-bold mb-2">
-          Вклад в &quot;{offer.bankName}&quot;
+          Вклад в {offer.bankName}
         </h2>
         <p className="text-sm text-gray-300 mb-4">
           Мин: ₽{formatCurrency(offer.minDeposit)}, Макс: ₽{formatCurrency(offer.maxDeposit)}
         </p>
 
         {/* НОВЫЙ БЛОК С ИНФОРМАЦИЕЙ */}
-        <div className="bg-gray-800 rounded-lg p-3 mb-4 text-sm">
+        <div className="bg-gray-700 rounded-lg p-3 mb-4 text-sm">
           <div className="flex justify-between">
             <span>Ваш баланс:</span>
             <span className="font-bold text-green-400">₽{formatCurrency(balance)}</span>

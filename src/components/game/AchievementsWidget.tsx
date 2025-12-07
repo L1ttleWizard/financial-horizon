@@ -26,11 +26,11 @@ export function AchievementsWidget({ unlockedIds, allAchievements }: Achievement
   return (
     <div className={`rounded-xl shadow-lg p-5 flex flex-col pb-8 ${
       theme === 'dark'
-        ? 'bg-[rgba(48,19,110,0.6)]  shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] '
+        ? 'bg-[rgba(48,19,110,0.75)]  bg-opacity-50 ${theme==="dark" ?"bg-[rgba(48,19,110,0.65)] border-2 border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] rounded-xl'
         : 'bg-white'
     }`}>
       {/* Header */}
-      <div className="flex justify-between items-start mb-3.5 ">
+      <div className="flex justify-between items-start mb-7 ">
         <div>
           <h3 className={`text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Недавние достижения</h3>
           <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{`${unlockedCount} / ${totalCount} разблокировано`}</p>

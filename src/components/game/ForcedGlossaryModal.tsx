@@ -30,7 +30,7 @@ export function ForcedGlossaryModal({ term }: ModalProps) {
           <h3 className="text-2xl font-bold text-white mb-2">
             {term.title}
           </h3>
-          <p className="text-yellow-100 text-base">{term.definition}</p>
+          <p className="text-white text-base">{term.definition}</p>
         </div>
 
         <button

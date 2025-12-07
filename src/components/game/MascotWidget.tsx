@@ -1,10 +1,19 @@
 import Image from "next/image";
-
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAppSelector } from "@/store/hooks";
 
-// src/components/game/MascotWidget.tsx
+const mascots: { [key: string]: string } = {
+  fox: "/fox1.png",
+  scrudge: "/scrudge.png",
+  scrudge1: "/scrudge1.png",
+  scrudge2: "/scrudge2.png",
+  scrudge3: "/scrudge3.png",
+};
+
 export function MascotWidget() {
   const { theme } = useTheme();
+  const selectedMascot = useAppSelector((state) => state.game.mascot);
+  const mascotPath = mascots[selectedMascot] || "/fox1.png";
 
   return (
     <div
@@ -14,7 +23,7 @@ export function MascotWidget() {
           : 'bg-white'
       }`}>
       <div className={`w-57 h-57 rounded-full mx-auto mb-8 flex items-center justify-center ${theme === 'dark' ? 'bg-[rgba(13,4,32,0.35)]' : 'bg-gray-200'}`}>
-        <Image src="/fox1.png" width={100} height={100} alt="Mascot" className="w-42 h-48 pr-0 pt-0 mt-6" />
+        <Image src={mascotPath} width={100} height={100} alt="Mascot" className="w-42 h-48 pr-0 pt-0 mt-6" />
       </div>
       <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Ваш Помощник</h3>
       <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>

@@ -19,20 +19,20 @@ export function EventModal({ event }: ModalProps) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ backgroundColor: 'rgba(72, 59, 114, 0.5)' }}>
-      <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 animate-fade-in-up bg-event-modal bg-opacity-50 border-event-modal-stroke border-2" style={{borderColor:"#00C8FF", boxShadow: `0 0 100px 17px #79D7FF`}}>
-        <div className="flex flex-col items-center justify-center bg-gray-100 rounded-xl">
+      <div className="rounded-2xl shadow-2xl p-6 sm:p-8 max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 animate-fade-in-up bg-event-modal bg-opacity-50 border-event-modal-stroke border-2" style={{borderColor:"#00C8FF", boxShadow: `0 0 100px 17px #79D7FF`, height: '400px'}}>
+        <div className="bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden p-4">
           <Image
             src={event.illustration}
             alt={event.title}
             width={300}
             height={300}
-            className="rounded-xl p-1"
+            className="object-contain w-full h-full"
             priority
           />
         </div>
-        <div className="text-white">
+        <div className="text-white flex flex-col">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">{event.title}</h2>
-          <p className="text-gray-300 mb-6">{event.description}</p>
+          <p className="text-gray-300 mb-6 flex-grow overflow-y-auto">{event.description}</p>
           <div id="event-choices" className="flex flex-col space-y-3">
             {event.choices.map((choice, index) => (
               <button

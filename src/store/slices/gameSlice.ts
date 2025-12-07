@@ -59,7 +59,7 @@ export interface ActiveDeposit {
 export interface PropertyInvestment {
   id: string;
   name: string;
-  type: 'apartment' | 'commercial' | 'crypto' | 'stocks';
+  type: "apartment" | "commercial" | "crypto" | "stocks";
   amount: number;
   monthlyIncome: number;
   purchaseTurn: number;
@@ -76,7 +76,7 @@ export interface NetWorthHistoryPoint {
 }
 type ChoiceEffects = Choice["effects"];
 
-type SerializableGameEvent = Omit<GameEvent, 'triggerCondition'>;
+type SerializableGameEvent = Omit<GameEvent, "triggerCondition">;
 
 // --- СТРУКТУРА СОСТОЯНИЯ ---
 export interface GameState {
@@ -109,6 +109,7 @@ export interface GameState {
   negativeEventCounter: number;
   lastEventId: string | null;
   areOffersInitialized: boolean;
+  mascot: string;
   // Системные переменные
   monthlyBills: number;
   weeklySpends: number;
@@ -142,23 +143,24 @@ const initialState: GameState = {
   negativeEventCounter: 0,
   lastEventId: null,
   areOffersInitialized: false,
+  mascot: "fox",
   monthlyBills: 49200,
   weeklySpends: 10000,
   monthlySalary: 131200,
 };
 
 const getNetWorth = (state: GameState) => {
-    const bankSavings = (state.activeDeposits || []).reduce(
-        (sum, dep) => sum + dep.amount,
-        0
-    );
-    const propertyValue = (state.propertyInvestments || []).reduce(
-        (sum, prop) => sum + prop.amount,
-        0
-    );
-    const savings = bankSavings + propertyValue;
-    return state.balance + savings - state.debt;
-}
+  const bankSavings = (state.activeDeposits || []).reduce(
+    (sum, dep) => sum + dep.amount,
+    0
+  );
+  const propertyValue = (state.propertyInvestments || []).reduce(
+    (sum, prop) => sum + prop.amount,
+    0
+  );
+  const savings = bankSavings + propertyValue;
+  return state.balance + savings - state.debt;
+};
 
 const addLogEntry = (
   state: GameState,
@@ -166,7 +168,7 @@ const addLogEntry = (
   description: string,
   amount: number
 ) => {
-  if (amount === 0 && type !== 'income' && type !== 'expense') return;
+  if (amount === 0 && type !== "income" && type !== "expense") return;
   const netWorth = getNetWorth(state);
   state.log.push({
     id: `${Date.now()}-${Math.random()}`,
@@ -202,13 +204,28 @@ const applyBalanceChange = (
     } else {
       const shortfall = expense - state.balance;
       if (state.balance > 0) {
-        addLogEntry(state, "expense", `Частичная оплата: ${description}`, -state.balance);
+        addLogEntry(
+          state,
+          "expense",
+          `Частичная оплата: ${description}`,
+          -state.balance
+        );
         state.balance = 0;
       }
       state.debt += shortfall;
       state.mood += MOOD_PENALTY_FOR_DEBT;
-      addLogEntry(state, "debt", `Экстренный кредит: ${description}`, shortfall);
-      addLogEntry(state, "mood", "Стресс из-за нового долга", MOOD_PENALTY_FOR_DEBT);
+      addLogEntry(
+        state,
+        "debt",
+        `Экстренный кредит: ${description}`,
+        shortfall
+      );
+      addLogEntry(
+        state,
+        "mood",
+        "Стресс из-за нового долга",
+        MOOD_PENALTY_FOR_DEBT
+      );
     }
   }
 };
@@ -226,7 +243,7 @@ const updateNetWorthAndTree = (state: GameState) => {
     0
   );
   state.savings = bankSavings + propertyValue;
-  
+
   const netWorth = state.balance + state.savings - state.debt;
   state.netWorthHistory.push({ day: state.day, netWorth });
   const newStage = getTreeStageForNetWorth(netWorth);
@@ -283,26 +300,42 @@ const checkAllAchievements = (state: GameState) => {
   if (state.day >= PAYDAY_CYCLE) checkAndUnlock("FIRST_STEPS");
   if (state.savings > 0) checkAndUnlock("FIRST_SAVINGS");
   if (state.debt > 0) checkAndUnlock("CREDIT_BAPTISM");
-  if (state.debt === 0 && state.log.some(e => e.type === 'debt')) checkAndUnlock("DEBT_FREE");
-  if (state.log.filter(e => e.description.includes("Экономный") || e.description.includes("недорогой")).length >= 3) checkAndUnlock("WISE_SHOPPER");
-  if (state.log.filter(e => e.description.includes("Подработка")).length >= 3) checkAndUnlock("SIDE_HUSTLER");
+  if (state.debt === 0 && state.log.some((e) => e.type === "debt"))
+    checkAndUnlock("DEBT_FREE");
+  if (
+    state.log.filter(
+      (e) =>
+        e.description.includes("Экономный") ||
+        e.description.includes("недорогой")
+    ).length >= 3
+  )
+    checkAndUnlock("WISE_SHOPPER");
+  if (state.log.filter((e) => e.description.includes("Подработка")).length >= 3)
+    checkAndUnlock("SIDE_HUSTLER");
 
   // Tier 2
-  const totalExpenses = state.monthlyBills + (state.weeklySpends * 4);
+  const totalExpenses = state.monthlyBills + state.weeklySpends * 4;
   if (state.savings >= totalExpenses * 3) checkAndUnlock("RAINY_DAY_FUND");
-  if (state.activeDeposits.length > 0 && state.propertyInvestments.length > 0) checkAndUnlock("DIVERSIFIER");
+  if (state.activeDeposits.length > 0 && state.propertyInvestments.length > 0)
+    checkAndUnlock("DIVERSIFIER");
   if (state.propertyInvestments.length > 0) checkAndUnlock("REAL_ESTATE_MOGUL");
-  if (state.log.some(e => e.description.includes("Завершение вклада"))) checkAndUnlock("COMPOUND_MAGIC");
+  if (state.log.some((e) => e.description.includes("Завершение вклада")))
+    checkAndUnlock("COMPOUND_MAGIC");
   if (state.debt === 0 && state.day > 12) checkAndUnlock("DEBT_AVOIDER");
-  if (state.log.some(e => e.description.includes("Благотворительность"))) checkAndUnlock("PHILANTHROPIST");
+  if (state.log.some((e) => e.description.includes("Благотворительность")))
+    checkAndUnlock("PHILANTHROPIST");
 
   // Tier 3
   const netWorth = state.balance + state.savings - state.debt;
   if (netWorth >= 1000000) checkAndUnlock("MILLIONAIRE");
   // More complex logic for passive income would be needed here
-  if (state.log.some(e => e.description.includes("Глобальная рецессия"))) checkAndUnlock("CRISIS_MANAGER");
-  if (state.log.some(e => e.description.includes("Написать книгу"))) checkAndUnlock("BOOK_AUTHOR");
-  const totalDebtPaid = state.log.filter(e => e.description === 'Погашение долга').reduce((sum, entry) => sum + Math.abs(entry.amount), 0);
+  if (state.log.some((e) => e.description.includes("Глобальная рецессия")))
+    checkAndUnlock("CRISIS_MANAGER");
+  if (state.log.some((e) => e.description.includes("Написать книгу")))
+    checkAndUnlock("BOOK_AUTHOR");
+  const totalDebtPaid = state.log
+    .filter((e) => e.description === "Погашение долга")
+    .reduce((sum, entry) => sum + Math.abs(entry.amount), 0);
   if (totalDebtPaid > 200000) checkAndUnlock("ZERO_DEBT_MASTER");
 };
 
@@ -367,15 +400,23 @@ const gameSlice = createSlice({
 
       // 2. Filter events by difficulty and cooldown
       let eligibleEvents = gameEventsPool.filter(
-        (event) => event.difficulty <= maxDifficulty && event.id !== state.lastEventId
+        (event) =>
+          event.difficulty <= maxDifficulty && event.id !== state.lastEventId
       );
 
       // 3. Prevent "death spiral" of negative events
       if (state.negativeEventCounter >= 2) {
-        eligibleEvents = eligibleEvents.filter(event => !event.isNegative);
+        eligibleEvents = eligibleEvents.filter((event) => !event.isNegative);
       }
 
-      console.log("Eligible events:", JSON.stringify(eligibleEvents.map(e => e.id), null, 2));
+      console.log(
+        "Eligible events:",
+        JSON.stringify(
+          eligibleEvents.map((e) => e.id),
+          null,
+          2
+        )
+      );
 
       let chosenEvent: GameEvent | null = null;
       // 4. Select a random event from the eligible pool
@@ -386,13 +427,23 @@ const gameSlice = createSlice({
 
       // If no event is found (e.g., all are on cooldown or filtered out), pick a default one
       if (!chosenEvent) {
-        chosenEvent = gameEventsPool.find(event => event.id === 'celebrate_payday') || gameEventsPool[0];
+        chosenEvent =
+          gameEventsPool.find((event) => event.id === "celebrate_payday") ||
+          gameEventsPool[0];
       }
 
       console.log("Chosen event:", JSON.stringify(chosenEvent, null, 2));
 
       // 6. Update state based on chosen event
-      const { id, title, description, illustration, choices, difficulty, isNegative } = chosenEvent;
+      const {
+        id,
+        title,
+        description,
+        illustration,
+        choices,
+        difficulty,
+        isNegative,
+      } = chosenEvent;
       const serializableEvent: SerializableGameEvent = {
         id,
         title,
@@ -455,11 +506,11 @@ const gameSlice = createSlice({
       addLogEntry(state, "income", "Месячная зарплата", state.monthlySalary);
       state.mood += MOOD_BOOST_ON_PAYDAY;
       addLogEntry(state, "mood", "Бонус к настроению", MOOD_BOOST_ON_PAYDAY);
-      
+
       // Повышение зарплаты после обучения (через 8 недель после обучения)
       if (state.day === PAYDAY_CYCLE * 2) {
         // Проверяем, было ли обучение в логе
-        const hasEducation = state.log.some(entry => 
+        const hasEducation = state.log.some((entry) =>
           entry.description.includes("Инвестиция в образование")
         );
         if (hasEducation) {
@@ -467,7 +518,7 @@ const gameSlice = createSlice({
           addLogEntry(state, "income", "Повышение зарплаты после обучения", 0);
         }
       }
-      
+
       updateNetWorthAndTree(state);
       checkGameOverConditions(state);
       checkAllAchievements(state);
@@ -486,9 +537,12 @@ const gameSlice = createSlice({
         if (!state.propertyInvestments) {
           state.propertyInvestments = [];
         }
-        
+
         // Если это инвестиция в недвижимость из события
-        if (choice.text.includes("квартиру") || choice.text.includes("недвижимость")) {
+        if (
+          choice.text.includes("квартиру") ||
+          choice.text.includes("недвижимость")
+        ) {
           const propertyInvestment: PropertyInvestment = {
             id: `${Date.now()}-${Math.random()}`,
             name: "Квартира для сдачи в аренду",
@@ -496,13 +550,17 @@ const gameSlice = createSlice({
             amount: Math.abs(effects.savings),
             monthlyIncome: Math.abs(effects.savings) * 0.01, // 1% в месяц
             purchaseTurn: state.day,
-            description: "Инвестиционная недвижимость, приносящая пассивный доход"
+            description:
+              "Инвестиционная недвижимость, приносящая пассивный доход",
           };
           state.propertyInvestments.push(propertyInvestment);
           addLogEntry(state, "savings", choice.text, effects.savings);
-        } 
+        }
         // Если это криптовалютная инвестиция
-        else if (choice.text.includes("криптовалют") || choice.text.includes("крипту")) {
+        else if (
+          choice.text.includes("криптовалют") ||
+          choice.text.includes("крипту")
+        ) {
           const cryptoInvestment: PropertyInvestment = {
             id: `${Date.now()}-${Math.random()}`,
             name: "Криптовалютная инвестиция",
@@ -510,13 +568,16 @@ const gameSlice = createSlice({
             amount: Math.abs(effects.savings),
             monthlyIncome: 0, // Криптовалюта не приносит регулярный доход
             purchaseTurn: state.day,
-            description: "Высокорисковая инвестиция в криптовалюту"
+            description: "Высокорисковая инвестиция в криптовалюту",
           };
           state.propertyInvestments.push(cryptoInvestment);
           addLogEntry(state, "savings", choice.text, effects.savings);
         }
         // Если это инвестиция в акции
-        else if (choice.text.includes("акци") || choice.text.includes("фондовый рынок")) {
+        else if (
+          choice.text.includes("акци") ||
+          choice.text.includes("фондовый рынок")
+        ) {
           const stockInvestment: PropertyInvestment = {
             id: `${Date.now()}-${Math.random()}`,
             name: "Инвестиция в акции",
@@ -524,19 +585,18 @@ const gameSlice = createSlice({
             amount: Math.abs(effects.savings),
             monthlyIncome: Math.abs(effects.savings) * 0.005, // 0.5% в месяц
             purchaseTurn: state.day,
-            description: "Инвестиция в фондовый рынок"
+            description: "Инвестиция в фондовый рынок",
           };
           state.propertyInvestments.push(stockInvestment);
           addLogEntry(state, "savings", choice.text, effects.savings);
-        }
-        else {
+        } else {
           // Create a generic, instant deposit for unhandled savings effects
           const savingsAmount = effects.savings;
           if (savingsAmount > 0) {
             const newDeposit: ActiveDeposit = {
               id: `${Date.now()}-${Math.random()}`,
-              bankId: 'generic_savings',
-              bankName: 'Накопительный счет',
+              bankId: "generic_savings",
+              bankName: "Накопительный счет",
               amount: savingsAmount,
               annualRate: 0.05, // Default low rate
               term: 4, // Default short term
@@ -574,28 +634,20 @@ const gameSlice = createSlice({
         }
         if (effects.system_variables.weeklySpends_multiplier) {
           state.weeklySpends = Math.round(
-            state.weeklySpends * effects.system_variables.weeklySpends_multiplier
+            state.weeklySpends *
+              effects.system_variables.weeklySpends_multiplier
           );
-          addLogEntry(
-            state,
-            "expense",
-            "Изменение еженедельных трат",
-            0
-          );
+          addLogEntry(state, "expense", "Изменение еженедельных трат", 0);
         }
         if (effects.system_variables.monthlyBills_multiplier) {
           state.monthlyBills = Math.round(
-            state.monthlyBills * effects.system_variables.monthlyBills_multiplier
+            state.monthlyBills *
+              effects.system_variables.monthlyBills_multiplier
           );
-          addLogEntry(
-            state,
-            "expense",
-            "Изменение ежемесячных счетов",
-            0
-          );
+          addLogEntry(state, "expense", "Изменение ежемесячных счетов", 0);
         }
       }
-      
+
       // Обработка изменений системных переменных
       if (choice.text.includes("Согласиться на обучение")) {
         // Повышение зарплаты после обучения (через 8 недель)
@@ -606,7 +658,7 @@ const gameSlice = createSlice({
         state.weeklySpends = Math.round(state.weeklySpends * 1.1);
         addLogEntry(state, "expense", "Увеличение расходов из-за усталости", 0);
       }
-      
+
       if (state.mood > 100) state.mood = 100;
       if (state.mood < 0) state.mood = 0;
       state.lastChoiceResult = {
@@ -630,7 +682,11 @@ const gameSlice = createSlice({
       }
       state.balance -= amountToPay;
       state.debt -= amountToPay;
+      if (state.mood <= 95) {
+        state.mood += 5;
+      }
       addLogEntry(state, "expense", "Погашение долга", -amountToPay);
+      addLogEntry(state, "mood", "Погашение долга", 5);
       updateNetWorthAndTree(state);
       checkAllAchievements(state);
     },
@@ -680,11 +736,14 @@ const gameSlice = createSlice({
       state.propertyInvestments.push(action.payload);
       updateNetWorthAndTree(state);
     },
-    updateSystemVariables(state, action: PayloadAction<{
-      monthlyBills?: number;
-      weeklySpends?: number;
-      monthlySalary?: number;
-    }>) {
+    updateSystemVariables(
+      state,
+      action: PayloadAction<{
+        monthlyBills?: number;
+        weeklySpends?: number;
+        monthlySalary?: number;
+      }>
+    ) {
       if (action.payload.monthlyBills !== undefined) {
         state.monthlyBills = action.payload.monthlyBills;
       }
@@ -746,7 +805,15 @@ const gameSlice = createSlice({
       state.status = action.payload;
     },
     startDemoEvent(state, action: PayloadAction<GameEvent>) {
-      const { id, title, description, illustration, choices, difficulty, isNegative } = action.payload;
+      const {
+        id,
+        title,
+        description,
+        illustration,
+        choices,
+        difficulty,
+        isNegative,
+      } = action.payload;
       const serializableEvent: SerializableGameEvent = {
         id,
         title,
@@ -763,6 +830,9 @@ const gameSlice = createSlice({
       const shuffled = [...bankOffersPool].sort(() => 0.5 - Math.random());
       state.availableOffers = shuffled.slice(0, 6);
       state.areOffersInitialized = true;
+    },
+    setMascot(state, action: PayloadAction<string>) {
+      state.mascot = action.payload;
     },
   },
 });
@@ -782,5 +852,6 @@ export const {
   setGameLoadingStatus,
   startDemoEvent, // Export the new action
   initializeOffers,
+  setMascot,
 } = gameSlice.actions;
 export default gameSlice.reducer;

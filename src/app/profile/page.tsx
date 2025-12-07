@@ -16,6 +16,7 @@ import {
 import { db, auth } from "@/lib/firebase-client";
 import { sendPasswordResetEmail, deleteUser } from "firebase/auth";
 import AdminPanel from "@/components/admin/AdminPanel";
+import MascotSelector from "@/components/profile/MascotSelector";
 
 // Helper function to check nickname uniqueness
 async function isNicknameUnique(nickname: string): Promise<boolean> {
@@ -273,6 +274,9 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* --- Mascot Selector --- */}
+        <MascotSelector />
 
         {/* --- Account Management --- */}
         <div
