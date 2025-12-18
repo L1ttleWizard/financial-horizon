@@ -26,8 +26,8 @@ export function AchievementsWidget({ unlockedIds, allAchievements }: Achievement
   return (
     <div className={`rounded-xl shadow-lg p-5 flex flex-col pb-8 ${
       theme === 'dark'
-        ? 'bg-[rgba(48,19,110,0.75)]  bg-opacity-50 ${theme==="dark" ?"bg-[rgba(48,19,110,0.65)] border-2 border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] rounded-xl'
-        : 'bg-white'
+        ? 'bg-[rgba(48,19,110,0.75)]  bg-opacity-50 border-2 border-[rgba(255,255,255,0.3)]  rounded-xl'
+        : 'bg-white border-2 rounded-xl shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)]'
     }`}>
       {/* Header */}
       <div className="flex justify-between items-start mb-7 ">

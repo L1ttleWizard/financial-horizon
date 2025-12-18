@@ -13,7 +13,7 @@ export default function AchievementsPage() {
 
   return (
     <>
-    <main className="min-h-screen p-4 sm:p-8 flex justify-center">
+    <main className="min-h-screen p-4 sm:p-8 flex justify-center transition-all">
       <div className={`w-full max-w-4xl rounded-xl p-6 sm:p-8 ${theme === 'dark' ? 'bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),_0px_2px_4px_-2px_rgba(0,0,0,0.1)]' : 'bg-white shadow-md'}`}>
 
 

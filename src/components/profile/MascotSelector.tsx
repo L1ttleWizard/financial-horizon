@@ -5,14 +5,7 @@ import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setMascot } from "@/store/slices/gameSlice";
 import { useTheme } from "@/contexts/ThemeContext";
-
-const mascots = [
-  { id: "fox", name: "Лис", path: "/fox1.png" },
-  { id: "scrudge", name: "Скрудж", path: "/scrudge.png" },
-  { id: "scrudge1", name: "Скрудж 1", path: "/scrudge1.png" },
-  { id: "scrudge2", name: "Скрудж 2", path: "/scrudge2.png" },
-  { id: "scrudge3", name: "Скрудж 3", path: "/scrudge3.png" },
-];
+import { mascots } from "@/data/mascotsData";
 
 export default function MascotSelector() {
   const { theme } = useTheme();
@@ -27,7 +20,7 @@ export default function MascotSelector() {
 
   return (
     <div
-      className={`p-4 rounded-xl mt-4 ${
+      className={`p-4 rounded-xl mt-4  ${
         theme === "dark" ? "bg-[rgba(13,4,32,0.35)]" : "bg-gray-100"
       }`}
     >
@@ -38,15 +31,15 @@ export default function MascotSelector() {
       >
         Выбор маскота
       </h2>
-      <div className="flex justify-center gap-4">
-        {mascots.map((mascot) => (
+      <div className="flex justify-center flex-row gap-4 flex-wrap">
+        {mascots.map((mascot, index) => (
           <div
             key={mascot.id}
             className={`cursor-pointer border-2 p-2 rounded-lg ${
               currentMascot === mascot.id
                 ? "border-blue-500"
                 : "border-transparent"
-            }`}
+            } ${mascot.className}`}
             onClick={() => handleSelectMascot(mascot.id)}
           >
             <Image
@@ -54,6 +47,7 @@ export default function MascotSelector() {
               alt={mascot.name}
               width={100}
               height={100}
+              priority={index === 0}
             />
             <p
               className={`text-center mt-2 ${

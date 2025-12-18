@@ -308,7 +308,7 @@ export default function HomePage() {
                     strokeWidth={1.5}
                     stroke="currentColor"
                     className={`w-6 h-6 transition-transform duration-300 ${
-                      !isChartExpanded ? "rotate-180" : ""
+                      !isChartExpanded ? "" : "rotate-180"
                     }`}>
                     <path
                       strokeLinecap="round"

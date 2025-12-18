@@ -16,7 +16,7 @@ export function AchievementBadge({ achievement, isUnlocked }: BadgeProps) {
       } ${
         theme === "dark"
           ? "bg-[rgba(48,19,110,0.65)] border border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] rounded-xl"
-          : "bg-gray-100"
+          : "bg-gray-100 border rounded-xl border-[rgba(255,255,255,0.3)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)]" 
       }`}>
       <div className="text-3xl ">{achievement.icon}</div>
       <div className="text-left grow">
