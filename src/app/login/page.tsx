@@ -20,13 +20,15 @@ export default function LoginPage() {
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    if (!loading && user) {
+    if (user) {
       router.push("/profile");
+      console.log('s');
     }
   }, [user, loading, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('s');
     setError(null);
     setIsLoading(true);
 
