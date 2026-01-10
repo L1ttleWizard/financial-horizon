@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { auth } from "@/lib/firebase-client";
 import { signOut } from "firebase/auth";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, redirect } from "next/navigation";
 import { FaTrophy, FaUser } from "react-icons/fa";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { useAppSelector } from "@/store/hooks";
@@ -54,13 +54,13 @@ export const Header = () => {
     if (user) {
       return (
         <>
-          <Link
-            href="/profile"
+          <button
+            onClick={()=>{redirect('/profile')}}
             className={`text-lg font-medium hover:text-blue-600 transition-colors ${
               theme === "dark" ? "text-gray-300" : "text-gray-600"
             }`}>
             <FaUser />
-          </Link>
+          </button>
           <button
             onClick={handleLogout}
             className=" cursor-pointer text-lg font-medium text-red-600 hover:text-red-800 transition-colors">
