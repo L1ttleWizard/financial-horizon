@@ -21,6 +21,7 @@ import {
   resetOnboarding,
   startOnboarding,
 } from "@/store/slices/onboardingSlice";
+import Image from "next/image";
 
 export const Header = () => {
   const { theme } = useTheme();
@@ -107,12 +108,21 @@ export const Header = () => {
           : "bg-white"
       }`}>
       <div className="container mx-auto flex justify-between items-center p-4">
+        <Link href="/" className="flex  gap-2">
+        <Image
+                  src={'/лого1.png'}
+                  width={30}
+                  height={30}
+                  alt="logo"
+                  priority
+                />
         <Link
           href="/"
           className={`text-2xl font-bold hover:text-blue-600 transition-colors ${
             theme === "dark" ? "text-[#E8E1F0]" : "text-gray-800"
           }`}>
           Финансовый Горизонт
+        </Link>
         </Link>
         <nav className={`flex items-center gap-6 `}>
           <ThemeToggleButton />
